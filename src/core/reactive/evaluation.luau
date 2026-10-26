@@ -44,21 +44,19 @@ local function context(): Node?
 	return if inherited ~= nil then inherited.consumer else nil
 end
 
-local function frame(): Evaluation
-	local running = coroutine.running()
+local spare: Evaluation? = nil
+
+local function frame(running: thread): Evaluation
 	local cached = cache.frame
 	if running == cache.thread and cached ~= nil then
 		return cached
 	end
-	local found = evaluations[running]
-	local current: Evaluation
-	if found ~= nil then
-		current = found
-	else
-		local previous = cache.thread
-		if cached ~= nil and cached.order == 0 and previous ~= nil then
-			evaluations[previous] = nil
-			current = cached
+	local current = evaluations[running]
+	if current == nil then
+		local reused = spare
+		if reused ~= nil then
+			spare = nil
+			current = reused
 		else
 			local made: Evaluation = { consumer = nil, order = 0 }
 			current = made
@@ -71,9 +69,7 @@ local function frame(): Evaluation
 end
 
 local function enter(consumer: Node?): (Node?, number)
-	local running = coroutine.running()
-	local cached = if running == cache.thread then cache.frame else nil
-	local current: Evaluation = if cached ~= nil then cached else frame()
+	local current = frame(coroutine.running())
 	local previousConsumer, previousOrder = current.consumer, current.order
 	if previousOrder == 0 then
 		active += 1
@@ -85,19 +81,37 @@ local function enter(consumer: Node?): (Node?, number)
 end
 
 local function snapshot(): (Node?, number)
+	local running = coroutine.running()
 	local cached = cache.frame
-	local current: Evaluation = if cached ~= nil and coroutine.running() == cache.thread then cached else frame()
+	local current = if cached ~= nil and running == cache.thread then cached else evaluations[running]
+	if current == nil then
+		return nil, 0
+	end
 	return current.consumer, current.order
 end
 
 local function leave(previousConsumer: Node?, previousOrder: number)
 	local running = coroutine.running()
-	local cached = if running == cache.thread then cache.frame else nil
-	local current: Evaluation = if cached ~= nil then cached else frame()
+	local cached = cache.frame
+	local current = if cached ~= nil and running == cache.thread then cached else evaluations[running]
+	if current == nil then
+		return
+	end
+	local wasActive = current.order > 0
 	current.consumer = previousConsumer
 	current.order = previousOrder
 	if previousOrder == 0 then
-		active -= 1
+		if wasActive then
+			active -= 1
+		end
+		evaluations[running] = nil
+		if spare == nil then
+			spare = current
+		end
+		if cache.thread == running then
+			cache.thread = nil
+			cache.frame = nil
+		end
 	end
 end
 
