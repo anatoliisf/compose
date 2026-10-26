@@ -658,7 +658,11 @@ describe("Compose Design views as code", function()
 		local options: Design.EmitOptions = { name = "ChooseGame", rowFunctions = true }
 		local code = Design.emit(value, toy, options)
 		expect(string.find(code, "local _design = ", 1, true) ~= nil):toBe(true)
-		expect(string.find(code, "local function LabelRow(current)", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "type LabelRowItem = { id: string, name: string }\n", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "local function LabelRow(current: Toy.Readable<LabelRowItem>)", 1, true) ~= nil):toBe(
+			true
+		)
+		expect(string.find(code, "key = function(row: LabelRowItem): string\n", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, "render = LabelRow,", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, 'UI.Label "Label" {', 1, true) ~= nil):toBe(true)
 		local parsed = Design.parse(code, toy)
