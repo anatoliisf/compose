@@ -25,6 +25,8 @@ export type Owner = {
 	following: Owner?,
 	release: Dispose?,
 	after: Dispose?,
+	releaseSubject: ((subject: unknown) -> ())?,
+	subject: unknown,
 }
 
 export type Entry = Owner
@@ -66,7 +68,15 @@ end
 local function releaseEntry(entry: Entry, failures: { unknown })
 	local release = entry.release
 	if release == nil then
-		disposeOwner(entry)
+		local releaseSubject = entry.releaseSubject
+		if releaseSubject == nil then
+			disposeOwner(entry)
+			return
+		end
+		entry.releaseSubject = nil
+		local subject = entry.subject
+		entry.subject = nil
+		releaseSubject(subject)
 		return
 	end
 	entry.release = nil
@@ -172,6 +182,14 @@ local function own(owner: Owner, dispose: Dispose, after: Dispose?): Dispose
 		releaseEntry(entry, failures)
 		raiseAll(failures)
 	end
+end
+
+local function holdSubject(owner: Owner, releaseSubject: (subject: unknown) -> (), subject: unknown)
+	if owner.disposed then
+		releaseSubject(subject)
+		return
+	end
+	attach(owner, { releaseSubject = releaseSubject, subject = subject })
 end
 
 local function adopt(owner: Owner, dispose: Dispose)
@@ -428,6 +446,7 @@ return {
 	},
 	own = own,
 	adopt = adopt,
+	holdSubject = holdSubject,
 	watch = watch,
 	watchStatic = watchStatic,
 	watchTerminal = watchTerminal,

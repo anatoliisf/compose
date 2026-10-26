@@ -236,9 +236,7 @@ local function createRuntime(host: Host.Host): Runtime
 
 			local node = render.createNode(kind)
 			Nodes.markOwned(node)
-			Owner.own(owner, function()
-				destroyOwnedNode(node)
-			end)
+			Owner.holdSubject(owner, destroyOwnedNode, node)
 			if Inspect.isActive() then
 				Inspect.node(owner, node, "owned")
 				Nodes.chargeToOwner(owner, node, "owned")
