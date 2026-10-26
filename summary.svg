@@ -1,1413 +1,1413 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="7592" viewBox="0 0 640 7592" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
 <rect width="640" height="7592" rx="8" fill="#ffffff" stroke="#d0d7de"/>
 <text x="16" y="28" font-size="16" font-weight="600" fill="#1f2328">Compose performance</text>
-<text x="16" y="48" fill="#59636e">76eccc20c540 · 2026-10-26T072639Z · median of the CI Ubuntu runner's paired candidate</text>
+<text x="16" y="48" fill="#59636e">514a3bd6ec89 · 2026-10-26T082746Z · median of the CI Ubuntu runner's paired candidate</text>
 <text x="16" y="80" font-weight="600" fill="#59636e">Benchmark</text>
 <text x="400" y="80" font-weight="600" fill="#59636e" text-anchor="end">Median</text>
 <text x="500" y="80" font-weight="600" fill="#59636e" text-anchor="end">p95</text>
 <text x="620" y="80" font-weight="600" fill="#59636e" text-anchor="end">Change</text>
 <text x="16" y="104" fill="#1f2328">animate-many</text>
-<text x="400" y="104" fill="#1f2328" text-anchor="end">9.62 ms</text>
-<text x="500" y="104" fill="#1f2328" text-anchor="end">9.93 ms</text>
-<text x="620" y="104" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="104" fill="#1f2328" text-anchor="end">4.74 ms</text>
+<text x="500" y="104" fill="#1f2328" text-anchor="end">5.12 ms</text>
+<text x="620" y="104" fill="#1a7f37" text-anchor="end">-50.8%</text>
 <rect x="8" y="112" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="128" fill="#1f2328">animated-navigation.extreme/compose/burst</text>
-<text x="400" y="128" fill="#1f2328" text-anchor="end">12.46 ms</text>
-<text x="500" y="128" fill="#1f2328" text-anchor="end">16.20 ms</text>
-<text x="620" y="128" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="128" fill="#1f2328" text-anchor="end">6.90 ms</text>
+<text x="500" y="128" fill="#1f2328" text-anchor="end">7.36 ms</text>
+<text x="620" y="128" fill="#1a7f37" text-anchor="end">-44.6%</text>
 <text x="16" y="152" fill="#1f2328">animated-navigation.extreme/compose/cold</text>
-<text x="400" y="152" fill="#1f2328" text-anchor="end">16.62 ms</text>
-<text x="500" y="152" fill="#1f2328" text-anchor="end">19.51 ms</text>
-<text x="620" y="152" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="152" fill="#1f2328" text-anchor="end">11.34 ms</text>
+<text x="500" y="152" fill="#1f2328" text-anchor="end">15.68 ms</text>
+<text x="620" y="152" fill="#1a7f37" text-anchor="end">-31.8%</text>
 <rect x="8" y="160" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="176" fill="#1f2328">animated-navigation.extreme/compose/counts</text>
-<text x="400" y="176" fill="#1f2328" text-anchor="end">110.13 ms</text>
-<text x="500" y="176" fill="#1f2328" text-anchor="end">110.13 ms</text>
-<text x="620" y="176" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="176" fill="#1f2328" text-anchor="end">64.35 ms</text>
+<text x="500" y="176" fill="#1f2328" text-anchor="end">64.35 ms</text>
+<text x="620" y="176" fill="#1a7f37" text-anchor="end">-41.6%</text>
 <text x="16" y="200" fill="#1f2328">animated-navigation.extreme/compose/settle</text>
-<text x="400" y="200" fill="#1f2328" text-anchor="end">1.2 µs</text>
+<text x="400" y="200" fill="#1f2328" text-anchor="end">1.4 µs</text>
 <text x="500" y="200" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="620" y="200" fill="#59636e" text-anchor="end">—</text>
+<text x="620" y="200" fill="#cf222e" text-anchor="end">+11.6%</text>
 <rect x="8" y="208" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="224" fill="#1f2328">animated-navigation.extreme/compose/steady</text>
-<text x="400" y="224" fill="#1f2328" text-anchor="end">46.87 ms</text>
-<text x="500" y="224" fill="#1f2328" text-anchor="end">49.73 ms</text>
-<text x="620" y="224" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="224" fill="#1f2328" text-anchor="end">25.39 ms</text>
+<text x="500" y="224" fill="#1f2328" text-anchor="end">26.20 ms</text>
+<text x="620" y="224" fill="#1a7f37" text-anchor="end">-45.8%</text>
 <text x="16" y="248" fill="#1f2328">animated-navigation.extreme/compose/teardown</text>
-<text x="400" y="248" fill="#1f2328" text-anchor="end">6.01 ms</text>
-<text x="500" y="248" fill="#1f2328" text-anchor="end">7.40 ms</text>
-<text x="620" y="248" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="248" fill="#1f2328" text-anchor="end">4.71 ms</text>
+<text x="500" y="248" fill="#1f2328" text-anchor="end">5.92 ms</text>
+<text x="620" y="248" fill="#1a7f37" text-anchor="end">-21.6%</text>
 <rect x="8" y="256" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="272" fill="#1f2328">animated-navigation.large/compose/burst</text>
-<text x="400" y="272" fill="#1f2328" text-anchor="end">5.47 ms</text>
-<text x="500" y="272" fill="#1f2328" text-anchor="end">5.69 ms</text>
-<text x="620" y="272" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="272" fill="#1f2328" text-anchor="end">3.09 ms</text>
+<text x="500" y="272" fill="#1f2328" text-anchor="end">3.18 ms</text>
+<text x="620" y="272" fill="#1a7f37" text-anchor="end">-43.5%</text>
 <text x="16" y="296" fill="#1f2328">animated-navigation.large/compose/cold</text>
-<text x="400" y="296" fill="#1f2328" text-anchor="end">7.16 ms</text>
-<text x="500" y="296" fill="#1f2328" text-anchor="end">8.92 ms</text>
-<text x="620" y="296" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="296" fill="#1f2328" text-anchor="end">4.81 ms</text>
+<text x="500" y="296" fill="#1f2328" text-anchor="end">7.24 ms</text>
+<text x="620" y="296" fill="#1a7f37" text-anchor="end">-32.7%</text>
 <rect x="8" y="304" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="320" fill="#1f2328">animated-navigation.large/compose/counts</text>
-<text x="400" y="320" fill="#1f2328" text-anchor="end">76.25 ms</text>
-<text x="500" y="320" fill="#1f2328" text-anchor="end">76.25 ms</text>
-<text x="620" y="320" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="320" fill="#1f2328" text-anchor="end">48.34 ms</text>
+<text x="500" y="320" fill="#1f2328" text-anchor="end">48.34 ms</text>
+<text x="620" y="320" fill="#1a7f37" text-anchor="end">-36.6%</text>
 <text x="16" y="344" fill="#1f2328">animated-navigation.large/compose/settle</text>
-<text x="400" y="344" fill="#1f2328" text-anchor="end">0.9 µs</text>
-<text x="500" y="344" fill="#1f2328" text-anchor="end">2.6 µs</text>
-<text x="620" y="344" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="344" fill="#1f2328" text-anchor="end">1.2 µs</text>
+<text x="500" y="344" fill="#1f2328" text-anchor="end">1.9 µs</text>
+<text x="620" y="344" fill="#cf222e" text-anchor="end">+34.0%</text>
 <rect x="8" y="352" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="368" fill="#1f2328">animated-navigation.large/compose/steady</text>
-<text x="400" y="368" fill="#1f2328" text-anchor="end">35.46 ms</text>
-<text x="500" y="368" fill="#1f2328" text-anchor="end">36.72 ms</text>
-<text x="620" y="368" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="368" fill="#1f2328" text-anchor="end">19.04 ms</text>
+<text x="500" y="368" fill="#1f2328" text-anchor="end">20.24 ms</text>
+<text x="620" y="368" fill="#1a7f37" text-anchor="end">-46.3%</text>
 <text x="16" y="392" fill="#1f2328">animated-navigation.large/compose/teardown</text>
-<text x="400" y="392" fill="#1f2328" text-anchor="end">1.98 ms</text>
-<text x="500" y="392" fill="#1f2328" text-anchor="end">2.87 ms</text>
-<text x="620" y="392" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="392" fill="#1f2328" text-anchor="end">1.85 ms</text>
+<text x="500" y="392" fill="#1f2328" text-anchor="end">2.14 ms</text>
+<text x="620" y="392" fill="#1a7f37" text-anchor="end">-6.3%</text>
 <rect x="8" y="400" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="416" fill="#1f2328">animated-navigation.medium/compose/burst</text>
-<text x="400" y="416" fill="#1f2328" text-anchor="end">1.46 ms</text>
-<text x="500" y="416" fill="#1f2328" text-anchor="end">1.49 ms</text>
-<text x="620" y="416" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="416" fill="#1f2328" text-anchor="end">1.81 ms</text>
+<text x="500" y="416" fill="#1f2328" text-anchor="end">1.88 ms</text>
+<text x="620" y="416" fill="#cf222e" text-anchor="end">+23.3%</text>
 <text x="16" y="440" fill="#1f2328">animated-navigation.medium/compose/cold</text>
-<text x="400" y="440" fill="#1f2328" text-anchor="end">2.01 ms</text>
-<text x="500" y="440" fill="#1f2328" text-anchor="end">2.55 ms</text>
-<text x="620" y="440" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="440" fill="#1f2328" text-anchor="end">1.66 ms</text>
+<text x="500" y="440" fill="#1f2328" text-anchor="end">2.87 ms</text>
+<text x="620" y="440" fill="#1a7f37" text-anchor="end">-17.6%</text>
 <rect x="8" y="448" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="464" fill="#1f2328">animated-navigation.medium/compose/counts</text>
-<text x="400" y="464" fill="#1f2328" text-anchor="end">22.75 ms</text>
-<text x="500" y="464" fill="#1f2328" text-anchor="end">22.75 ms</text>
-<text x="620" y="464" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="464" fill="#1f2328" text-anchor="end">29.66 ms</text>
+<text x="500" y="464" fill="#1f2328" text-anchor="end">29.66 ms</text>
+<text x="620" y="464" fill="#cf222e" text-anchor="end">+30.4%</text>
 <text x="16" y="488" fill="#1f2328">animated-navigation.medium/compose/settle</text>
 <text x="400" y="488" fill="#1f2328" text-anchor="end">0.5 µs</text>
 <text x="500" y="488" fill="#1f2328" text-anchor="end">0.7 µs</text>
-<text x="620" y="488" fill="#59636e" text-anchor="end">—</text>
+<text x="620" y="488" fill="#cf222e" text-anchor="end">+5.9%</text>
 <rect x="8" y="496" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="512" fill="#1f2328">animated-navigation.medium/compose/steady</text>
-<text x="400" y="512" fill="#1f2328" text-anchor="end">11.24 ms</text>
-<text x="500" y="512" fill="#1f2328" text-anchor="end">11.36 ms</text>
-<text x="620" y="512" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="512" fill="#1f2328" text-anchor="end">14.64 ms</text>
+<text x="500" y="512" fill="#1f2328" text-anchor="end">15.16 ms</text>
+<text x="620" y="512" fill="#cf222e" text-anchor="end">+30.3%</text>
 <text x="16" y="536" fill="#1f2328">animated-navigation.medium/compose/teardown</text>
-<text x="400" y="536" fill="#1f2328" text-anchor="end">356.0 µs</text>
-<text x="500" y="536" fill="#1f2328" text-anchor="end">398.4 µs</text>
-<text x="620" y="536" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="536" fill="#1f2328" text-anchor="end">417.8 µs</text>
+<text x="500" y="536" fill="#1f2328" text-anchor="end">488.9 µs</text>
+<text x="620" y="536" fill="#cf222e" text-anchor="end">+17.4%</text>
 <rect x="8" y="544" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="560" fill="#1f2328">branch-swap</text>
-<text x="400" y="560" fill="#1f2328" text-anchor="end">4.11 ms</text>
-<text x="500" y="560" fill="#1f2328" text-anchor="end">5.22 ms</text>
-<text x="620" y="560" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="560" fill="#1f2328" text-anchor="end">4.73 ms</text>
+<text x="500" y="560" fill="#1f2328" text-anchor="end">7.25 ms</text>
+<text x="620" y="560" fill="#cf222e" text-anchor="end">+15.0%</text>
 <text x="16" y="584" fill="#1f2328">cold-mount-100</text>
-<text x="400" y="584" fill="#1f2328" text-anchor="end">686.8 µs</text>
-<text x="500" y="584" fill="#1f2328" text-anchor="end">840.0 µs</text>
-<text x="620" y="584" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="584" fill="#1f2328" text-anchor="end">560.2 µs</text>
+<text x="500" y="584" fill="#1f2328" text-anchor="end">1.47 ms</text>
+<text x="620" y="584" fill="#1a7f37" text-anchor="end">-18.4%</text>
 <rect x="8" y="592" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="608" fill="#1f2328">cold-mount-1000</text>
-<text x="400" y="608" fill="#1f2328" text-anchor="end">8.40 ms</text>
-<text x="500" y="608" fill="#1f2328" text-anchor="end">10.76 ms</text>
-<text x="620" y="608" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="608" fill="#1f2328" text-anchor="end">4.72 ms</text>
+<text x="500" y="608" fill="#1f2328" text-anchor="end">7.49 ms</text>
+<text x="620" y="608" fill="#1a7f37" text-anchor="end">-43.8%</text>
 <text x="16" y="632" fill="#1f2328">cold-mount-10000</text>
-<text x="400" y="632" fill="#1f2328" text-anchor="end">74.88 ms</text>
-<text x="500" y="632" fill="#1f2328" text-anchor="end">87.00 ms</text>
-<text x="620" y="632" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="632" fill="#1f2328" text-anchor="end">77.31 ms</text>
+<text x="500" y="632" fill="#1f2328" text-anchor="end">91.68 ms</text>
+<text x="620" y="632" fill="#cf222e" text-anchor="end">+3.2%</text>
 <rect x="8" y="640" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="656" fill="#1f2328">data-grid.extreme/compose/burst</text>
-<text x="400" y="656" fill="#1f2328" text-anchor="end">917.20 ms</text>
-<text x="500" y="656" fill="#1f2328" text-anchor="end">1055.99 ms</text>
-<text x="620" y="656" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="656" fill="#1f2328" text-anchor="end">848.36 ms</text>
+<text x="500" y="656" fill="#1f2328" text-anchor="end">887.78 ms</text>
+<text x="620" y="656" fill="#1a7f37" text-anchor="end">-7.5%</text>
 <text x="16" y="680" fill="#1f2328">data-grid.extreme/compose/cold</text>
-<text x="400" y="680" fill="#1f2328" text-anchor="end">564.67 ms</text>
-<text x="500" y="680" fill="#1f2328" text-anchor="end">665.87 ms</text>
-<text x="620" y="680" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="680" fill="#1f2328" text-anchor="end">532.20 ms</text>
+<text x="500" y="680" fill="#1f2328" text-anchor="end">544.89 ms</text>
+<text x="620" y="680" fill="#1a7f37" text-anchor="end">-5.8%</text>
 <rect x="8" y="688" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="704" fill="#1f2328">data-grid.extreme/compose/counts</text>
-<text x="400" y="704" fill="#1f2328" text-anchor="end">1731.76 ms</text>
-<text x="500" y="704" fill="#1f2328" text-anchor="end">1731.76 ms</text>
-<text x="620" y="704" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="704" fill="#1f2328" text-anchor="end">1413.52 ms</text>
+<text x="500" y="704" fill="#1f2328" text-anchor="end">1413.52 ms</text>
+<text x="620" y="704" fill="#1a7f37" text-anchor="end">-18.4%</text>
 <text x="16" y="728" fill="#1f2328">data-grid.extreme/compose/settle</text>
 <text x="400" y="728" fill="#1f2328" text-anchor="end">2.1 µs</text>
-<text x="500" y="728" fill="#1f2328" text-anchor="end">3.9 µs</text>
-<text x="620" y="728" fill="#59636e" text-anchor="end">—</text>
+<text x="500" y="728" fill="#1f2328" text-anchor="end">2.8 µs</text>
+<text x="620" y="728" fill="#1a7f37" text-anchor="end">-0.9%</text>
 <rect x="8" y="736" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="752" fill="#1f2328">data-grid.extreme/compose/steady</text>
-<text x="400" y="752" fill="#1f2328" text-anchor="end">27.88 ms</text>
-<text x="500" y="752" fill="#1f2328" text-anchor="end">33.92 ms</text>
-<text x="620" y="752" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="752" fill="#1f2328" text-anchor="end">26.61 ms</text>
+<text x="500" y="752" fill="#1f2328" text-anchor="end">31.30 ms</text>
+<text x="620" y="752" fill="#1a7f37" text-anchor="end">-4.6%</text>
 <text x="16" y="776" fill="#1f2328">data-grid.extreme/compose/teardown</text>
-<text x="400" y="776" fill="#1f2328" text-anchor="end">1.36 ms</text>
-<text x="500" y="776" fill="#1f2328" text-anchor="end">1.89 ms</text>
-<text x="620" y="776" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="776" fill="#1f2328" text-anchor="end">1.27 ms</text>
+<text x="500" y="776" fill="#1f2328" text-anchor="end">2.20 ms</text>
+<text x="620" y="776" fill="#1a7f37" text-anchor="end">-7.0%</text>
 <rect x="8" y="784" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="800" fill="#1f2328">data-grid.large/compose/burst</text>
-<text x="400" y="800" fill="#1f2328" text-anchor="end">108.37 ms</text>
-<text x="500" y="800" fill="#1f2328" text-anchor="end">113.80 ms</text>
-<text x="620" y="800" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="800" fill="#1f2328" text-anchor="end">137.57 ms</text>
+<text x="500" y="800" fill="#1f2328" text-anchor="end">146.22 ms</text>
+<text x="620" y="800" fill="#cf222e" text-anchor="end">+26.9%</text>
 <text x="16" y="824" fill="#1f2328">data-grid.large/compose/cold</text>
-<text x="400" y="824" fill="#1f2328" text-anchor="end">60.69 ms</text>
-<text x="500" y="824" fill="#1f2328" text-anchor="end">64.24 ms</text>
-<text x="620" y="824" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="824" fill="#1f2328" text-anchor="end">76.94 ms</text>
+<text x="500" y="824" fill="#1f2328" text-anchor="end">83.62 ms</text>
+<text x="620" y="824" fill="#cf222e" text-anchor="end">+26.8%</text>
 <rect x="8" y="832" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="848" fill="#1f2328">data-grid.large/compose/counts</text>
-<text x="400" y="848" fill="#1f2328" text-anchor="end">187.98 ms</text>
-<text x="500" y="848" fill="#1f2328" text-anchor="end">187.98 ms</text>
-<text x="620" y="848" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="848" fill="#1f2328" text-anchor="end">244.86 ms</text>
+<text x="500" y="848" fill="#1f2328" text-anchor="end">244.86 ms</text>
+<text x="620" y="848" fill="#cf222e" text-anchor="end">+30.3%</text>
 <text x="16" y="872" fill="#1f2328">data-grid.large/compose/settle</text>
-<text x="400" y="872" fill="#1f2328" text-anchor="end">1.5 µs</text>
+<text x="400" y="872" fill="#1f2328" text-anchor="end">1.6 µs</text>
 <text x="500" y="872" fill="#1f2328" text-anchor="end">2.1 µs</text>
-<text x="620" y="872" fill="#59636e" text-anchor="end">—</text>
+<text x="620" y="872" fill="#cf222e" text-anchor="end">+8.1%</text>
 <rect x="8" y="880" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="896" fill="#1f2328">data-grid.large/compose/steady</text>
-<text x="400" y="896" fill="#1f2328" text-anchor="end">14.96 ms</text>
-<text x="500" y="896" fill="#1f2328" text-anchor="end">21.28 ms</text>
-<text x="620" y="896" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="896" fill="#1f2328" text-anchor="end">18.10 ms</text>
+<text x="500" y="896" fill="#1f2328" text-anchor="end">25.32 ms</text>
+<text x="620" y="896" fill="#cf222e" text-anchor="end">+21.0%</text>
 <text x="16" y="920" fill="#1f2328">data-grid.large/compose/teardown</text>
-<text x="400" y="920" fill="#1f2328" text-anchor="end">469.9 µs</text>
-<text x="500" y="920" fill="#1f2328" text-anchor="end">673.6 µs</text>
-<text x="620" y="920" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="920" fill="#1f2328" text-anchor="end">567.8 µs</text>
+<text x="500" y="920" fill="#1f2328" text-anchor="end">898.6 µs</text>
+<text x="620" y="920" fill="#cf222e" text-anchor="end">+20.8%</text>
 <rect x="8" y="928" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="944" fill="#1f2328">data-grid.medium/compose/burst</text>
-<text x="400" y="944" fill="#1f2328" text-anchor="end">69.74 ms</text>
-<text x="500" y="944" fill="#1f2328" text-anchor="end">79.08 ms</text>
-<text x="620" y="944" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="944" fill="#1f2328" text-anchor="end">35.89 ms</text>
+<text x="500" y="944" fill="#1f2328" text-anchor="end">39.55 ms</text>
+<text x="620" y="944" fill="#1a7f37" text-anchor="end">-48.5%</text>
 <text x="16" y="968" fill="#1f2328">data-grid.medium/compose/cold</text>
-<text x="400" y="968" fill="#1f2328" text-anchor="end">39.86 ms</text>
-<text x="500" y="968" fill="#1f2328" text-anchor="end">43.42 ms</text>
-<text x="620" y="968" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="968" fill="#1f2328" text-anchor="end">21.10 ms</text>
+<text x="500" y="968" fill="#1f2328" text-anchor="end">24.14 ms</text>
+<text x="620" y="968" fill="#1a7f37" text-anchor="end">-47.1%</text>
 <rect x="8" y="976" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="992" fill="#1f2328">data-grid.medium/compose/counts</text>
-<text x="400" y="992" fill="#1f2328" text-anchor="end">141.79 ms</text>
-<text x="500" y="992" fill="#1f2328" text-anchor="end">141.79 ms</text>
-<text x="620" y="992" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="992" fill="#1f2328" text-anchor="end">71.60 ms</text>
+<text x="500" y="992" fill="#1f2328" text-anchor="end">71.60 ms</text>
+<text x="620" y="992" fill="#1a7f37" text-anchor="end">-49.5%</text>
 <text x="16" y="1016" fill="#1f2328">data-grid.medium/compose/settle</text>
-<text x="400" y="1016" fill="#1f2328" text-anchor="end">2.3 µs</text>
-<text x="500" y="1016" fill="#1f2328" text-anchor="end">3.4 µs</text>
-<text x="620" y="1016" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1016" fill="#1f2328" text-anchor="end">1.0 µs</text>
+<text x="500" y="1016" fill="#1f2328" text-anchor="end">1.5 µs</text>
+<text x="620" y="1016" fill="#1a7f37" text-anchor="end">-54.7%</text>
 <rect x="8" y="1024" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1040" fill="#1f2328">data-grid.medium/compose/steady</text>
-<text x="400" y="1040" fill="#1f2328" text-anchor="end">20.75 ms</text>
-<text x="500" y="1040" fill="#1f2328" text-anchor="end">23.24 ms</text>
-<text x="620" y="1040" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1040" fill="#1f2328" text-anchor="end">8.16 ms</text>
+<text x="500" y="1040" fill="#1f2328" text-anchor="end">12.78 ms</text>
+<text x="620" y="1040" fill="#1a7f37" text-anchor="end">-60.7%</text>
 <text x="16" y="1064" fill="#1f2328">data-grid.medium/compose/teardown</text>
-<text x="400" y="1064" fill="#1f2328" text-anchor="end">356.8 µs</text>
-<text x="500" y="1064" fill="#1f2328" text-anchor="end">397.2 µs</text>
-<text x="620" y="1064" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1064" fill="#1f2328" text-anchor="end">187.9 µs</text>
+<text x="500" y="1064" fill="#1f2328" text-anchor="end">227.4 µs</text>
+<text x="620" y="1064" fill="#1a7f37" text-anchor="end">-47.3%</text>
 <rect x="8" y="1072" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1088" fill="#1f2328">dense-dashboard.extreme/compose/burst</text>
-<text x="400" y="1088" fill="#1f2328" text-anchor="end">20.15 ms</text>
-<text x="500" y="1088" fill="#1f2328" text-anchor="end">24.08 ms</text>
-<text x="620" y="1088" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1088" fill="#1f2328" text-anchor="end">12.23 ms</text>
+<text x="500" y="1088" fill="#1f2328" text-anchor="end">16.94 ms</text>
+<text x="620" y="1088" fill="#1a7f37" text-anchor="end">-39.3%</text>
 <text x="16" y="1112" fill="#1f2328">dense-dashboard.extreme/compose/cold</text>
-<text x="400" y="1112" fill="#1f2328" text-anchor="end">606.7 µs</text>
-<text x="500" y="1112" fill="#1f2328" text-anchor="end">1.70 ms</text>
-<text x="620" y="1112" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1112" fill="#1f2328" text-anchor="end">398.8 µs</text>
+<text x="500" y="1112" fill="#1f2328" text-anchor="end">2.84 ms</text>
+<text x="620" y="1112" fill="#1a7f37" text-anchor="end">-34.3%</text>
 <rect x="8" y="1120" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1136" fill="#1f2328">dense-dashboard.extreme/compose/counts</text>
-<text x="400" y="1136" fill="#1f2328" text-anchor="end">23.44 ms</text>
-<text x="500" y="1136" fill="#1f2328" text-anchor="end">23.44 ms</text>
-<text x="620" y="1136" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1136" fill="#1f2328" text-anchor="end">13.69 ms</text>
+<text x="500" y="1136" fill="#1f2328" text-anchor="end">13.69 ms</text>
+<text x="620" y="1136" fill="#1a7f37" text-anchor="end">-41.6%</text>
 <text x="16" y="1160" fill="#1f2328">dense-dashboard.extreme/compose/settle</text>
-<text x="400" y="1160" fill="#1f2328" text-anchor="end">1.3 µs</text>
-<text x="500" y="1160" fill="#1f2328" text-anchor="end">1.8 µs</text>
-<text x="620" y="1160" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1160" fill="#1f2328" text-anchor="end">0.9 µs</text>
+<text x="500" y="1160" fill="#1f2328" text-anchor="end">1.6 µs</text>
+<text x="620" y="1160" fill="#1a7f37" text-anchor="end">-29.3%</text>
 <rect x="8" y="1168" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1184" fill="#1f2328">dense-dashboard.extreme/compose/steady</text>
-<text x="400" y="1184" fill="#1f2328" text-anchor="end">863.1 µs</text>
-<text x="500" y="1184" fill="#1f2328" text-anchor="end">948.1 µs</text>
-<text x="620" y="1184" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1184" fill="#1f2328" text-anchor="end">432.7 µs</text>
+<text x="500" y="1184" fill="#1f2328" text-anchor="end">1.33 ms</text>
+<text x="620" y="1184" fill="#1a7f37" text-anchor="end">-49.9%</text>
 <text x="16" y="1208" fill="#1f2328">dense-dashboard.extreme/compose/teardown</text>
-<text x="400" y="1208" fill="#1f2328" text-anchor="end">599.1 µs</text>
-<text x="500" y="1208" fill="#1f2328" text-anchor="end">823.0 µs</text>
-<text x="620" y="1208" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1208" fill="#1f2328" text-anchor="end">388.0 µs</text>
+<text x="500" y="1208" fill="#1f2328" text-anchor="end">619.5 µs</text>
+<text x="620" y="1208" fill="#1a7f37" text-anchor="end">-35.2%</text>
 <rect x="8" y="1216" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1232" fill="#1f2328">dense-dashboard.large/compose/burst</text>
-<text x="400" y="1232" fill="#1f2328" text-anchor="end">9.71 ms</text>
-<text x="500" y="1232" fill="#1f2328" text-anchor="end">12.38 ms</text>
-<text x="620" y="1232" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1232" fill="#1f2328" text-anchor="end">4.19 ms</text>
+<text x="500" y="1232" fill="#1f2328" text-anchor="end">8.05 ms</text>
+<text x="620" y="1232" fill="#1a7f37" text-anchor="end">-56.9%</text>
 <text x="16" y="1256" fill="#1f2328">dense-dashboard.large/compose/cold</text>
-<text x="400" y="1256" fill="#1f2328" text-anchor="end">371.6 µs</text>
-<text x="500" y="1256" fill="#1f2328" text-anchor="end">940.3 µs</text>
-<text x="620" y="1256" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1256" fill="#1f2328" text-anchor="end">211.1 µs</text>
+<text x="500" y="1256" fill="#1f2328" text-anchor="end">356.6 µs</text>
+<text x="620" y="1256" fill="#1a7f37" text-anchor="end">-43.2%</text>
 <rect x="8" y="1264" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1280" fill="#1f2328">dense-dashboard.large/compose/counts</text>
-<text x="400" y="1280" fill="#1f2328" text-anchor="end">16.41 ms</text>
-<text x="500" y="1280" fill="#1f2328" text-anchor="end">16.41 ms</text>
-<text x="620" y="1280" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1280" fill="#1f2328" text-anchor="end">9.67 ms</text>
+<text x="500" y="1280" fill="#1f2328" text-anchor="end">9.67 ms</text>
+<text x="620" y="1280" fill="#1a7f37" text-anchor="end">-41.1%</text>
 <text x="16" y="1304" fill="#1f2328">dense-dashboard.large/compose/settle</text>
-<text x="400" y="1304" fill="#1f2328" text-anchor="end">1.0 µs</text>
-<text x="500" y="1304" fill="#1f2328" text-anchor="end">1.2 µs</text>
-<text x="620" y="1304" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1304" fill="#1f2328" text-anchor="end">0.6 µs</text>
+<text x="500" y="1304" fill="#1f2328" text-anchor="end">1.1 µs</text>
+<text x="620" y="1304" fill="#1a7f37" text-anchor="end">-35.1%</text>
 <rect x="8" y="1312" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1328" fill="#1f2328">dense-dashboard.large/compose/steady</text>
-<text x="400" y="1328" fill="#1f2328" text-anchor="end">865.5 µs</text>
-<text x="500" y="1328" fill="#1f2328" text-anchor="end">927.4 µs</text>
-<text x="620" y="1328" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1328" fill="#1f2328" text-anchor="end">435.0 µs</text>
+<text x="500" y="1328" fill="#1f2328" text-anchor="end">467.1 µs</text>
+<text x="620" y="1328" fill="#1a7f37" text-anchor="end">-49.7%</text>
 <text x="16" y="1352" fill="#1f2328">dense-dashboard.large/compose/teardown</text>
-<text x="400" y="1352" fill="#1f2328" text-anchor="end">297.0 µs</text>
-<text x="500" y="1352" fill="#1f2328" text-anchor="end">355.5 µs</text>
-<text x="620" y="1352" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1352" fill="#1f2328" text-anchor="end">159.4 µs</text>
+<text x="500" y="1352" fill="#1f2328" text-anchor="end">173.1 µs</text>
+<text x="620" y="1352" fill="#1a7f37" text-anchor="end">-46.3%</text>
 <rect x="8" y="1360" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1376" fill="#1f2328">dense-dashboard.medium/compose/burst</text>
-<text x="400" y="1376" fill="#1f2328" text-anchor="end">3.26 ms</text>
-<text x="500" y="1376" fill="#1f2328" text-anchor="end">4.89 ms</text>
-<text x="620" y="1376" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1376" fill="#1f2328" text-anchor="end">3.75 ms</text>
+<text x="500" y="1376" fill="#1f2328" text-anchor="end">6.07 ms</text>
+<text x="620" y="1376" fill="#cf222e" text-anchor="end">+15.1%</text>
 <text x="16" y="1400" fill="#1f2328">dense-dashboard.medium/compose/cold</text>
-<text x="400" y="1400" fill="#1f2328" text-anchor="end">214.4 µs</text>
-<text x="500" y="1400" fill="#1f2328" text-anchor="end">357.9 µs</text>
-<text x="620" y="1400" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1400" fill="#1f2328" text-anchor="end">274.0 µs</text>
+<text x="500" y="1400" fill="#1f2328" text-anchor="end">778.0 µs</text>
+<text x="620" y="1400" fill="#cf222e" text-anchor="end">+27.8%</text>
 <rect x="8" y="1408" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1424" fill="#1f2328">dense-dashboard.medium/compose/counts</text>
-<text x="400" y="1424" fill="#1f2328" text-anchor="end">6.74 ms</text>
-<text x="500" y="1424" fill="#1f2328" text-anchor="end">6.74 ms</text>
-<text x="620" y="1424" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1424" fill="#1f2328" text-anchor="end">8.37 ms</text>
+<text x="500" y="1424" fill="#1f2328" text-anchor="end">8.37 ms</text>
+<text x="620" y="1424" fill="#cf222e" text-anchor="end">+24.3%</text>
 <text x="16" y="1448" fill="#1f2328">dense-dashboard.medium/compose/settle</text>
-<text x="400" y="1448" fill="#1f2328" text-anchor="end">0.8 µs</text>
-<text x="500" y="1448" fill="#1f2328" text-anchor="end">0.9 µs</text>
-<text x="620" y="1448" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1448" fill="#1f2328" text-anchor="end">1.3 µs</text>
+<text x="500" y="1448" fill="#1f2328" text-anchor="end">2.3 µs</text>
+<text x="620" y="1448" fill="#cf222e" text-anchor="end">+74.0%</text>
 <rect x="8" y="1456" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1472" fill="#1f2328">dense-dashboard.medium/compose/steady</text>
-<text x="400" y="1472" fill="#1f2328" text-anchor="end">823.5 µs</text>
-<text x="500" y="1472" fill="#1f2328" text-anchor="end">847.8 µs</text>
-<text x="620" y="1472" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1472" fill="#1f2328" text-anchor="end">817.9 µs</text>
+<text x="500" y="1472" fill="#1f2328" text-anchor="end">888.7 µs</text>
+<text x="620" y="1472" fill="#1a7f37" text-anchor="end">-0.7%</text>
 <text x="16" y="1496" fill="#1f2328">dense-dashboard.medium/compose/teardown</text>
-<text x="400" y="1496" fill="#1f2328" text-anchor="end">120.9 µs</text>
-<text x="500" y="1496" fill="#1f2328" text-anchor="end">127.7 µs</text>
-<text x="620" y="1496" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1496" fill="#1f2328" text-anchor="end">153.9 µs</text>
+<text x="500" y="1496" fill="#1f2328" text-anchor="end">409.3 µs</text>
+<text x="620" y="1496" fill="#cf222e" text-anchor="end">+27.3%</text>
 <rect x="8" y="1504" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1520" fill="#1f2328">entities-identity-churn-10.extreme/compose/burst</text>
-<text x="400" y="1520" fill="#1f2328" text-anchor="end">57.28 ms</text>
-<text x="500" y="1520" fill="#1f2328" text-anchor="end">72.74 ms</text>
-<text x="620" y="1520" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1520" fill="#1f2328" text-anchor="end">58.55 ms</text>
+<text x="500" y="1520" fill="#1f2328" text-anchor="end">77.26 ms</text>
+<text x="620" y="1520" fill="#cf222e" text-anchor="end">+2.2%</text>
 <text x="16" y="1544" fill="#1f2328">entities-identity-churn-10.extreme/compose/cold</text>
-<text x="400" y="1544" fill="#1f2328" text-anchor="end">35.13 ms</text>
-<text x="500" y="1544" fill="#1f2328" text-anchor="end">47.56 ms</text>
-<text x="620" y="1544" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1544" fill="#1f2328" text-anchor="end">48.79 ms</text>
+<text x="500" y="1544" fill="#1f2328" text-anchor="end">62.71 ms</text>
+<text x="620" y="1544" fill="#cf222e" text-anchor="end">+38.9%</text>
 <rect x="8" y="1552" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1568" fill="#1f2328">entities-identity-churn-10.extreme/compose/counts</text>
-<text x="400" y="1568" fill="#1f2328" text-anchor="end">203.65 ms</text>
-<text x="500" y="1568" fill="#1f2328" text-anchor="end">203.65 ms</text>
-<text x="620" y="1568" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1568" fill="#1f2328" text-anchor="end">278.04 ms</text>
+<text x="500" y="1568" fill="#1f2328" text-anchor="end">278.04 ms</text>
+<text x="620" y="1568" fill="#cf222e" text-anchor="end">+36.5%</text>
 <text x="16" y="1592" fill="#1f2328">entities-identity-churn-10.extreme/compose/settle</text>
-<text x="400" y="1592" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="500" y="1592" fill="#1f2328" text-anchor="end">2.3 µs</text>
-<text x="620" y="1592" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1592" fill="#1f2328" text-anchor="end">2.7 µs</text>
+<text x="500" y="1592" fill="#1f2328" text-anchor="end">3.2 µs</text>
+<text x="620" y="1592" fill="#cf222e" text-anchor="end">+65.1%</text>
 <rect x="8" y="1600" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1616" fill="#1f2328">entities-identity-churn-10.extreme/compose/steady</text>
-<text x="400" y="1616" fill="#1f2328" text-anchor="end">67.61 ms</text>
-<text x="500" y="1616" fill="#1f2328" text-anchor="end">79.29 ms</text>
-<text x="620" y="1616" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1616" fill="#1f2328" text-anchor="end">110.49 ms</text>
+<text x="500" y="1616" fill="#1f2328" text-anchor="end">118.06 ms</text>
+<text x="620" y="1616" fill="#cf222e" text-anchor="end">+63.4%</text>
 <text x="16" y="1640" fill="#1f2328">entities-identity-churn-10.extreme/compose/teardown</text>
-<text x="400" y="1640" fill="#1f2328" text-anchor="end">1.38 ms</text>
-<text x="500" y="1640" fill="#1f2328" text-anchor="end">2.43 ms</text>
-<text x="620" y="1640" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1640" fill="#1f2328" text-anchor="end">1.96 ms</text>
+<text x="500" y="1640" fill="#1f2328" text-anchor="end">2.21 ms</text>
+<text x="620" y="1640" fill="#cf222e" text-anchor="end">+42.0%</text>
 <rect x="8" y="1648" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1664" fill="#1f2328">entities-identity-churn-10.large/compose/burst</text>
-<text x="400" y="1664" fill="#1f2328" text-anchor="end">22.66 ms</text>
-<text x="500" y="1664" fill="#1f2328" text-anchor="end">26.83 ms</text>
-<text x="620" y="1664" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1664" fill="#1f2328" text-anchor="end">12.17 ms</text>
+<text x="500" y="1664" fill="#1f2328" text-anchor="end">15.16 ms</text>
+<text x="620" y="1664" fill="#1a7f37" text-anchor="end">-46.3%</text>
 <text x="16" y="1688" fill="#1f2328">entities-identity-churn-10.large/compose/cold</text>
-<text x="400" y="1688" fill="#1f2328" text-anchor="end">16.03 ms</text>
-<text x="500" y="1688" fill="#1f2328" text-anchor="end">26.11 ms</text>
-<text x="620" y="1688" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1688" fill="#1f2328" text-anchor="end">10.77 ms</text>
+<text x="500" y="1688" fill="#1f2328" text-anchor="end">15.97 ms</text>
+<text x="620" y="1688" fill="#1a7f37" text-anchor="end">-32.8%</text>
 <rect x="8" y="1696" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1712" fill="#1f2328">entities-identity-churn-10.large/compose/counts</text>
-<text x="400" y="1712" fill="#1f2328" text-anchor="end">80.94 ms</text>
-<text x="500" y="1712" fill="#1f2328" text-anchor="end">80.94 ms</text>
-<text x="620" y="1712" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1712" fill="#1f2328" text-anchor="end">39.36 ms</text>
+<text x="500" y="1712" fill="#1f2328" text-anchor="end">39.36 ms</text>
+<text x="620" y="1712" fill="#1a7f37" text-anchor="end">-51.4%</text>
 <text x="16" y="1736" fill="#1f2328">entities-identity-churn-10.large/compose/settle</text>
-<text x="400" y="1736" fill="#1f2328" text-anchor="end">1.9 µs</text>
-<text x="500" y="1736" fill="#1f2328" text-anchor="end">3.0 µs</text>
-<text x="620" y="1736" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1736" fill="#1f2328" text-anchor="end">1.8 µs</text>
+<text x="500" y="1736" fill="#1f2328" text-anchor="end">2.7 µs</text>
+<text x="620" y="1736" fill="#1a7f37" text-anchor="end">-4.3%</text>
 <rect x="8" y="1744" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1760" fill="#1f2328">entities-identity-churn-10.large/compose/steady</text>
-<text x="400" y="1760" fill="#1f2328" text-anchor="end">29.70 ms</text>
-<text x="500" y="1760" fill="#1f2328" text-anchor="end">32.30 ms</text>
-<text x="620" y="1760" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1760" fill="#1f2328" text-anchor="end">13.17 ms</text>
+<text x="500" y="1760" fill="#1f2328" text-anchor="end">19.35 ms</text>
+<text x="620" y="1760" fill="#1a7f37" text-anchor="end">-55.7%</text>
 <text x="16" y="1784" fill="#1f2328">entities-identity-churn-10.large/compose/teardown</text>
-<text x="400" y="1784" fill="#1f2328" text-anchor="end">555.6 µs</text>
-<text x="500" y="1784" fill="#1f2328" text-anchor="end">593.5 µs</text>
-<text x="620" y="1784" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1784" fill="#1f2328" text-anchor="end">288.1 µs</text>
+<text x="500" y="1784" fill="#1f2328" text-anchor="end">535.4 µs</text>
+<text x="620" y="1784" fill="#1a7f37" text-anchor="end">-48.2%</text>
 <rect x="8" y="1792" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1808" fill="#1f2328">entities-identity-churn-10.medium/compose/burst</text>
-<text x="400" y="1808" fill="#1f2328" text-anchor="end">8.78 ms</text>
-<text x="500" y="1808" fill="#1f2328" text-anchor="end">14.03 ms</text>
-<text x="620" y="1808" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1808" fill="#1f2328" text-anchor="end">6.49 ms</text>
+<text x="500" y="1808" fill="#1f2328" text-anchor="end">10.87 ms</text>
+<text x="620" y="1808" fill="#1a7f37" text-anchor="end">-26.1%</text>
 <text x="16" y="1832" fill="#1f2328">entities-identity-churn-10.medium/compose/cold</text>
-<text x="400" y="1832" fill="#1f2328" text-anchor="end">6.85 ms</text>
-<text x="500" y="1832" fill="#1f2328" text-anchor="end">10.87 ms</text>
-<text x="620" y="1832" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1832" fill="#1f2328" text-anchor="end">4.06 ms</text>
+<text x="500" y="1832" fill="#1f2328" text-anchor="end">6.30 ms</text>
+<text x="620" y="1832" fill="#1a7f37" text-anchor="end">-40.6%</text>
 <rect x="8" y="1840" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1856" fill="#1f2328">entities-identity-churn-10.medium/compose/counts</text>
-<text x="400" y="1856" fill="#1f2328" text-anchor="end">33.01 ms</text>
-<text x="500" y="1856" fill="#1f2328" text-anchor="end">33.01 ms</text>
-<text x="620" y="1856" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1856" fill="#1f2328" text-anchor="end">23.55 ms</text>
+<text x="500" y="1856" fill="#1f2328" text-anchor="end">23.55 ms</text>
+<text x="620" y="1856" fill="#1a7f37" text-anchor="end">-28.7%</text>
 <text x="16" y="1880" fill="#1f2328">entities-identity-churn-10.medium/compose/settle</text>
-<text x="400" y="1880" fill="#1f2328" text-anchor="end">1.1 µs</text>
-<text x="500" y="1880" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="620" y="1880" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1880" fill="#1f2328" text-anchor="end">1.6 µs</text>
+<text x="500" y="1880" fill="#1f2328" text-anchor="end">2.2 µs</text>
+<text x="620" y="1880" fill="#cf222e" text-anchor="end">+46.2%</text>
 <rect x="8" y="1888" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1904" fill="#1f2328">entities-identity-churn-10.medium/compose/steady</text>
-<text x="400" y="1904" fill="#1f2328" text-anchor="end">10.63 ms</text>
-<text x="500" y="1904" fill="#1f2328" text-anchor="end">13.17 ms</text>
-<text x="620" y="1904" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1904" fill="#1f2328" text-anchor="end">6.02 ms</text>
+<text x="500" y="1904" fill="#1f2328" text-anchor="end">9.68 ms</text>
+<text x="620" y="1904" fill="#1a7f37" text-anchor="end">-43.4%</text>
 <text x="16" y="1928" fill="#1f2328">entities-identity-churn-10.medium/compose/teardown</text>
-<text x="400" y="1928" fill="#1f2328" text-anchor="end">231.8 µs</text>
-<text x="500" y="1928" fill="#1f2328" text-anchor="end">266.4 µs</text>
-<text x="620" y="1928" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1928" fill="#1f2328" text-anchor="end">181.7 µs</text>
+<text x="500" y="1928" fill="#1f2328" text-anchor="end">239.6 µs</text>
+<text x="620" y="1928" fill="#1a7f37" text-anchor="end">-21.6%</text>
 <rect x="8" y="1936" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="1952" fill="#1f2328">entities-identity-churn-50.extreme/compose/burst</text>
-<text x="400" y="1952" fill="#1f2328" text-anchor="end">38.16 ms</text>
-<text x="500" y="1952" fill="#1f2328" text-anchor="end">41.63 ms</text>
-<text x="620" y="1952" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1952" fill="#1f2328" text-anchor="end">45.51 ms</text>
+<text x="500" y="1952" fill="#1f2328" text-anchor="end">60.08 ms</text>
+<text x="620" y="1952" fill="#cf222e" text-anchor="end">+19.3%</text>
 <text x="16" y="1976" fill="#1f2328">entities-identity-churn-50.extreme/compose/cold</text>
-<text x="400" y="1976" fill="#1f2328" text-anchor="end">30.01 ms</text>
-<text x="500" y="1976" fill="#1f2328" text-anchor="end">42.08 ms</text>
-<text x="620" y="1976" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="1976" fill="#1f2328" text-anchor="end">36.98 ms</text>
+<text x="500" y="1976" fill="#1f2328" text-anchor="end">57.33 ms</text>
+<text x="620" y="1976" fill="#cf222e" text-anchor="end">+23.2%</text>
 <rect x="8" y="1984" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2000" fill="#1f2328">entities-identity-churn-50.extreme/compose/counts</text>
-<text x="400" y="2000" fill="#1f2328" text-anchor="end">308.85 ms</text>
-<text x="500" y="2000" fill="#1f2328" text-anchor="end">308.85 ms</text>
-<text x="620" y="2000" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2000" fill="#1f2328" text-anchor="end">356.18 ms</text>
+<text x="500" y="2000" fill="#1f2328" text-anchor="end">356.18 ms</text>
+<text x="620" y="2000" fill="#cf222e" text-anchor="end">+15.3%</text>
 <text x="16" y="2024" fill="#1f2328">entities-identity-churn-50.extreme/compose/settle</text>
-<text x="400" y="2024" fill="#1f2328" text-anchor="end">1.9 µs</text>
-<text x="500" y="2024" fill="#1f2328" text-anchor="end">2.3 µs</text>
-<text x="620" y="2024" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2024" fill="#1f2328" text-anchor="end">1.8 µs</text>
+<text x="500" y="2024" fill="#1f2328" text-anchor="end">2.1 µs</text>
+<text x="620" y="2024" fill="#1a7f37" text-anchor="end">-7.2%</text>
 <rect x="8" y="2032" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2048" fill="#1f2328">entities-identity-churn-50.extreme/compose/steady</text>
-<text x="400" y="2048" fill="#1f2328" text-anchor="end">170.67 ms</text>
-<text x="500" y="2048" fill="#1f2328" text-anchor="end">191.16 ms</text>
-<text x="620" y="2048" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2048" fill="#1f2328" text-anchor="end">195.16 ms</text>
+<text x="500" y="2048" fill="#1f2328" text-anchor="end">239.87 ms</text>
+<text x="620" y="2048" fill="#cf222e" text-anchor="end">+14.3%</text>
 <text x="16" y="2072" fill="#1f2328">entities-identity-churn-50.extreme/compose/teardown</text>
-<text x="400" y="2072" fill="#1f2328" text-anchor="end">1.01 ms</text>
-<text x="500" y="2072" fill="#1f2328" text-anchor="end">1.16 ms</text>
-<text x="620" y="2072" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2072" fill="#1f2328" text-anchor="end">1.12 ms</text>
+<text x="500" y="2072" fill="#1f2328" text-anchor="end">1.33 ms</text>
+<text x="620" y="2072" fill="#cf222e" text-anchor="end">+11.1%</text>
 <rect x="8" y="2080" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2096" fill="#1f2328">entities-identity-churn-50.large/compose/burst</text>
-<text x="400" y="2096" fill="#1f2328" text-anchor="end">20.45 ms</text>
-<text x="500" y="2096" fill="#1f2328" text-anchor="end">30.54 ms</text>
-<text x="620" y="2096" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2096" fill="#1f2328" text-anchor="end">22.65 ms</text>
+<text x="500" y="2096" fill="#1f2328" text-anchor="end">37.79 ms</text>
+<text x="620" y="2096" fill="#cf222e" text-anchor="end">+10.8%</text>
 <text x="16" y="2120" fill="#1f2328">entities-identity-churn-50.large/compose/cold</text>
-<text x="400" y="2120" fill="#1f2328" text-anchor="end">12.20 ms</text>
-<text x="500" y="2120" fill="#1f2328" text-anchor="end">24.45 ms</text>
-<text x="620" y="2120" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2120" fill="#1f2328" text-anchor="end">16.23 ms</text>
+<text x="500" y="2120" fill="#1f2328" text-anchor="end">29.70 ms</text>
+<text x="620" y="2120" fill="#cf222e" text-anchor="end">+33.1%</text>
 <rect x="8" y="2128" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2144" fill="#1f2328">entities-identity-churn-50.large/compose/counts</text>
-<text x="400" y="2144" fill="#1f2328" text-anchor="end">116.76 ms</text>
-<text x="500" y="2144" fill="#1f2328" text-anchor="end">116.76 ms</text>
-<text x="620" y="2144" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2144" fill="#1f2328" text-anchor="end">159.72 ms</text>
+<text x="500" y="2144" fill="#1f2328" text-anchor="end">159.72 ms</text>
+<text x="620" y="2144" fill="#cf222e" text-anchor="end">+36.8%</text>
 <text x="16" y="2168" fill="#1f2328">entities-identity-churn-50.large/compose/settle</text>
-<text x="400" y="2168" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="500" y="2168" fill="#1f2328" text-anchor="end">1.9 µs</text>
-<text x="620" y="2168" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2168" fill="#1f2328" text-anchor="end">2.6 µs</text>
+<text x="500" y="2168" fill="#1f2328" text-anchor="end">3.5 µs</text>
+<text x="620" y="2168" fill="#cf222e" text-anchor="end">+52.0%</text>
 <rect x="8" y="2176" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2192" fill="#1f2328">entities-identity-churn-50.large/compose/steady</text>
-<text x="400" y="2192" fill="#1f2328" text-anchor="end">65.49 ms</text>
-<text x="500" y="2192" fill="#1f2328" text-anchor="end">74.65 ms</text>
-<text x="620" y="2192" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2192" fill="#1f2328" text-anchor="end">100.48 ms</text>
+<text x="500" y="2192" fill="#1f2328" text-anchor="end">107.46 ms</text>
+<text x="620" y="2192" fill="#cf222e" text-anchor="end">+53.4%</text>
 <text x="16" y="2216" fill="#1f2328">entities-identity-churn-50.large/compose/teardown</text>
-<text x="400" y="2216" fill="#1f2328" text-anchor="end">465.8 µs</text>
-<text x="500" y="2216" fill="#1f2328" text-anchor="end">693.0 µs</text>
-<text x="620" y="2216" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2216" fill="#1f2328" text-anchor="end">729.5 µs</text>
+<text x="500" y="2216" fill="#1f2328" text-anchor="end">1.23 ms</text>
+<text x="620" y="2216" fill="#cf222e" text-anchor="end">+56.6%</text>
 <rect x="8" y="2224" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2240" fill="#1f2328">entities-identity-churn-50.medium/compose/burst</text>
-<text x="400" y="2240" fill="#1f2328" text-anchor="end">7.36 ms</text>
-<text x="500" y="2240" fill="#1f2328" text-anchor="end">10.94 ms</text>
-<text x="620" y="2240" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2240" fill="#1f2328" text-anchor="end">9.36 ms</text>
+<text x="500" y="2240" fill="#1f2328" text-anchor="end">12.02 ms</text>
+<text x="620" y="2240" fill="#cf222e" text-anchor="end">+27.2%</text>
 <text x="16" y="2264" fill="#1f2328">entities-identity-churn-50.medium/compose/cold</text>
-<text x="400" y="2264" fill="#1f2328" text-anchor="end">5.22 ms</text>
-<text x="500" y="2264" fill="#1f2328" text-anchor="end">10.27 ms</text>
-<text x="620" y="2264" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2264" fill="#1f2328" text-anchor="end">8.08 ms</text>
+<text x="500" y="2264" fill="#1f2328" text-anchor="end">13.75 ms</text>
+<text x="620" y="2264" fill="#cf222e" text-anchor="end">+54.8%</text>
 <rect x="8" y="2272" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2288" fill="#1f2328">entities-identity-churn-50.medium/compose/counts</text>
-<text x="400" y="2288" fill="#1f2328" text-anchor="end">53.77 ms</text>
-<text x="500" y="2288" fill="#1f2328" text-anchor="end">53.77 ms</text>
-<text x="620" y="2288" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2288" fill="#1f2328" text-anchor="end">72.92 ms</text>
+<text x="500" y="2288" fill="#1f2328" text-anchor="end">72.92 ms</text>
+<text x="620" y="2288" fill="#cf222e" text-anchor="end">+35.6%</text>
 <text x="16" y="2312" fill="#1f2328">entities-identity-churn-50.medium/compose/settle</text>
-<text x="400" y="2312" fill="#1f2328" text-anchor="end">1.0 µs</text>
-<text x="500" y="2312" fill="#1f2328" text-anchor="end">1.3 µs</text>
-<text x="620" y="2312" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2312" fill="#1f2328" text-anchor="end">1.3 µs</text>
+<text x="500" y="2312" fill="#1f2328" text-anchor="end">1.8 µs</text>
+<text x="620" y="2312" fill="#cf222e" text-anchor="end">+25.2%</text>
 <rect x="8" y="2320" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2336" fill="#1f2328">entities-identity-churn-50.medium/compose/steady</text>
-<text x="400" y="2336" fill="#1f2328" text-anchor="end">24.17 ms</text>
-<text x="500" y="2336" fill="#1f2328" text-anchor="end">28.81 ms</text>
-<text x="620" y="2336" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2336" fill="#1f2328" text-anchor="end">29.08 ms</text>
+<text x="500" y="2336" fill="#1f2328" text-anchor="end">37.99 ms</text>
+<text x="620" y="2336" fill="#cf222e" text-anchor="end">+20.3%</text>
 <text x="16" y="2360" fill="#1f2328">entities-identity-churn-50.medium/compose/teardown</text>
-<text x="400" y="2360" fill="#1f2328" text-anchor="end">206.6 µs</text>
-<text x="500" y="2360" fill="#1f2328" text-anchor="end">220.8 µs</text>
-<text x="620" y="2360" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2360" fill="#1f2328" text-anchor="end">265.4 µs</text>
+<text x="500" y="2360" fill="#1f2328" text-anchor="end">293.6 µs</text>
+<text x="620" y="2360" fill="#cf222e" text-anchor="end">+28.5%</text>
 <rect x="8" y="2368" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2384" fill="#1f2328">entities-identity-churn.extreme/compose/burst</text>
-<text x="400" y="2384" fill="#1f2328" text-anchor="end">67.90 ms</text>
-<text x="500" y="2384" fill="#1f2328" text-anchor="end">96.22 ms</text>
-<text x="620" y="2384" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2384" fill="#1f2328" text-anchor="end">40.48 ms</text>
+<text x="500" y="2384" fill="#1f2328" text-anchor="end">70.11 ms</text>
+<text x="620" y="2384" fill="#1a7f37" text-anchor="end">-40.4%</text>
 <text x="16" y="2408" fill="#1f2328">entities-identity-churn.extreme/compose/cold</text>
-<text x="400" y="2408" fill="#1f2328" text-anchor="end">43.44 ms</text>
-<text x="500" y="2408" fill="#1f2328" text-anchor="end">51.76 ms</text>
-<text x="620" y="2408" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2408" fill="#1f2328" text-anchor="end">23.19 ms</text>
+<text x="500" y="2408" fill="#1f2328" text-anchor="end">38.90 ms</text>
+<text x="620" y="2408" fill="#1a7f37" text-anchor="end">-46.6%</text>
 <rect x="8" y="2416" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2432" fill="#1f2328">entities-identity-churn.extreme/compose/counts</text>
-<text x="400" y="2432" fill="#1f2328" text-anchor="end">322.09 ms</text>
-<text x="500" y="2432" fill="#1f2328" text-anchor="end">322.09 ms</text>
-<text x="620" y="2432" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2432" fill="#1f2328" text-anchor="end">155.08 ms</text>
+<text x="500" y="2432" fill="#1f2328" text-anchor="end">155.08 ms</text>
+<text x="620" y="2432" fill="#1a7f37" text-anchor="end">-51.9%</text>
 <text x="16" y="2456" fill="#1f2328">entities-identity-churn.extreme/compose/settle</text>
-<text x="400" y="2456" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="500" y="2456" fill="#1f2328" text-anchor="end">2.5 µs</text>
-<text x="620" y="2456" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2456" fill="#1f2328" text-anchor="end">2.0 µs</text>
+<text x="500" y="2456" fill="#1f2328" text-anchor="end">2.8 µs</text>
+<text x="620" y="2456" fill="#1a7f37" text-anchor="end">-8.3%</text>
 <rect x="8" y="2464" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2480" fill="#1f2328">entities-identity-churn.extreme/compose/steady</text>
-<text x="400" y="2480" fill="#1f2328" text-anchor="end">168.29 ms</text>
-<text x="500" y="2480" fill="#1f2328" text-anchor="end">196.12 ms</text>
-<text x="620" y="2480" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2480" fill="#1f2328" text-anchor="end">78.04 ms</text>
+<text x="500" y="2480" fill="#1f2328" text-anchor="end">93.33 ms</text>
+<text x="620" y="2480" fill="#1a7f37" text-anchor="end">-53.6%</text>
 <text x="16" y="2504" fill="#1f2328">entities-identity-churn.extreme/compose/teardown</text>
-<text x="400" y="2504" fill="#1f2328" text-anchor="end">1.92 ms</text>
-<text x="500" y="2504" fill="#1f2328" text-anchor="end">2.32 ms</text>
-<text x="620" y="2504" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2504" fill="#1f2328" text-anchor="end">1.08 ms</text>
+<text x="500" y="2504" fill="#1f2328" text-anchor="end">1.44 ms</text>
+<text x="620" y="2504" fill="#1a7f37" text-anchor="end">-43.6%</text>
 <rect x="8" y="2512" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2528" fill="#1f2328">entities-identity-churn.large/compose/burst</text>
-<text x="400" y="2528" fill="#1f2328" text-anchor="end">15.20 ms</text>
-<text x="500" y="2528" fill="#1f2328" text-anchor="end">25.77 ms</text>
-<text x="620" y="2528" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2528" fill="#1f2328" text-anchor="end">12.82 ms</text>
+<text x="500" y="2528" fill="#1f2328" text-anchor="end">23.71 ms</text>
+<text x="620" y="2528" fill="#1a7f37" text-anchor="end">-15.7%</text>
 <text x="16" y="2552" fill="#1f2328">entities-identity-churn.large/compose/cold</text>
-<text x="400" y="2552" fill="#1f2328" text-anchor="end">14.41 ms</text>
-<text x="500" y="2552" fill="#1f2328" text-anchor="end">20.32 ms</text>
-<text x="620" y="2552" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2552" fill="#1f2328" text-anchor="end">10.03 ms</text>
+<text x="500" y="2552" fill="#1f2328" text-anchor="end">15.61 ms</text>
+<text x="620" y="2552" fill="#1a7f37" text-anchor="end">-30.4%</text>
 <rect x="8" y="2560" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2576" fill="#1f2328">entities-identity-churn.large/compose/counts</text>
-<text x="400" y="2576" fill="#1f2328" text-anchor="end">94.81 ms</text>
-<text x="500" y="2576" fill="#1f2328" text-anchor="end">94.81 ms</text>
-<text x="620" y="2576" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2576" fill="#1f2328" text-anchor="end">66.05 ms</text>
+<text x="500" y="2576" fill="#1f2328" text-anchor="end">66.05 ms</text>
+<text x="620" y="2576" fill="#1a7f37" text-anchor="end">-30.3%</text>
 <text x="16" y="2600" fill="#1f2328">entities-identity-churn.large/compose/settle</text>
-<text x="400" y="2600" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="500" y="2600" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="620" y="2600" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2600" fill="#1f2328" text-anchor="end">2.1 µs</text>
+<text x="500" y="2600" fill="#1f2328" text-anchor="end">2.8 µs</text>
+<text x="620" y="2600" fill="#cf222e" text-anchor="end">+25.1%</text>
 <rect x="8" y="2608" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2624" fill="#1f2328">entities-identity-churn.large/compose/steady</text>
-<text x="400" y="2624" fill="#1f2328" text-anchor="end">42.87 ms</text>
-<text x="500" y="2624" fill="#1f2328" text-anchor="end">52.64 ms</text>
-<text x="620" y="2624" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2624" fill="#1f2328" text-anchor="end">30.47 ms</text>
+<text x="500" y="2624" fill="#1f2328" text-anchor="end">34.14 ms</text>
+<text x="620" y="2624" fill="#1a7f37" text-anchor="end">-28.9%</text>
 <text x="16" y="2648" fill="#1f2328">entities-identity-churn.large/compose/teardown</text>
-<text x="400" y="2648" fill="#1f2328" text-anchor="end">421.7 µs</text>
-<text x="500" y="2648" fill="#1f2328" text-anchor="end">525.4 µs</text>
-<text x="620" y="2648" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2648" fill="#1f2328" text-anchor="end">347.3 µs</text>
+<text x="500" y="2648" fill="#1f2328" text-anchor="end">539.4 µs</text>
+<text x="620" y="2648" fill="#1a7f37" text-anchor="end">-17.6%</text>
 <rect x="8" y="2656" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2672" fill="#1f2328">entities-identity-churn.medium/compose/burst</text>
-<text x="400" y="2672" fill="#1f2328" text-anchor="end">9.27 ms</text>
-<text x="500" y="2672" fill="#1f2328" text-anchor="end">11.72 ms</text>
-<text x="620" y="2672" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2672" fill="#1f2328" text-anchor="end">6.21 ms</text>
+<text x="500" y="2672" fill="#1f2328" text-anchor="end">10.79 ms</text>
+<text x="620" y="2672" fill="#1a7f37" text-anchor="end">-33.0%</text>
 <text x="16" y="2696" fill="#1f2328">entities-identity-churn.medium/compose/cold</text>
-<text x="400" y="2696" fill="#1f2328" text-anchor="end">6.18 ms</text>
-<text x="500" y="2696" fill="#1f2328" text-anchor="end">9.84 ms</text>
-<text x="620" y="2696" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2696" fill="#1f2328" text-anchor="end">5.20 ms</text>
+<text x="500" y="2696" fill="#1f2328" text-anchor="end">7.62 ms</text>
+<text x="620" y="2696" fill="#1a7f37" text-anchor="end">-15.8%</text>
 <rect x="8" y="2704" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2720" fill="#1f2328">entities-identity-churn.medium/compose/counts</text>
-<text x="400" y="2720" fill="#1f2328" text-anchor="end">48.43 ms</text>
-<text x="500" y="2720" fill="#1f2328" text-anchor="end">48.43 ms</text>
-<text x="620" y="2720" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2720" fill="#1f2328" text-anchor="end">24.55 ms</text>
+<text x="500" y="2720" fill="#1f2328" text-anchor="end">24.55 ms</text>
+<text x="620" y="2720" fill="#1a7f37" text-anchor="end">-49.3%</text>
 <text x="16" y="2744" fill="#1f2328">entities-identity-churn.medium/compose/settle</text>
-<text x="400" y="2744" fill="#1f2328" text-anchor="end">1.8 µs</text>
-<text x="500" y="2744" fill="#1f2328" text-anchor="end">2.5 µs</text>
-<text x="620" y="2744" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2744" fill="#1f2328" text-anchor="end">1.7 µs</text>
+<text x="500" y="2744" fill="#1f2328" text-anchor="end">2.0 µs</text>
+<text x="620" y="2744" fill="#1a7f37" text-anchor="end">-5.2%</text>
 <rect x="8" y="2752" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2768" fill="#1f2328">entities-identity-churn.medium/compose/steady</text>
-<text x="400" y="2768" fill="#1f2328" text-anchor="end">18.97 ms</text>
-<text x="500" y="2768" fill="#1f2328" text-anchor="end">26.49 ms</text>
-<text x="620" y="2768" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2768" fill="#1f2328" text-anchor="end">11.14 ms</text>
+<text x="500" y="2768" fill="#1f2328" text-anchor="end">15.15 ms</text>
+<text x="620" y="2768" fill="#1a7f37" text-anchor="end">-41.2%</text>
 <text x="16" y="2792" fill="#1f2328">entities-identity-churn.medium/compose/teardown</text>
-<text x="400" y="2792" fill="#1f2328" text-anchor="end">266.7 µs</text>
-<text x="500" y="2792" fill="#1f2328" text-anchor="end">285.2 µs</text>
-<text x="620" y="2792" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2792" fill="#1f2328" text-anchor="end">172.8 µs</text>
+<text x="500" y="2792" fill="#1f2328" text-anchor="end">199.5 µs</text>
+<text x="620" y="2792" fill="#1a7f37" text-anchor="end">-35.2%</text>
 <rect x="8" y="2800" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2816" fill="#1f2328">entities-integrated.extreme/compose/burst</text>
-<text x="400" y="2816" fill="#1f2328" text-anchor="end">21.28 ms</text>
-<text x="500" y="2816" fill="#1f2328" text-anchor="end">28.27 ms</text>
-<text x="620" y="2816" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2816" fill="#1f2328" text-anchor="end">17.09 ms</text>
+<text x="500" y="2816" fill="#1f2328" text-anchor="end">22.59 ms</text>
+<text x="620" y="2816" fill="#1a7f37" text-anchor="end">-19.7%</text>
 <text x="16" y="2840" fill="#1f2328">entities-integrated.extreme/compose/cold</text>
-<text x="400" y="2840" fill="#1f2328" text-anchor="end">107.93 ms</text>
-<text x="500" y="2840" fill="#1f2328" text-anchor="end">166.39 ms</text>
-<text x="620" y="2840" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2840" fill="#1f2328" text-anchor="end">93.15 ms</text>
+<text x="500" y="2840" fill="#1f2328" text-anchor="end">138.95 ms</text>
+<text x="620" y="2840" fill="#1a7f37" text-anchor="end">-13.7%</text>
 <rect x="8" y="2848" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2864" fill="#1f2328">entities-integrated.extreme/compose/counts</text>
-<text x="400" y="2864" fill="#1f2328" text-anchor="end">345.88 ms</text>
-<text x="500" y="2864" fill="#1f2328" text-anchor="end">345.88 ms</text>
-<text x="620" y="2864" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2864" fill="#1f2328" text-anchor="end">271.17 ms</text>
+<text x="500" y="2864" fill="#1f2328" text-anchor="end">271.17 ms</text>
+<text x="620" y="2864" fill="#1a7f37" text-anchor="end">-21.6%</text>
 <text x="16" y="2888" fill="#1f2328">entities-integrated.extreme/compose/settle</text>
-<text x="400" y="2888" fill="#1f2328" text-anchor="end">1.8 µs</text>
-<text x="500" y="2888" fill="#1f2328" text-anchor="end">2.6 µs</text>
-<text x="620" y="2888" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2888" fill="#1f2328" text-anchor="end">2.2 µs</text>
+<text x="500" y="2888" fill="#1f2328" text-anchor="end">2.9 µs</text>
+<text x="620" y="2888" fill="#cf222e" text-anchor="end">+22.5%</text>
 <rect x="8" y="2896" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2912" fill="#1f2328">entities-integrated.extreme/compose/steady</text>
-<text x="400" y="2912" fill="#1f2328" text-anchor="end">112.06 ms</text>
-<text x="500" y="2912" fill="#1f2328" text-anchor="end">132.82 ms</text>
-<text x="620" y="2912" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2912" fill="#1f2328" text-anchor="end">90.77 ms</text>
+<text x="500" y="2912" fill="#1f2328" text-anchor="end">112.14 ms</text>
+<text x="620" y="2912" fill="#1a7f37" text-anchor="end">-19.0%</text>
 <text x="16" y="2936" fill="#1f2328">entities-integrated.extreme/compose/teardown</text>
-<text x="400" y="2936" fill="#1f2328" text-anchor="end">33.24 ms</text>
-<text x="500" y="2936" fill="#1f2328" text-anchor="end">41.73 ms</text>
-<text x="620" y="2936" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2936" fill="#1f2328" text-anchor="end">38.55 ms</text>
+<text x="500" y="2936" fill="#1f2328" text-anchor="end">56.09 ms</text>
+<text x="620" y="2936" fill="#cf222e" text-anchor="end">+16.0%</text>
 <rect x="8" y="2944" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="2960" fill="#1f2328">entities-integrated.large/compose/burst</text>
-<text x="400" y="2960" fill="#1f2328" text-anchor="end">8.72 ms</text>
-<text x="500" y="2960" fill="#1f2328" text-anchor="end">11.58 ms</text>
-<text x="620" y="2960" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2960" fill="#1f2328" text-anchor="end">10.51 ms</text>
+<text x="500" y="2960" fill="#1f2328" text-anchor="end">14.90 ms</text>
+<text x="620" y="2960" fill="#cf222e" text-anchor="end">+20.6%</text>
 <text x="16" y="2984" fill="#1f2328">entities-integrated.large/compose/cold</text>
-<text x="400" y="2984" fill="#1f2328" text-anchor="end">35.33 ms</text>
-<text x="500" y="2984" fill="#1f2328" text-anchor="end">47.70 ms</text>
-<text x="620" y="2984" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="2984" fill="#1f2328" text-anchor="end">46.56 ms</text>
+<text x="500" y="2984" fill="#1f2328" text-anchor="end">58.66 ms</text>
+<text x="620" y="2984" fill="#cf222e" text-anchor="end">+31.8%</text>
 <rect x="8" y="2992" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3008" fill="#1f2328">entities-integrated.large/compose/counts</text>
-<text x="400" y="3008" fill="#1f2328" text-anchor="end">127.89 ms</text>
-<text x="500" y="3008" fill="#1f2328" text-anchor="end">127.89 ms</text>
-<text x="620" y="3008" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3008" fill="#1f2328" text-anchor="end">165.42 ms</text>
+<text x="500" y="3008" fill="#1f2328" text-anchor="end">165.42 ms</text>
+<text x="620" y="3008" fill="#cf222e" text-anchor="end">+29.3%</text>
 <text x="16" y="3032" fill="#1f2328">entities-integrated.large/compose/settle</text>
-<text x="400" y="3032" fill="#1f2328" text-anchor="end">1.4 µs</text>
-<text x="500" y="3032" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="620" y="3032" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3032" fill="#1f2328" text-anchor="end">1.6 µs</text>
+<text x="500" y="3032" fill="#1f2328" text-anchor="end">2.6 µs</text>
+<text x="620" y="3032" fill="#cf222e" text-anchor="end">+14.0%</text>
 <rect x="8" y="3040" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3056" fill="#1f2328">entities-integrated.large/compose/steady</text>
-<text x="400" y="3056" fill="#1f2328" text-anchor="end">42.27 ms</text>
-<text x="500" y="3056" fill="#1f2328" text-anchor="end">51.10 ms</text>
-<text x="620" y="3056" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3056" fill="#1f2328" text-anchor="end">58.99 ms</text>
+<text x="500" y="3056" fill="#1f2328" text-anchor="end">73.86 ms</text>
+<text x="620" y="3056" fill="#cf222e" text-anchor="end">+39.5%</text>
 <text x="16" y="3080" fill="#1f2328">entities-integrated.large/compose/teardown</text>
-<text x="400" y="3080" fill="#1f2328" text-anchor="end">9.38 ms</text>
-<text x="500" y="3080" fill="#1f2328" text-anchor="end">11.03 ms</text>
-<text x="620" y="3080" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3080" fill="#1f2328" text-anchor="end">11.68 ms</text>
+<text x="500" y="3080" fill="#1f2328" text-anchor="end">12.56 ms</text>
+<text x="620" y="3080" fill="#cf222e" text-anchor="end">+24.4%</text>
 <rect x="8" y="3088" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3104" fill="#1f2328">entities-integrated.medium/compose/burst</text>
-<text x="400" y="3104" fill="#1f2328" text-anchor="end">8.06 ms</text>
-<text x="500" y="3104" fill="#1f2328" text-anchor="end">10.63 ms</text>
-<text x="620" y="3104" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3104" fill="#1f2328" text-anchor="end">5.41 ms</text>
+<text x="500" y="3104" fill="#1f2328" text-anchor="end">9.66 ms</text>
+<text x="620" y="3104" fill="#1a7f37" text-anchor="end">-32.9%</text>
 <text x="16" y="3128" fill="#1f2328">entities-integrated.medium/compose/cold</text>
-<text x="400" y="3128" fill="#1f2328" text-anchor="end">23.64 ms</text>
-<text x="500" y="3128" fill="#1f2328" text-anchor="end">32.73 ms</text>
-<text x="620" y="3128" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3128" fill="#1f2328" text-anchor="end">18.35 ms</text>
+<text x="500" y="3128" fill="#1f2328" text-anchor="end">26.78 ms</text>
+<text x="620" y="3128" fill="#1a7f37" text-anchor="end">-22.4%</text>
 <rect x="8" y="3136" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3152" fill="#1f2328">entities-integrated.medium/compose/counts</text>
-<text x="400" y="3152" fill="#1f2328" text-anchor="end">92.32 ms</text>
-<text x="500" y="3152" fill="#1f2328" text-anchor="end">92.32 ms</text>
-<text x="620" y="3152" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3152" fill="#1f2328" text-anchor="end">67.52 ms</text>
+<text x="500" y="3152" fill="#1f2328" text-anchor="end">67.52 ms</text>
+<text x="620" y="3152" fill="#1a7f37" text-anchor="end">-26.9%</text>
 <text x="16" y="3176" fill="#1f2328">entities-integrated.medium/compose/settle</text>
-<text x="400" y="3176" fill="#1f2328" text-anchor="end">1.6 µs</text>
-<text x="500" y="3176" fill="#1f2328" text-anchor="end">1.9 µs</text>
-<text x="620" y="3176" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3176" fill="#1f2328" text-anchor="end">2.1 µs</text>
+<text x="500" y="3176" fill="#1f2328" text-anchor="end">2.6 µs</text>
+<text x="620" y="3176" fill="#cf222e" text-anchor="end">+29.3%</text>
 <rect x="8" y="3184" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3200" fill="#1f2328">entities-integrated.medium/compose/steady</text>
-<text x="400" y="3200" fill="#1f2328" text-anchor="end">39.85 ms</text>
-<text x="500" y="3200" fill="#1f2328" text-anchor="end">50.55 ms</text>
-<text x="620" y="3200" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3200" fill="#1f2328" text-anchor="end">29.94 ms</text>
+<text x="500" y="3200" fill="#1f2328" text-anchor="end">35.80 ms</text>
+<text x="620" y="3200" fill="#1a7f37" text-anchor="end">-24.9%</text>
 <text x="16" y="3224" fill="#1f2328">entities-integrated.medium/compose/teardown</text>
-<text x="400" y="3224" fill="#1f2328" text-anchor="end">6.11 ms</text>
-<text x="500" y="3224" fill="#1f2328" text-anchor="end">6.68 ms</text>
-<text x="620" y="3224" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3224" fill="#1f2328" text-anchor="end">6.49 ms</text>
+<text x="500" y="3224" fill="#1f2328" text-anchor="end">8.84 ms</text>
+<text x="620" y="3224" fill="#cf222e" text-anchor="end">+6.2%</text>
 <rect x="8" y="3232" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3248" fill="#1f2328">entities-relevance-saturated.extreme/compose/burst</text>
-<text x="400" y="3248" fill="#1f2328" text-anchor="end">95.06 ms</text>
-<text x="500" y="3248" fill="#1f2328" text-anchor="end">107.37 ms</text>
-<text x="620" y="3248" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3248" fill="#1f2328" text-anchor="end">94.07 ms</text>
+<text x="500" y="3248" fill="#1f2328" text-anchor="end">117.98 ms</text>
+<text x="620" y="3248" fill="#1a7f37" text-anchor="end">-1.0%</text>
 <text x="16" y="3272" fill="#1f2328">entities-relevance-saturated.extreme/compose/cold</text>
-<text x="400" y="3272" fill="#1f2328" text-anchor="end">30.59 ms</text>
-<text x="500" y="3272" fill="#1f2328" text-anchor="end">48.42 ms</text>
-<text x="620" y="3272" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3272" fill="#1f2328" text-anchor="end">22.23 ms</text>
+<text x="500" y="3272" fill="#1f2328" text-anchor="end">49.60 ms</text>
+<text x="620" y="3272" fill="#1a7f37" text-anchor="end">-27.3%</text>
 <rect x="8" y="3280" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3296" fill="#1f2328">entities-relevance-saturated.extreme/compose/counts</text>
-<text x="400" y="3296" fill="#1f2328" text-anchor="end">228.81 ms</text>
-<text x="500" y="3296" fill="#1f2328" text-anchor="end">228.81 ms</text>
-<text x="620" y="3296" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3296" fill="#1f2328" text-anchor="end">211.00 ms</text>
+<text x="500" y="3296" fill="#1f2328" text-anchor="end">211.00 ms</text>
+<text x="620" y="3296" fill="#1a7f37" text-anchor="end">-7.8%</text>
 <text x="16" y="3320" fill="#1f2328">entities-relevance-saturated.extreme/compose/settle</text>
-<text x="400" y="3320" fill="#1f2328" text-anchor="end">2.0 µs</text>
-<text x="500" y="3320" fill="#1f2328" text-anchor="end">2.9 µs</text>
-<text x="620" y="3320" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3320" fill="#1f2328" text-anchor="end">2.8 µs</text>
+<text x="500" y="3320" fill="#1f2328" text-anchor="end">3.5 µs</text>
+<text x="620" y="3320" fill="#cf222e" text-anchor="end">+37.2%</text>
 <rect x="8" y="3328" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3344" fill="#1f2328">entities-relevance-saturated.extreme/compose/steady</text>
-<text x="400" y="3344" fill="#1f2328" text-anchor="end">56.51 ms</text>
-<text x="500" y="3344" fill="#1f2328" text-anchor="end">101.28 ms</text>
-<text x="620" y="3344" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3344" fill="#1f2328" text-anchor="end">52.16 ms</text>
+<text x="500" y="3344" fill="#1f2328" text-anchor="end">81.07 ms</text>
+<text x="620" y="3344" fill="#1a7f37" text-anchor="end">-7.7%</text>
 <text x="16" y="3368" fill="#1f2328">entities-relevance-saturated.extreme/compose/teardown</text>
-<text x="400" y="3368" fill="#1f2328" text-anchor="end">13.11 ms</text>
-<text x="500" y="3368" fill="#1f2328" text-anchor="end">15.07 ms</text>
-<text x="620" y="3368" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3368" fill="#1f2328" text-anchor="end">13.42 ms</text>
+<text x="500" y="3368" fill="#1f2328" text-anchor="end">14.55 ms</text>
+<text x="620" y="3368" fill="#cf222e" text-anchor="end">+2.3%</text>
 <rect x="8" y="3376" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3392" fill="#1f2328">entities-relevance-saturated.large/compose/burst</text>
-<text x="400" y="3392" fill="#1f2328" text-anchor="end">27.40 ms</text>
-<text x="500" y="3392" fill="#1f2328" text-anchor="end">42.40 ms</text>
-<text x="620" y="3392" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3392" fill="#1f2328" text-anchor="end">40.55 ms</text>
+<text x="500" y="3392" fill="#1f2328" text-anchor="end">52.27 ms</text>
+<text x="620" y="3392" fill="#cf222e" text-anchor="end">+48.0%</text>
 <text x="16" y="3416" fill="#1f2328">entities-relevance-saturated.large/compose/cold</text>
-<text x="400" y="3416" fill="#1f2328" text-anchor="end">11.95 ms</text>
-<text x="500" y="3416" fill="#1f2328" text-anchor="end">19.17 ms</text>
-<text x="620" y="3416" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3416" fill="#1f2328" text-anchor="end">12.45 ms</text>
+<text x="500" y="3416" fill="#1f2328" text-anchor="end">29.67 ms</text>
+<text x="620" y="3416" fill="#cf222e" text-anchor="end">+4.1%</text>
 <rect x="8" y="3424" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3440" fill="#1f2328">entities-relevance-saturated.large/compose/counts</text>
-<text x="400" y="3440" fill="#1f2328" text-anchor="end">100.42 ms</text>
-<text x="500" y="3440" fill="#1f2328" text-anchor="end">100.42 ms</text>
-<text x="620" y="3440" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3440" fill="#1f2328" text-anchor="end">101.70 ms</text>
+<text x="500" y="3440" fill="#1f2328" text-anchor="end">101.70 ms</text>
+<text x="620" y="3440" fill="#cf222e" text-anchor="end">+1.3%</text>
 <text x="16" y="3464" fill="#1f2328">entities-relevance-saturated.large/compose/settle</text>
-<text x="400" y="3464" fill="#1f2328" text-anchor="end">1.5 µs</text>
-<text x="500" y="3464" fill="#1f2328" text-anchor="end">2.1 µs</text>
-<text x="620" y="3464" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3464" fill="#1f2328" text-anchor="end">2.3 µs</text>
+<text x="500" y="3464" fill="#1f2328" text-anchor="end">3.5 µs</text>
+<text x="620" y="3464" fill="#cf222e" text-anchor="end">+49.6%</text>
 <rect x="8" y="3472" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3488" fill="#1f2328">entities-relevance-saturated.large/compose/steady</text>
-<text x="400" y="3488" fill="#1f2328" text-anchor="end">19.35 ms</text>
-<text x="500" y="3488" fill="#1f2328" text-anchor="end">33.82 ms</text>
-<text x="620" y="3488" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3488" fill="#1f2328" text-anchor="end">23.97 ms</text>
+<text x="500" y="3488" fill="#1f2328" text-anchor="end">35.11 ms</text>
+<text x="620" y="3488" fill="#cf222e" text-anchor="end">+23.9%</text>
 <text x="16" y="3512" fill="#1f2328">entities-relevance-saturated.large/compose/teardown</text>
-<text x="400" y="3512" fill="#1f2328" text-anchor="end">2.91 ms</text>
-<text x="500" y="3512" fill="#1f2328" text-anchor="end">3.11 ms</text>
-<text x="620" y="3512" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3512" fill="#1f2328" text-anchor="end">4.13 ms</text>
+<text x="500" y="3512" fill="#1f2328" text-anchor="end">4.56 ms</text>
+<text x="620" y="3512" fill="#cf222e" text-anchor="end">+42.3%</text>
 <rect x="8" y="3520" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3536" fill="#1f2328">entities-relevance-saturated.medium/compose/burst</text>
-<text x="400" y="3536" fill="#1f2328" text-anchor="end">13.88 ms</text>
-<text x="500" y="3536" fill="#1f2328" text-anchor="end">20.90 ms</text>
-<text x="620" y="3536" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3536" fill="#1f2328" text-anchor="end">10.18 ms</text>
+<text x="500" y="3536" fill="#1f2328" text-anchor="end">13.68 ms</text>
+<text x="620" y="3536" fill="#1a7f37" text-anchor="end">-26.7%</text>
 <text x="16" y="3560" fill="#1f2328">entities-relevance-saturated.medium/compose/cold</text>
-<text x="400" y="3560" fill="#1f2328" text-anchor="end">6.10 ms</text>
-<text x="500" y="3560" fill="#1f2328" text-anchor="end">12.07 ms</text>
-<text x="620" y="3560" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3560" fill="#1f2328" text-anchor="end">4.52 ms</text>
+<text x="500" y="3560" fill="#1f2328" text-anchor="end">9.41 ms</text>
+<text x="620" y="3560" fill="#1a7f37" text-anchor="end">-25.9%</text>
 <rect x="8" y="3568" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3584" fill="#1f2328">entities-relevance-saturated.medium/compose/counts</text>
-<text x="400" y="3584" fill="#1f2328" text-anchor="end">39.92 ms</text>
-<text x="500" y="3584" fill="#1f2328" text-anchor="end">39.92 ms</text>
-<text x="620" y="3584" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3584" fill="#1f2328" text-anchor="end">26.02 ms</text>
+<text x="500" y="3584" fill="#1f2328" text-anchor="end">26.02 ms</text>
+<text x="620" y="3584" fill="#1a7f37" text-anchor="end">-34.8%</text>
 <text x="16" y="3608" fill="#1f2328">entities-relevance-saturated.medium/compose/settle</text>
-<text x="400" y="3608" fill="#1f2328" text-anchor="end">1.3 µs</text>
-<text x="500" y="3608" fill="#1f2328" text-anchor="end">1.6 µs</text>
-<text x="620" y="3608" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3608" fill="#1f2328" text-anchor="end">1.8 µs</text>
+<text x="500" y="3608" fill="#1f2328" text-anchor="end">2.4 µs</text>
+<text x="620" y="3608" fill="#cf222e" text-anchor="end">+39.7%</text>
 <rect x="8" y="3616" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3632" fill="#1f2328">entities-relevance-saturated.medium/compose/steady</text>
-<text x="400" y="3632" fill="#1f2328" text-anchor="end">8.59 ms</text>
-<text x="500" y="3632" fill="#1f2328" text-anchor="end">13.06 ms</text>
-<text x="620" y="3632" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3632" fill="#1f2328" text-anchor="end">6.71 ms</text>
+<text x="500" y="3632" fill="#1f2328" text-anchor="end">12.06 ms</text>
+<text x="620" y="3632" fill="#1a7f37" text-anchor="end">-21.8%</text>
 <text x="16" y="3656" fill="#1f2328">entities-relevance-saturated.medium/compose/teardown</text>
-<text x="400" y="3656" fill="#1f2328" text-anchor="end">1.14 ms</text>
-<text x="500" y="3656" fill="#1f2328" text-anchor="end">1.26 ms</text>
-<text x="620" y="3656" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3656" fill="#1f2328" text-anchor="end">1.23 ms</text>
+<text x="500" y="3656" fill="#1f2328" text-anchor="end">1.48 ms</text>
+<text x="620" y="3656" fill="#cf222e" text-anchor="end">+8.6%</text>
 <rect x="8" y="3664" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3680" fill="#1f2328">entities-relevance-sweep.extreme/compose/burst</text>
-<text x="400" y="3680" fill="#1f2328" text-anchor="end">139.55 ms</text>
-<text x="500" y="3680" fill="#1f2328" text-anchor="end">174.61 ms</text>
-<text x="620" y="3680" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3680" fill="#1f2328" text-anchor="end">143.86 ms</text>
+<text x="500" y="3680" fill="#1f2328" text-anchor="end">172.97 ms</text>
+<text x="620" y="3680" fill="#cf222e" text-anchor="end">+3.1%</text>
 <text x="16" y="3704" fill="#1f2328">entities-relevance-sweep.extreme/compose/cold</text>
-<text x="400" y="3704" fill="#1f2328" text-anchor="end">37.48 ms</text>
-<text x="500" y="3704" fill="#1f2328" text-anchor="end">61.73 ms</text>
-<text x="620" y="3704" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3704" fill="#1f2328" text-anchor="end">26.81 ms</text>
+<text x="500" y="3704" fill="#1f2328" text-anchor="end">53.50 ms</text>
+<text x="620" y="3704" fill="#1a7f37" text-anchor="end">-28.5%</text>
 <rect x="8" y="3712" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3728" fill="#1f2328">entities-relevance-sweep.extreme/compose/counts</text>
-<text x="400" y="3728" fill="#1f2328" text-anchor="end">453.94 ms</text>
-<text x="500" y="3728" fill="#1f2328" text-anchor="end">453.94 ms</text>
-<text x="620" y="3728" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3728" fill="#1f2328" text-anchor="end">363.60 ms</text>
+<text x="500" y="3728" fill="#1f2328" text-anchor="end">363.60 ms</text>
+<text x="620" y="3728" fill="#1a7f37" text-anchor="end">-19.9%</text>
 <text x="16" y="3752" fill="#1f2328">entities-relevance-sweep.extreme/compose/settle</text>
-<text x="400" y="3752" fill="#1f2328" text-anchor="end">2.0 µs</text>
-<text x="500" y="3752" fill="#1f2328" text-anchor="end">2.9 µs</text>
-<text x="620" y="3752" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3752" fill="#1f2328" text-anchor="end">2.9 µs</text>
+<text x="500" y="3752" fill="#1f2328" text-anchor="end">4.0 µs</text>
+<text x="620" y="3752" fill="#cf222e" text-anchor="end">+44.5%</text>
 <rect x="8" y="3760" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3776" fill="#1f2328">entities-relevance-sweep.extreme/compose/steady</text>
-<text x="400" y="3776" fill="#1f2328" text-anchor="end">149.43 ms</text>
-<text x="500" y="3776" fill="#1f2328" text-anchor="end">171.74 ms</text>
-<text x="620" y="3776" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3776" fill="#1f2328" text-anchor="end">140.86 ms</text>
+<text x="500" y="3776" fill="#1f2328" text-anchor="end">154.76 ms</text>
+<text x="620" y="3776" fill="#1a7f37" text-anchor="end">-5.7%</text>
 <text x="16" y="3800" fill="#1f2328">entities-relevance-sweep.extreme/compose/teardown</text>
-<text x="400" y="3800" fill="#1f2328" text-anchor="end">13.49 ms</text>
-<text x="500" y="3800" fill="#1f2328" text-anchor="end">14.59 ms</text>
-<text x="620" y="3800" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3800" fill="#1f2328" text-anchor="end">13.81 ms</text>
+<text x="500" y="3800" fill="#1f2328" text-anchor="end">14.78 ms</text>
+<text x="620" y="3800" fill="#cf222e" text-anchor="end">+2.3%</text>
 <rect x="8" y="3808" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3824" fill="#1f2328">entities-relevance-sweep.large/compose/burst</text>
-<text x="400" y="3824" fill="#1f2328" text-anchor="end">64.37 ms</text>
-<text x="500" y="3824" fill="#1f2328" text-anchor="end">76.52 ms</text>
-<text x="620" y="3824" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3824" fill="#1f2328" text-anchor="end">33.31 ms</text>
+<text x="500" y="3824" fill="#1f2328" text-anchor="end">44.77 ms</text>
+<text x="620" y="3824" fill="#1a7f37" text-anchor="end">-48.2%</text>
 <text x="16" y="3848" fill="#1f2328">entities-relevance-sweep.large/compose/cold</text>
-<text x="400" y="3848" fill="#1f2328" text-anchor="end">12.51 ms</text>
-<text x="500" y="3848" fill="#1f2328" text-anchor="end">26.70 ms</text>
-<text x="620" y="3848" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3848" fill="#1f2328" text-anchor="end">8.06 ms</text>
+<text x="500" y="3848" fill="#1f2328" text-anchor="end">15.99 ms</text>
+<text x="620" y="3848" fill="#1a7f37" text-anchor="end">-35.6%</text>
 <rect x="8" y="3856" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3872" fill="#1f2328">entities-relevance-sweep.large/compose/counts</text>
-<text x="400" y="3872" fill="#1f2328" text-anchor="end">187.16 ms</text>
-<text x="500" y="3872" fill="#1f2328" text-anchor="end">187.16 ms</text>
-<text x="620" y="3872" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3872" fill="#1f2328" text-anchor="end">84.45 ms</text>
+<text x="500" y="3872" fill="#1f2328" text-anchor="end">84.45 ms</text>
+<text x="620" y="3872" fill="#1a7f37" text-anchor="end">-54.9%</text>
 <text x="16" y="3896" fill="#1f2328">entities-relevance-sweep.large/compose/settle</text>
-<text x="400" y="3896" fill="#1f2328" text-anchor="end">2.3 µs</text>
-<text x="500" y="3896" fill="#1f2328" text-anchor="end">2.7 µs</text>
-<text x="620" y="3896" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3896" fill="#1f2328" text-anchor="end">1.9 µs</text>
+<text x="500" y="3896" fill="#1f2328" text-anchor="end">2.4 µs</text>
+<text x="620" y="3896" fill="#1a7f37" text-anchor="end">-16.9%</text>
 <rect x="8" y="3904" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3920" fill="#1f2328">entities-relevance-sweep.large/compose/steady</text>
-<text x="400" y="3920" fill="#1f2328" text-anchor="end">56.63 ms</text>
-<text x="500" y="3920" fill="#1f2328" text-anchor="end">71.20 ms</text>
-<text x="620" y="3920" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3920" fill="#1f2328" text-anchor="end">29.55 ms</text>
+<text x="500" y="3920" fill="#1f2328" text-anchor="end">41.81 ms</text>
+<text x="620" y="3920" fill="#1a7f37" text-anchor="end">-47.8%</text>
 <text x="16" y="3944" fill="#1f2328">entities-relevance-sweep.large/compose/teardown</text>
-<text x="400" y="3944" fill="#1f2328" text-anchor="end">3.92 ms</text>
-<text x="500" y="3944" fill="#1f2328" text-anchor="end">5.44 ms</text>
-<text x="620" y="3944" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3944" fill="#1f2328" text-anchor="end">2.64 ms</text>
+<text x="500" y="3944" fill="#1f2328" text-anchor="end">3.23 ms</text>
+<text x="620" y="3944" fill="#1a7f37" text-anchor="end">-32.7%</text>
 <rect x="8" y="3952" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="3968" fill="#1f2328">entities-relevance-sweep.medium/compose/burst</text>
-<text x="400" y="3968" fill="#1f2328" text-anchor="end">20.43 ms</text>
-<text x="500" y="3968" fill="#1f2328" text-anchor="end">28.29 ms</text>
-<text x="620" y="3968" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3968" fill="#1f2328" text-anchor="end">27.25 ms</text>
+<text x="500" y="3968" fill="#1f2328" text-anchor="end">37.47 ms</text>
+<text x="620" y="3968" fill="#cf222e" text-anchor="end">+33.3%</text>
 <text x="16" y="3992" fill="#1f2328">entities-relevance-sweep.medium/compose/cold</text>
-<text x="400" y="3992" fill="#1f2328" text-anchor="end">6.22 ms</text>
-<text x="500" y="3992" fill="#1f2328" text-anchor="end">13.02 ms</text>
-<text x="620" y="3992" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="3992" fill="#1f2328" text-anchor="end">7.65 ms</text>
+<text x="500" y="3992" fill="#1f2328" text-anchor="end">16.17 ms</text>
+<text x="620" y="3992" fill="#cf222e" text-anchor="end">+22.9%</text>
 <rect x="8" y="4000" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4016" fill="#1f2328">entities-relevance-sweep.medium/compose/counts</text>
-<text x="400" y="4016" fill="#1f2328" text-anchor="end">79.31 ms</text>
-<text x="500" y="4016" fill="#1f2328" text-anchor="end">79.31 ms</text>
-<text x="620" y="4016" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4016" fill="#1f2328" text-anchor="end">99.35 ms</text>
+<text x="500" y="4016" fill="#1f2328" text-anchor="end">99.35 ms</text>
+<text x="620" y="4016" fill="#cf222e" text-anchor="end">+25.3%</text>
 <text x="16" y="4040" fill="#1f2328">entities-relevance-sweep.medium/compose/settle</text>
-<text x="400" y="4040" fill="#1f2328" text-anchor="end">1.2 µs</text>
-<text x="500" y="4040" fill="#1f2328" text-anchor="end">2.5 µs</text>
-<text x="620" y="4040" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4040" fill="#1f2328" text-anchor="end">2.3 µs</text>
+<text x="500" y="4040" fill="#1f2328" text-anchor="end">3.0 µs</text>
+<text x="620" y="4040" fill="#cf222e" text-anchor="end">+95.7%</text>
 <rect x="8" y="4048" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4064" fill="#1f2328">entities-relevance-sweep.medium/compose/steady</text>
-<text x="400" y="4064" fill="#1f2328" text-anchor="end">21.06 ms</text>
-<text x="500" y="4064" fill="#1f2328" text-anchor="end">30.93 ms</text>
-<text x="620" y="4064" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4064" fill="#1f2328" text-anchor="end">29.69 ms</text>
+<text x="500" y="4064" fill="#1f2328" text-anchor="end">39.24 ms</text>
+<text x="620" y="4064" fill="#cf222e" text-anchor="end">+41.0%</text>
 <text x="16" y="4088" fill="#1f2328">entities-relevance-sweep.medium/compose/teardown</text>
-<text x="400" y="4088" fill="#1f2328" text-anchor="end">1.12 ms</text>
-<text x="500" y="4088" fill="#1f2328" text-anchor="end">1.84 ms</text>
-<text x="620" y="4088" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4088" fill="#1f2328" text-anchor="end">1.66 ms</text>
+<text x="500" y="4088" fill="#1f2328" text-anchor="end">2.50 ms</text>
+<text x="620" y="4088" fill="#cf222e" text-anchor="end">+48.4%</text>
 <rect x="8" y="4096" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4112" fill="#1f2328">entity-labels-sparse.extreme/compose/burst</text>
-<text x="400" y="4112" fill="#1f2328" text-anchor="end">55.18 ms</text>
-<text x="500" y="4112" fill="#1f2328" text-anchor="end">69.17 ms</text>
-<text x="620" y="4112" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4112" fill="#1f2328" text-anchor="end">21.14 ms</text>
+<text x="500" y="4112" fill="#1f2328" text-anchor="end">24.58 ms</text>
+<text x="620" y="4112" fill="#1a7f37" text-anchor="end">-61.7%</text>
 <text x="16" y="4136" fill="#1f2328">entity-labels-sparse.extreme/compose/cold</text>
-<text x="400" y="4136" fill="#1f2328" text-anchor="end">32.82 ms</text>
-<text x="500" y="4136" fill="#1f2328" text-anchor="end">46.22 ms</text>
-<text x="620" y="4136" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4136" fill="#1f2328" text-anchor="end">17.44 ms</text>
+<text x="500" y="4136" fill="#1f2328" text-anchor="end">24.64 ms</text>
+<text x="620" y="4136" fill="#1a7f37" text-anchor="end">-46.9%</text>
 <rect x="8" y="4144" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4160" fill="#1f2328">entity-labels-sparse.extreme/compose/counts</text>
-<text x="400" y="4160" fill="#1f2328" text-anchor="end">135.33 ms</text>
-<text x="500" y="4160" fill="#1f2328" text-anchor="end">135.33 ms</text>
-<text x="620" y="4160" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4160" fill="#1f2328" text-anchor="end">59.31 ms</text>
+<text x="500" y="4160" fill="#1f2328" text-anchor="end">59.31 ms</text>
+<text x="620" y="4160" fill="#1a7f37" text-anchor="end">-56.2%</text>
 <text x="16" y="4184" fill="#1f2328">entity-labels-sparse.extreme/compose/settle</text>
-<text x="400" y="4184" fill="#1f2328" text-anchor="end">2.6 µs</text>
-<text x="500" y="4184" fill="#1f2328" text-anchor="end">4.2 µs</text>
-<text x="620" y="4184" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4184" fill="#1f2328" text-anchor="end">1.7 µs</text>
+<text x="500" y="4184" fill="#1f2328" text-anchor="end">2.1 µs</text>
+<text x="620" y="4184" fill="#1a7f37" text-anchor="end">-33.0%</text>
 <rect x="8" y="4192" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4208" fill="#1f2328">entity-labels-sparse.extreme/compose/steady</text>
-<text x="400" y="4208" fill="#1f2328" text-anchor="end">5.92 ms</text>
-<text x="500" y="4208" fill="#1f2328" text-anchor="end">6.18 ms</text>
-<text x="620" y="4208" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4208" fill="#1f2328" text-anchor="end">2.64 ms</text>
+<text x="500" y="4208" fill="#1f2328" text-anchor="end">3.28 ms</text>
+<text x="620" y="4208" fill="#1a7f37" text-anchor="end">-55.5%</text>
 <text x="16" y="4232" fill="#1f2328">entity-labels-sparse.extreme/compose/teardown</text>
-<text x="400" y="4232" fill="#1f2328" text-anchor="end">15.69 ms</text>
-<text x="500" y="4232" fill="#1f2328" text-anchor="end">19.54 ms</text>
-<text x="620" y="4232" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4232" fill="#1f2328" text-anchor="end">7.76 ms</text>
+<text x="500" y="4232" fill="#1f2328" text-anchor="end">9.03 ms</text>
+<text x="620" y="4232" fill="#1a7f37" text-anchor="end">-50.5%</text>
 <rect x="8" y="4240" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4256" fill="#1f2328">entity-labels-sparse.large/compose/burst</text>
-<text x="400" y="4256" fill="#1f2328" text-anchor="end">17.00 ms</text>
-<text x="500" y="4256" fill="#1f2328" text-anchor="end">22.61 ms</text>
-<text x="620" y="4256" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4256" fill="#1f2328" text-anchor="end">10.27 ms</text>
+<text x="500" y="4256" fill="#1f2328" text-anchor="end">13.14 ms</text>
+<text x="620" y="4256" fill="#1a7f37" text-anchor="end">-39.6%</text>
 <text x="16" y="4280" fill="#1f2328">entity-labels-sparse.large/compose/cold</text>
-<text x="400" y="4280" fill="#1f2328" text-anchor="end">14.61 ms</text>
-<text x="500" y="4280" fill="#1f2328" text-anchor="end">22.06 ms</text>
-<text x="620" y="4280" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4280" fill="#1f2328" text-anchor="end">9.46 ms</text>
+<text x="500" y="4280" fill="#1f2328" text-anchor="end">14.86 ms</text>
+<text x="620" y="4280" fill="#1a7f37" text-anchor="end">-35.2%</text>
 <rect x="8" y="4288" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4304" fill="#1f2328">entity-labels-sparse.large/compose/counts</text>
-<text x="400" y="4304" fill="#1f2328" text-anchor="end">56.03 ms</text>
-<text x="500" y="4304" fill="#1f2328" text-anchor="end">56.03 ms</text>
-<text x="620" y="4304" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4304" fill="#1f2328" text-anchor="end">30.72 ms</text>
+<text x="500" y="4304" fill="#1f2328" text-anchor="end">30.72 ms</text>
+<text x="620" y="4304" fill="#1a7f37" text-anchor="end">-45.2%</text>
 <text x="16" y="4328" fill="#1f2328">entity-labels-sparse.large/compose/settle</text>
-<text x="400" y="4328" fill="#1f2328" text-anchor="end">2.0 µs</text>
-<text x="500" y="4328" fill="#1f2328" text-anchor="end">2.3 µs</text>
-<text x="620" y="4328" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4328" fill="#1f2328" text-anchor="end">1.2 µs</text>
+<text x="500" y="4328" fill="#1f2328" text-anchor="end">1.5 µs</text>
+<text x="620" y="4328" fill="#1a7f37" text-anchor="end">-39.0%</text>
 <rect x="8" y="4336" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4352" fill="#1f2328">entity-labels-sparse.large/compose/steady</text>
-<text x="400" y="4352" fill="#1f2328" text-anchor="end">2.40 ms</text>
-<text x="500" y="4352" fill="#1f2328" text-anchor="end">3.04 ms</text>
-<text x="620" y="4352" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4352" fill="#1f2328" text-anchor="end">1.41 ms</text>
+<text x="500" y="4352" fill="#1f2328" text-anchor="end">1.76 ms</text>
+<text x="620" y="4352" fill="#1a7f37" text-anchor="end">-41.5%</text>
 <text x="16" y="4376" fill="#1f2328">entity-labels-sparse.large/compose/teardown</text>
-<text x="400" y="4376" fill="#1f2328" text-anchor="end">4.51 ms</text>
-<text x="500" y="4376" fill="#1f2328" text-anchor="end">6.67 ms</text>
-<text x="620" y="4376" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4376" fill="#1f2328" text-anchor="end">2.93 ms</text>
+<text x="500" y="4376" fill="#1f2328" text-anchor="end">3.30 ms</text>
+<text x="620" y="4376" fill="#1a7f37" text-anchor="end">-35.0%</text>
 <rect x="8" y="4384" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4400" fill="#1f2328">entity-labels-sparse.medium/compose/burst</text>
-<text x="400" y="4400" fill="#1f2328" text-anchor="end">6.84 ms</text>
-<text x="500" y="4400" fill="#1f2328" text-anchor="end">9.09 ms</text>
-<text x="620" y="4400" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4400" fill="#1f2328" text-anchor="end">9.11 ms</text>
+<text x="500" y="4400" fill="#1f2328" text-anchor="end">12.81 ms</text>
+<text x="620" y="4400" fill="#cf222e" text-anchor="end">+33.1%</text>
 <text x="16" y="4424" fill="#1f2328">entity-labels-sparse.medium/compose/cold</text>
-<text x="400" y="4424" fill="#1f2328" text-anchor="end">6.07 ms</text>
-<text x="500" y="4424" fill="#1f2328" text-anchor="end">8.90 ms</text>
-<text x="620" y="4424" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4424" fill="#1f2328" text-anchor="end">5.75 ms</text>
+<text x="500" y="4424" fill="#1f2328" text-anchor="end">11.91 ms</text>
+<text x="620" y="4424" fill="#1a7f37" text-anchor="end">-5.3%</text>
 <rect x="8" y="4432" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4448" fill="#1f2328">entity-labels-sparse.medium/compose/counts</text>
-<text x="400" y="4448" fill="#1f2328" text-anchor="end">24.58 ms</text>
-<text x="500" y="4448" fill="#1f2328" text-anchor="end">24.58 ms</text>
-<text x="620" y="4448" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4448" fill="#1f2328" text-anchor="end">28.49 ms</text>
+<text x="500" y="4448" fill="#1f2328" text-anchor="end">28.49 ms</text>
+<text x="620" y="4448" fill="#cf222e" text-anchor="end">+15.9%</text>
 <text x="16" y="4472" fill="#1f2328">entity-labels-sparse.medium/compose/settle</text>
-<text x="400" y="4472" fill="#1f2328" text-anchor="end">0.9 µs</text>
-<text x="500" y="4472" fill="#1f2328" text-anchor="end">1.5 µs</text>
-<text x="620" y="4472" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4472" fill="#1f2328" text-anchor="end">2.3 µs</text>
+<text x="500" y="4472" fill="#1f2328" text-anchor="end">3.2 µs</text>
+<text x="620" y="4472" fill="#cf222e" text-anchor="end">+145.8%</text>
 <rect x="8" y="4480" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4496" fill="#1f2328">entity-labels-sparse.medium/compose/steady</text>
-<text x="400" y="4496" fill="#1f2328" text-anchor="end">968.2 µs</text>
-<text x="500" y="4496" fill="#1f2328" text-anchor="end">1.12 ms</text>
-<text x="620" y="4496" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4496" fill="#1f2328" text-anchor="end">1.68 ms</text>
+<text x="500" y="4496" fill="#1f2328" text-anchor="end">1.89 ms</text>
+<text x="620" y="4496" fill="#cf222e" text-anchor="end">+73.3%</text>
 <text x="16" y="4520" fill="#1f2328">entity-labels-sparse.medium/compose/teardown</text>
-<text x="400" y="4520" fill="#1f2328" text-anchor="end">1.29 ms</text>
-<text x="500" y="4520" fill="#1f2328" text-anchor="end">2.15 ms</text>
-<text x="620" y="4520" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4520" fill="#1f2328" text-anchor="end">1.94 ms</text>
+<text x="500" y="4520" fill="#1f2328" text-anchor="end">2.69 ms</text>
+<text x="620" y="4520" fill="#cf222e" text-anchor="end">+50.7%</text>
 <rect x="8" y="4528" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4544" fill="#1f2328">entity-labels.extreme/compose/burst</text>
-<text x="400" y="4544" fill="#1f2328" text-anchor="end">53.69 ms</text>
-<text x="500" y="4544" fill="#1f2328" text-anchor="end">65.81 ms</text>
-<text x="620" y="4544" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4544" fill="#1f2328" text-anchor="end">21.37 ms</text>
+<text x="500" y="4544" fill="#1f2328" text-anchor="end">27.94 ms</text>
+<text x="620" y="4544" fill="#1a7f37" text-anchor="end">-60.2%</text>
 <text x="16" y="4568" fill="#1f2328">entity-labels.extreme/compose/cold</text>
-<text x="400" y="4568" fill="#1f2328" text-anchor="end">42.54 ms</text>
-<text x="500" y="4568" fill="#1f2328" text-anchor="end">48.08 ms</text>
-<text x="620" y="4568" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4568" fill="#1f2328" text-anchor="end">18.79 ms</text>
+<text x="500" y="4568" fill="#1f2328" text-anchor="end">26.05 ms</text>
+<text x="620" y="4568" fill="#1a7f37" text-anchor="end">-55.8%</text>
 <rect x="8" y="4576" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4592" fill="#1f2328">entity-labels.extreme/compose/counts</text>
-<text x="400" y="4592" fill="#1f2328" text-anchor="end">210.74 ms</text>
-<text x="500" y="4592" fill="#1f2328" text-anchor="end">210.74 ms</text>
-<text x="620" y="4592" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4592" fill="#1f2328" text-anchor="end">102.01 ms</text>
+<text x="500" y="4592" fill="#1f2328" text-anchor="end">102.01 ms</text>
+<text x="620" y="4592" fill="#1a7f37" text-anchor="end">-51.6%</text>
 <text x="16" y="4616" fill="#1f2328">entity-labels.extreme/compose/settle</text>
-<text x="400" y="4616" fill="#1f2328" text-anchor="end">2.5 µs</text>
-<text x="500" y="4616" fill="#1f2328" text-anchor="end">4.9 µs</text>
-<text x="620" y="4616" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4616" fill="#1f2328" text-anchor="end">1.5 µs</text>
+<text x="500" y="4616" fill="#1f2328" text-anchor="end">2.0 µs</text>
+<text x="620" y="4616" fill="#1a7f37" text-anchor="end">-39.5%</text>
 <rect x="8" y="4624" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4640" fill="#1f2328">entity-labels.extreme/compose/steady</text>
-<text x="400" y="4640" fill="#1f2328" text-anchor="end">52.61 ms</text>
-<text x="500" y="4640" fill="#1f2328" text-anchor="end">60.03 ms</text>
-<text x="620" y="4640" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4640" fill="#1f2328" text-anchor="end">24.85 ms</text>
+<text x="500" y="4640" fill="#1f2328" text-anchor="end">25.66 ms</text>
+<text x="620" y="4640" fill="#1a7f37" text-anchor="end">-52.8%</text>
 <text x="16" y="4664" fill="#1f2328">entity-labels.extreme/compose/teardown</text>
-<text x="400" y="4664" fill="#1f2328" text-anchor="end">16.45 ms</text>
-<text x="500" y="4664" fill="#1f2328" text-anchor="end">18.19 ms</text>
-<text x="620" y="4664" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4664" fill="#1f2328" text-anchor="end">7.98 ms</text>
+<text x="500" y="4664" fill="#1f2328" text-anchor="end">10.00 ms</text>
+<text x="620" y="4664" fill="#1a7f37" text-anchor="end">-51.5%</text>
 <rect x="8" y="4672" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4688" fill="#1f2328">entity-labels.large/compose/burst</text>
-<text x="400" y="4688" fill="#1f2328" text-anchor="end">19.16 ms</text>
-<text x="500" y="4688" fill="#1f2328" text-anchor="end">20.87 ms</text>
-<text x="620" y="4688" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4688" fill="#1f2328" text-anchor="end">27.92 ms</text>
+<text x="500" y="4688" fill="#1f2328" text-anchor="end">36.27 ms</text>
+<text x="620" y="4688" fill="#cf222e" text-anchor="end">+45.7%</text>
 <text x="16" y="4712" fill="#1f2328">entity-labels.large/compose/cold</text>
-<text x="400" y="4712" fill="#1f2328" text-anchor="end">18.68 ms</text>
-<text x="500" y="4712" fill="#1f2328" text-anchor="end">22.33 ms</text>
-<text x="620" y="4712" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4712" fill="#1f2328" text-anchor="end">20.07 ms</text>
+<text x="500" y="4712" fill="#1f2328" text-anchor="end">24.28 ms</text>
+<text x="620" y="4712" fill="#cf222e" text-anchor="end">+7.4%</text>
 <rect x="8" y="4720" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4736" fill="#1f2328">entity-labels.large/compose/counts</text>
-<text x="400" y="4736" fill="#1f2328" text-anchor="end">91.91 ms</text>
-<text x="500" y="4736" fill="#1f2328" text-anchor="end">91.91 ms</text>
-<text x="620" y="4736" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4736" fill="#1f2328" text-anchor="end">114.13 ms</text>
+<text x="500" y="4736" fill="#1f2328" text-anchor="end">114.13 ms</text>
+<text x="620" y="4736" fill="#cf222e" text-anchor="end">+24.2%</text>
 <text x="16" y="4760" fill="#1f2328">entity-labels.large/compose/settle</text>
-<text x="400" y="4760" fill="#1f2328" text-anchor="end">1.2 µs</text>
-<text x="500" y="4760" fill="#1f2328" text-anchor="end">1.8 µs</text>
-<text x="620" y="4760" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4760" fill="#1f2328" text-anchor="end">2.6 µs</text>
+<text x="500" y="4760" fill="#1f2328" text-anchor="end">17.4 µs</text>
+<text x="620" y="4760" fill="#cf222e" text-anchor="end">+111.4%</text>
 <rect x="8" y="4768" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4784" fill="#1f2328">entity-labels.large/compose/steady</text>
-<text x="400" y="4784" fill="#1f2328" text-anchor="end">22.66 ms</text>
-<text x="500" y="4784" fill="#1f2328" text-anchor="end">23.82 ms</text>
-<text x="620" y="4784" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4784" fill="#1f2328" text-anchor="end">28.15 ms</text>
+<text x="500" y="4784" fill="#1f2328" text-anchor="end">32.41 ms</text>
+<text x="620" y="4784" fill="#cf222e" text-anchor="end">+24.2%</text>
 <text x="16" y="4808" fill="#1f2328">entity-labels.large/compose/teardown</text>
-<text x="400" y="4808" fill="#1f2328" text-anchor="end">4.11 ms</text>
-<text x="500" y="4808" fill="#1f2328" text-anchor="end">4.73 ms</text>
-<text x="620" y="4808" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4808" fill="#1f2328" text-anchor="end">6.44 ms</text>
+<text x="500" y="4808" fill="#1f2328" text-anchor="end">7.48 ms</text>
+<text x="620" y="4808" fill="#cf222e" text-anchor="end">+56.7%</text>
 <rect x="8" y="4816" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4832" fill="#1f2328">entity-labels.medium/compose/burst</text>
-<text x="400" y="4832" fill="#1f2328" text-anchor="end">6.41 ms</text>
-<text x="500" y="4832" fill="#1f2328" text-anchor="end">8.91 ms</text>
-<text x="620" y="4832" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4832" fill="#1f2328" text-anchor="end">7.92 ms</text>
+<text x="500" y="4832" fill="#1f2328" text-anchor="end">11.95 ms</text>
+<text x="620" y="4832" fill="#cf222e" text-anchor="end">+23.5%</text>
 <text x="16" y="4856" fill="#1f2328">entity-labels.medium/compose/cold</text>
-<text x="400" y="4856" fill="#1f2328" text-anchor="end">7.04 ms</text>
-<text x="500" y="4856" fill="#1f2328" text-anchor="end">7.97 ms</text>
-<text x="620" y="4856" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4856" fill="#1f2328" text-anchor="end">7.22 ms</text>
+<text x="500" y="4856" fill="#1f2328" text-anchor="end">12.37 ms</text>
+<text x="620" y="4856" fill="#cf222e" text-anchor="end">+2.6%</text>
 <rect x="8" y="4864" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4880" fill="#1f2328">entity-labels.medium/compose/counts</text>
-<text x="400" y="4880" fill="#1f2328" text-anchor="end">34.53 ms</text>
-<text x="500" y="4880" fill="#1f2328" text-anchor="end">34.53 ms</text>
-<text x="620" y="4880" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4880" fill="#1f2328" text-anchor="end">41.76 ms</text>
+<text x="500" y="4880" fill="#1f2328" text-anchor="end">41.76 ms</text>
+<text x="620" y="4880" fill="#cf222e" text-anchor="end">+20.9%</text>
 <text x="16" y="4904" fill="#1f2328">entity-labels.medium/compose/settle</text>
-<text x="400" y="4904" fill="#1f2328" text-anchor="end">0.9 µs</text>
-<text x="500" y="4904" fill="#1f2328" text-anchor="end">1.1 µs</text>
-<text x="620" y="4904" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4904" fill="#1f2328" text-anchor="end">2.2 µs</text>
+<text x="500" y="4904" fill="#1f2328" text-anchor="end">2.5 µs</text>
+<text x="620" y="4904" fill="#cf222e" text-anchor="end">+136.7%</text>
 <rect x="8" y="4912" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4928" fill="#1f2328">entity-labels.medium/compose/steady</text>
-<text x="400" y="4928" fill="#1f2328" text-anchor="end">9.63 ms</text>
-<text x="500" y="4928" fill="#1f2328" text-anchor="end">10.99 ms</text>
-<text x="620" y="4928" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4928" fill="#1f2328" text-anchor="end">11.48 ms</text>
+<text x="500" y="4928" fill="#1f2328" text-anchor="end">13.67 ms</text>
+<text x="620" y="4928" fill="#cf222e" text-anchor="end">+19.1%</text>
 <text x="16" y="4952" fill="#1f2328">entity-labels.medium/compose/teardown</text>
-<text x="400" y="4952" fill="#1f2328" text-anchor="end">1.34 ms</text>
-<text x="500" y="4952" fill="#1f2328" text-anchor="end">1.68 ms</text>
-<text x="620" y="4952" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4952" fill="#1f2328" text-anchor="end">2.01 ms</text>
+<text x="500" y="4952" fill="#1f2328" text-anchor="end">2.48 ms</text>
+<text x="620" y="4952" fill="#cf222e" text-anchor="end">+50.4%</text>
 <rect x="8" y="4960" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="4976" fill="#1f2328">events</text>
-<text x="400" y="4976" fill="#1f2328" text-anchor="end">12.82 ms</text>
-<text x="500" y="4976" fill="#1f2328" text-anchor="end">15.27 ms</text>
-<text x="620" y="4976" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="4976" fill="#1f2328" text-anchor="end">16.20 ms</text>
+<text x="500" y="4976" fill="#1f2328" text-anchor="end">19.50 ms</text>
+<text x="620" y="4976" fill="#cf222e" text-anchor="end">+26.4%</text>
 <text x="16" y="5000" fill="#1f2328">inspector.extreme/compose/burst</text>
-<text x="400" y="5000" fill="#1f2328" text-anchor="end">10.28 ms</text>
-<text x="500" y="5000" fill="#1f2328" text-anchor="end">10.65 ms</text>
-<text x="620" y="5000" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5000" fill="#1f2328" text-anchor="end">16.18 ms</text>
+<text x="500" y="5000" fill="#1f2328" text-anchor="end">18.34 ms</text>
+<text x="620" y="5000" fill="#cf222e" text-anchor="end">+57.4%</text>
 <rect x="8" y="5008" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5024" fill="#1f2328">inspector.extreme/compose/cold</text>
-<text x="400" y="5024" fill="#1f2328" text-anchor="end">26.25 ms</text>
-<text x="500" y="5024" fill="#1f2328" text-anchor="end">40.44 ms</text>
-<text x="620" y="5024" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5024" fill="#1f2328" text-anchor="end">32.78 ms</text>
+<text x="500" y="5024" fill="#1f2328" text-anchor="end">45.74 ms</text>
+<text x="620" y="5024" fill="#cf222e" text-anchor="end">+24.9%</text>
 <text x="16" y="5048" fill="#1f2328">inspector.extreme/compose/counts</text>
-<text x="400" y="5048" fill="#1f2328" text-anchor="end">42.79 ms</text>
-<text x="500" y="5048" fill="#1f2328" text-anchor="end">42.79 ms</text>
-<text x="620" y="5048" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5048" fill="#1f2328" text-anchor="end">50.58 ms</text>
+<text x="500" y="5048" fill="#1f2328" text-anchor="end">50.58 ms</text>
+<text x="620" y="5048" fill="#cf222e" text-anchor="end">+18.2%</text>
 <rect x="8" y="5056" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5072" fill="#1f2328">inspector.extreme/compose/settle</text>
-<text x="400" y="5072" fill="#1f2328" text-anchor="end">1.2 µs</text>
-<text x="500" y="5072" fill="#1f2328" text-anchor="end">1.4 µs</text>
-<text x="620" y="5072" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5072" fill="#1f2328" text-anchor="end">2.7 µs</text>
+<text x="500" y="5072" fill="#1f2328" text-anchor="end">4.2 µs</text>
+<text x="620" y="5072" fill="#cf222e" text-anchor="end">+136.5%</text>
 <text x="16" y="5096" fill="#1f2328">inspector.extreme/compose/steady</text>
-<text x="400" y="5096" fill="#1f2328" text-anchor="end">264.2 µs</text>
-<text x="500" y="5096" fill="#1f2328" text-anchor="end">328.4 µs</text>
-<text x="620" y="5096" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5096" fill="#1f2328" text-anchor="end">375.4 µs</text>
+<text x="500" y="5096" fill="#1f2328" text-anchor="end">423.2 µs</text>
+<text x="620" y="5096" fill="#cf222e" text-anchor="end">+42.1%</text>
 <rect x="8" y="5104" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5120" fill="#1f2328">inspector.extreme/compose/teardown</text>
-<text x="400" y="5120" fill="#1f2328" text-anchor="end">2.27 ms</text>
-<text x="500" y="5120" fill="#1f2328" text-anchor="end">3.24 ms</text>
-<text x="620" y="5120" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5120" fill="#1f2328" text-anchor="end">4.16 ms</text>
+<text x="500" y="5120" fill="#1f2328" text-anchor="end">5.09 ms</text>
+<text x="620" y="5120" fill="#cf222e" text-anchor="end">+83.0%</text>
 <text x="16" y="5144" fill="#1f2328">inspector.large/compose/burst</text>
-<text x="400" y="5144" fill="#1f2328" text-anchor="end">5.17 ms</text>
-<text x="500" y="5144" fill="#1f2328" text-anchor="end">5.62 ms</text>
-<text x="620" y="5144" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5144" fill="#1f2328" text-anchor="end">5.52 ms</text>
+<text x="500" y="5144" fill="#1f2328" text-anchor="end">6.06 ms</text>
+<text x="620" y="5144" fill="#cf222e" text-anchor="end">+6.8%</text>
 <rect x="8" y="5152" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5168" fill="#1f2328">inspector.large/compose/cold</text>
-<text x="400" y="5168" fill="#1f2328" text-anchor="end">10.73 ms</text>
-<text x="500" y="5168" fill="#1f2328" text-anchor="end">16.23 ms</text>
-<text x="620" y="5168" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5168" fill="#1f2328" text-anchor="end">10.55 ms</text>
+<text x="500" y="5168" fill="#1f2328" text-anchor="end">16.66 ms</text>
+<text x="620" y="5168" fill="#1a7f37" text-anchor="end">-1.7%</text>
 <text x="16" y="5192" fill="#1f2328">inspector.large/compose/counts</text>
-<text x="400" y="5192" fill="#1f2328" text-anchor="end">22.55 ms</text>
-<text x="500" y="5192" fill="#1f2328" text-anchor="end">22.55 ms</text>
-<text x="620" y="5192" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5192" fill="#1f2328" text-anchor="end">25.06 ms</text>
+<text x="500" y="5192" fill="#1f2328" text-anchor="end">25.06 ms</text>
+<text x="620" y="5192" fill="#cf222e" text-anchor="end">+11.1%</text>
 <rect x="8" y="5200" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5216" fill="#1f2328">inspector.large/compose/settle</text>
-<text x="400" y="5216" fill="#1f2328" text-anchor="end">0.8 µs</text>
-<text x="500" y="5216" fill="#1f2328" text-anchor="end">1.3 µs</text>
-<text x="620" y="5216" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5216" fill="#1f2328" text-anchor="end">2.1 µs</text>
+<text x="500" y="5216" fill="#1f2328" text-anchor="end">2.5 µs</text>
+<text x="620" y="5216" fill="#cf222e" text-anchor="end">+160.2%</text>
 <text x="16" y="5240" fill="#1f2328">inspector.large/compose/steady</text>
-<text x="400" y="5240" fill="#1f2328" text-anchor="end">256.4 µs</text>
-<text x="500" y="5240" fill="#1f2328" text-anchor="end">413.8 µs</text>
-<text x="620" y="5240" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5240" fill="#1f2328" text-anchor="end">347.2 µs</text>
+<text x="500" y="5240" fill="#1f2328" text-anchor="end">416.2 µs</text>
+<text x="620" y="5240" fill="#cf222e" text-anchor="end">+35.4%</text>
 <rect x="8" y="5248" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5264" fill="#1f2328">inspector.large/compose/teardown</text>
-<text x="400" y="5264" fill="#1f2328" text-anchor="end">1.17 ms</text>
-<text x="500" y="5264" fill="#1f2328" text-anchor="end">1.41 ms</text>
-<text x="620" y="5264" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5264" fill="#1f2328" text-anchor="end">1.56 ms</text>
+<text x="500" y="5264" fill="#1f2328" text-anchor="end">1.96 ms</text>
+<text x="620" y="5264" fill="#cf222e" text-anchor="end">+33.2%</text>
 <text x="16" y="5288" fill="#1f2328">inspector.medium/compose/burst</text>
-<text x="400" y="5288" fill="#1f2328" text-anchor="end">1.73 ms</text>
-<text x="500" y="5288" fill="#1f2328" text-anchor="end">1.86 ms</text>
-<text x="620" y="5288" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5288" fill="#1f2328" text-anchor="end">812.1 µs</text>
+<text x="500" y="5288" fill="#1f2328" text-anchor="end">893.6 µs</text>
+<text x="620" y="5288" fill="#1a7f37" text-anchor="end">-53.1%</text>
 <rect x="8" y="5296" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5312" fill="#1f2328">inspector.medium/compose/cold</text>
-<text x="400" y="5312" fill="#1f2328" text-anchor="end">2.92 ms</text>
-<text x="500" y="5312" fill="#1f2328" text-anchor="end">4.09 ms</text>
-<text x="620" y="5312" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5312" fill="#1f2328" text-anchor="end">2.01 ms</text>
+<text x="500" y="5312" fill="#1f2328" text-anchor="end">2.65 ms</text>
+<text x="620" y="5312" fill="#1a7f37" text-anchor="end">-31.2%</text>
 <text x="16" y="5336" fill="#1f2328">inspector.medium/compose/counts</text>
-<text x="400" y="5336" fill="#1f2328" text-anchor="end">6.27 ms</text>
-<text x="500" y="5336" fill="#1f2328" text-anchor="end">6.27 ms</text>
-<text x="620" y="5336" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5336" fill="#1f2328" text-anchor="end">3.83 ms</text>
+<text x="500" y="5336" fill="#1f2328" text-anchor="end">3.83 ms</text>
+<text x="620" y="5336" fill="#1a7f37" text-anchor="end">-39.0%</text>
 <rect x="8" y="5344" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5360" fill="#1f2328">inspector.medium/compose/settle</text>
-<text x="400" y="5360" fill="#1f2328" text-anchor="end">0.6 µs</text>
-<text x="500" y="5360" fill="#1f2328" text-anchor="end">0.9 µs</text>
-<text x="620" y="5360" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5360" fill="#1f2328" text-anchor="end">0.4 µs</text>
+<text x="500" y="5360" fill="#1f2328" text-anchor="end">0.6 µs</text>
+<text x="620" y="5360" fill="#1a7f37" text-anchor="end">-39.0%</text>
 <text x="16" y="5384" fill="#1f2328">inspector.medium/compose/steady</text>
-<text x="400" y="5384" fill="#1f2328" text-anchor="end">220.2 µs</text>
-<text x="500" y="5384" fill="#1f2328" text-anchor="end">233.3 µs</text>
-<text x="620" y="5384" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5384" fill="#1f2328" text-anchor="end">113.5 µs</text>
+<text x="500" y="5384" fill="#1f2328" text-anchor="end">158.2 µs</text>
+<text x="620" y="5384" fill="#1a7f37" text-anchor="end">-48.5%</text>
 <rect x="8" y="5392" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5408" fill="#1f2328">inspector.medium/compose/teardown</text>
-<text x="400" y="5408" fill="#1f2328" text-anchor="end">363.0 µs</text>
-<text x="500" y="5408" fill="#1f2328" text-anchor="end">505.3 µs</text>
-<text x="620" y="5408" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5408" fill="#1f2328" text-anchor="end">214.0 µs</text>
+<text x="500" y="5408" fill="#1f2328" text-anchor="end">435.3 µs</text>
+<text x="620" y="5408" fill="#1a7f37" text-anchor="end">-41.0%</text>
 <text x="16" y="5432" fill="#1f2328">keyed-append</text>
-<text x="400" y="5432" fill="#1f2328" text-anchor="end">2.24 ms</text>
-<text x="500" y="5432" fill="#1f2328" text-anchor="end">3.42 ms</text>
-<text x="620" y="5432" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5432" fill="#1f2328" text-anchor="end">1.23 ms</text>
+<text x="500" y="5432" fill="#1f2328" text-anchor="end">1.52 ms</text>
+<text x="620" y="5432" fill="#1a7f37" text-anchor="end">-45.1%</text>
 <rect x="8" y="5440" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5456" fill="#1f2328">keyed-insert</text>
-<text x="400" y="5456" fill="#1f2328" text-anchor="end">3.90 ms</text>
-<text x="500" y="5456" fill="#1f2328" text-anchor="end">4.42 ms</text>
-<text x="620" y="5456" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5456" fill="#1f2328" text-anchor="end">2.14 ms</text>
+<text x="500" y="5456" fill="#1f2328" text-anchor="end">2.46 ms</text>
+<text x="620" y="5456" fill="#1a7f37" text-anchor="end">-45.3%</text>
 <text x="16" y="5480" fill="#1f2328">keyed-prepend</text>
-<text x="400" y="5480" fill="#1f2328" text-anchor="end">4.63 ms</text>
-<text x="500" y="5480" fill="#1f2328" text-anchor="end">5.11 ms</text>
-<text x="620" y="5480" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5480" fill="#1f2328" text-anchor="end">5.67 ms</text>
+<text x="500" y="5480" fill="#1f2328" text-anchor="end">6.45 ms</text>
+<text x="620" y="5480" fill="#cf222e" text-anchor="end">+22.4%</text>
 <rect x="8" y="5488" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5504" fill="#1f2328">keyed-remove</text>
-<text x="400" y="5504" fill="#1f2328" text-anchor="end">3.75 ms</text>
-<text x="500" y="5504" fill="#1f2328" text-anchor="end">4.43 ms</text>
-<text x="620" y="5504" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5504" fill="#1f2328" text-anchor="end">2.34 ms</text>
+<text x="500" y="5504" fill="#1f2328" text-anchor="end">3.70 ms</text>
+<text x="620" y="5504" fill="#1a7f37" text-anchor="end">-37.7%</text>
 <text x="16" y="5528" fill="#1f2328">keyed-replace</text>
-<text x="400" y="5528" fill="#1f2328" text-anchor="end">52.49 ms</text>
-<text x="500" y="5528" fill="#1f2328" text-anchor="end">57.57 ms</text>
-<text x="620" y="5528" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5528" fill="#1f2328" text-anchor="end">65.20 ms</text>
+<text x="500" y="5528" fill="#1f2328" text-anchor="end">67.37 ms</text>
+<text x="620" y="5528" fill="#cf222e" text-anchor="end">+24.2%</text>
 <rect x="8" y="5536" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5552" fill="#1f2328">keyed-reverse</text>
-<text x="400" y="5552" fill="#1f2328" text-anchor="end">3.45 ms</text>
-<text x="500" y="5552" fill="#1f2328" text-anchor="end">3.51 ms</text>
-<text x="620" y="5552" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5552" fill="#1f2328" text-anchor="end">4.15 ms</text>
+<text x="500" y="5552" fill="#1f2328" text-anchor="end">4.31 ms</text>
+<text x="620" y="5552" fill="#cf222e" text-anchor="end">+20.2%</text>
 <text x="16" y="5576" fill="#1f2328">keyed-rotate</text>
-<text x="400" y="5576" fill="#1f2328" text-anchor="end">3.68 ms</text>
-<text x="500" y="5576" fill="#1f2328" text-anchor="end">3.73 ms</text>
-<text x="620" y="5576" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5576" fill="#1f2328" text-anchor="end">4.21 ms</text>
+<text x="500" y="5576" fill="#1f2328" text-anchor="end">4.32 ms</text>
+<text x="620" y="5576" fill="#cf222e" text-anchor="end">+14.4%</text>
 <rect x="8" y="5584" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5600" fill="#1f2328">keyed-shuffle</text>
-<text x="400" y="5600" fill="#1f2328" text-anchor="end">3.51 ms</text>
-<text x="500" y="5600" fill="#1f2328" text-anchor="end">3.54 ms</text>
-<text x="620" y="5600" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5600" fill="#1f2328" text-anchor="end">4.34 ms</text>
+<text x="500" y="5600" fill="#1f2328" text-anchor="end">4.41 ms</text>
+<text x="620" y="5600" fill="#cf222e" text-anchor="end">+23.8%</text>
 <text x="16" y="5624" fill="#1f2328">mount-cycles</text>
-<text x="400" y="5624" fill="#1f2328" text-anchor="end">22.49 ms</text>
-<text x="500" y="5624" fill="#1f2328" text-anchor="end">34.57 ms</text>
-<text x="620" y="5624" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5624" fill="#1f2328" text-anchor="end">16.29 ms</text>
+<text x="500" y="5624" fill="#1f2328" text-anchor="end">17.66 ms</text>
+<text x="620" y="5624" fill="#1a7f37" text-anchor="end">-27.6%</text>
 <rect x="8" y="5632" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5648" fill="#1f2328">mount-dispose</text>
-<text x="400" y="5648" fill="#1f2328" text-anchor="end">8.16 ms</text>
-<text x="500" y="5648" fill="#1f2328" text-anchor="end">9.75 ms</text>
-<text x="620" y="5648" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5648" fill="#1f2328" text-anchor="end">11.09 ms</text>
+<text x="500" y="5648" fill="#1f2328" text-anchor="end">13.22 ms</text>
+<text x="620" y="5648" fill="#cf222e" text-anchor="end">+36.0%</text>
 <text x="16" y="5672" fill="#1f2328">ordered-window-scroll</text>
-<text x="400" y="5672" fill="#1f2328" text-anchor="end">476.6 µs</text>
-<text x="500" y="5672" fill="#1f2328" text-anchor="end">490.7 µs</text>
-<text x="620" y="5672" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5672" fill="#1f2328" text-anchor="end">541.8 µs</text>
+<text x="500" y="5672" fill="#1f2328" text-anchor="end">570.5 µs</text>
+<text x="620" y="5672" fill="#cf222e" text-anchor="end">+13.7%</text>
 <rect x="8" y="5680" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5696" fill="#1f2328">scene-2d.extreme/compose/burst</text>
-<text x="400" y="5696" fill="#1f2328" text-anchor="end">30.00 ms</text>
-<text x="500" y="5696" fill="#1f2328" text-anchor="end">40.07 ms</text>
-<text x="620" y="5696" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5696" fill="#1f2328" text-anchor="end">30.10 ms</text>
+<text x="500" y="5696" fill="#1f2328" text-anchor="end">37.00 ms</text>
+<text x="620" y="5696" fill="#cf222e" text-anchor="end">+0.3%</text>
 <text x="16" y="5720" fill="#1f2328">scene-2d.extreme/compose/cold</text>
-<text x="400" y="5720" fill="#1f2328" text-anchor="end">21.59 ms</text>
-<text x="500" y="5720" fill="#1f2328" text-anchor="end">29.35 ms</text>
-<text x="620" y="5720" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5720" fill="#1f2328" text-anchor="end">18.64 ms</text>
+<text x="500" y="5720" fill="#1f2328" text-anchor="end">32.82 ms</text>
+<text x="620" y="5720" fill="#1a7f37" text-anchor="end">-13.7%</text>
 <rect x="8" y="5728" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5744" fill="#1f2328">scene-2d.extreme/compose/counts</text>
-<text x="400" y="5744" fill="#1f2328" text-anchor="end">222.07 ms</text>
-<text x="500" y="5744" fill="#1f2328" text-anchor="end">222.07 ms</text>
-<text x="620" y="5744" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5744" fill="#1f2328" text-anchor="end">182.93 ms</text>
+<text x="500" y="5744" fill="#1f2328" text-anchor="end">182.93 ms</text>
+<text x="620" y="5744" fill="#1a7f37" text-anchor="end">-17.6%</text>
 <text x="16" y="5768" fill="#1f2328">scene-2d.extreme/compose/settle</text>
-<text x="400" y="5768" fill="#1f2328" text-anchor="end">2.0 µs</text>
-<text x="500" y="5768" fill="#1f2328" text-anchor="end">2.6 µs</text>
-<text x="620" y="5768" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5768" fill="#1f2328" text-anchor="end">3.0 µs</text>
+<text x="500" y="5768" fill="#1f2328" text-anchor="end">3.3 µs</text>
+<text x="620" y="5768" fill="#cf222e" text-anchor="end">+47.5%</text>
 <rect x="8" y="5776" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5792" fill="#1f2328">scene-2d.extreme/compose/steady</text>
-<text x="400" y="5792" fill="#1f2328" text-anchor="end">101.47 ms</text>
-<text x="500" y="5792" fill="#1f2328" text-anchor="end">110.71 ms</text>
-<text x="620" y="5792" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5792" fill="#1f2328" text-anchor="end">63.73 ms</text>
+<text x="500" y="5792" fill="#1f2328" text-anchor="end">73.78 ms</text>
+<text x="620" y="5792" fill="#1a7f37" text-anchor="end">-37.2%</text>
 <text x="16" y="5816" fill="#1f2328">scene-2d.extreme/compose/teardown</text>
-<text x="400" y="5816" fill="#1f2328" text-anchor="end">1.17 ms</text>
-<text x="500" y="5816" fill="#1f2328" text-anchor="end">1.72 ms</text>
-<text x="620" y="5816" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5816" fill="#1f2328" text-anchor="end">1.28 ms</text>
+<text x="500" y="5816" fill="#1f2328" text-anchor="end">1.85 ms</text>
+<text x="620" y="5816" fill="#cf222e" text-anchor="end">+9.8%</text>
 <rect x="8" y="5824" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5840" fill="#1f2328">scene-2d.large/compose/burst</text>
-<text x="400" y="5840" fill="#1f2328" text-anchor="end">30.04 ms</text>
-<text x="500" y="5840" fill="#1f2328" text-anchor="end">37.60 ms</text>
-<text x="620" y="5840" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5840" fill="#1f2328" text-anchor="end">37.03 ms</text>
+<text x="500" y="5840" fill="#1f2328" text-anchor="end">43.30 ms</text>
+<text x="620" y="5840" fill="#cf222e" text-anchor="end">+23.2%</text>
 <text x="16" y="5864" fill="#1f2328">scene-2d.large/compose/cold</text>
-<text x="400" y="5864" fill="#1f2328" text-anchor="end">9.78 ms</text>
-<text x="500" y="5864" fill="#1f2328" text-anchor="end">11.13 ms</text>
-<text x="620" y="5864" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5864" fill="#1f2328" text-anchor="end">11.29 ms</text>
+<text x="500" y="5864" fill="#1f2328" text-anchor="end">16.97 ms</text>
+<text x="620" y="5864" fill="#cf222e" text-anchor="end">+15.4%</text>
 <rect x="8" y="5872" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5888" fill="#1f2328">scene-2d.large/compose/counts</text>
-<text x="400" y="5888" fill="#1f2328" text-anchor="end">203.52 ms</text>
-<text x="500" y="5888" fill="#1f2328" text-anchor="end">203.52 ms</text>
-<text x="620" y="5888" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5888" fill="#1f2328" text-anchor="end">232.34 ms</text>
+<text x="500" y="5888" fill="#1f2328" text-anchor="end">232.34 ms</text>
+<text x="620" y="5888" fill="#cf222e" text-anchor="end">+14.2%</text>
 <text x="16" y="5912" fill="#1f2328">scene-2d.large/compose/settle</text>
-<text x="400" y="5912" fill="#1f2328" text-anchor="end">1.6 µs</text>
-<text x="500" y="5912" fill="#1f2328" text-anchor="end">3.4 µs</text>
-<text x="620" y="5912" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5912" fill="#1f2328" text-anchor="end">2.4 µs</text>
+<text x="500" y="5912" fill="#1f2328" text-anchor="end">3.0 µs</text>
+<text x="620" y="5912" fill="#cf222e" text-anchor="end">+51.9%</text>
 <rect x="8" y="5920" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5936" fill="#1f2328">scene-2d.large/compose/steady</text>
-<text x="400" y="5936" fill="#1f2328" text-anchor="end">102.07 ms</text>
-<text x="500" y="5936" fill="#1f2328" text-anchor="end">109.21 ms</text>
-<text x="620" y="5936" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5936" fill="#1f2328" text-anchor="end">113.89 ms</text>
+<text x="500" y="5936" fill="#1f2328" text-anchor="end">118.12 ms</text>
+<text x="620" y="5936" fill="#cf222e" text-anchor="end">+11.6%</text>
 <text x="16" y="5960" fill="#1f2328">scene-2d.large/compose/teardown</text>
-<text x="400" y="5960" fill="#1f2328" text-anchor="end">1.11 ms</text>
-<text x="500" y="5960" fill="#1f2328" text-anchor="end">1.28 ms</text>
-<text x="620" y="5960" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5960" fill="#1f2328" text-anchor="end">1.58 ms</text>
+<text x="500" y="5960" fill="#1f2328" text-anchor="end">1.96 ms</text>
+<text x="620" y="5960" fill="#cf222e" text-anchor="end">+42.8%</text>
 <rect x="8" y="5968" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="5984" fill="#1f2328">scene-2d.medium/compose/burst</text>
-<text x="400" y="5984" fill="#1f2328" text-anchor="end">18.82 ms</text>
-<text x="500" y="5984" fill="#1f2328" text-anchor="end">20.98 ms</text>
-<text x="620" y="5984" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="5984" fill="#1f2328" text-anchor="end">22.93 ms</text>
+<text x="500" y="5984" fill="#1f2328" text-anchor="end">27.96 ms</text>
+<text x="620" y="5984" fill="#cf222e" text-anchor="end">+21.8%</text>
 <text x="16" y="6008" fill="#1f2328">scene-2d.medium/compose/cold</text>
-<text x="400" y="6008" fill="#1f2328" text-anchor="end">5.11 ms</text>
-<text x="500" y="6008" fill="#1f2328" text-anchor="end">6.37 ms</text>
-<text x="620" y="6008" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6008" fill="#1f2328" text-anchor="end">6.14 ms</text>
+<text x="500" y="6008" fill="#1f2328" text-anchor="end">7.23 ms</text>
+<text x="620" y="6008" fill="#cf222e" text-anchor="end">+20.2%</text>
 <rect x="8" y="6016" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6032" fill="#1f2328">scene-2d.medium/compose/counts</text>
-<text x="400" y="6032" fill="#1f2328" text-anchor="end">126.71 ms</text>
-<text x="500" y="6032" fill="#1f2328" text-anchor="end">126.71 ms</text>
-<text x="620" y="6032" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6032" fill="#1f2328" text-anchor="end">160.72 ms</text>
+<text x="500" y="6032" fill="#1f2328" text-anchor="end">160.72 ms</text>
+<text x="620" y="6032" fill="#cf222e" text-anchor="end">+26.8%</text>
 <text x="16" y="6056" fill="#1f2328">scene-2d.medium/compose/settle</text>
-<text x="400" y="6056" fill="#1f2328" text-anchor="end">1.2 µs</text>
-<text x="500" y="6056" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="620" y="6056" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6056" fill="#1f2328" text-anchor="end">1.5 µs</text>
+<text x="500" y="6056" fill="#1f2328" text-anchor="end">2.0 µs</text>
+<text x="620" y="6056" fill="#cf222e" text-anchor="end">+21.7%</text>
 <rect x="8" y="6064" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6080" fill="#1f2328">scene-2d.medium/compose/steady</text>
-<text x="400" y="6080" fill="#1f2328" text-anchor="end">59.49 ms</text>
-<text x="500" y="6080" fill="#1f2328" text-anchor="end">62.88 ms</text>
-<text x="620" y="6080" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6080" fill="#1f2328" text-anchor="end">76.37 ms</text>
+<text x="500" y="6080" fill="#1f2328" text-anchor="end">79.91 ms</text>
+<text x="620" y="6080" fill="#cf222e" text-anchor="end">+28.4%</text>
 <text x="16" y="6104" fill="#1f2328">scene-2d.medium/compose/teardown</text>
-<text x="400" y="6104" fill="#1f2328" text-anchor="end">772.6 µs</text>
-<text x="500" y="6104" fill="#1f2328" text-anchor="end">1.03 ms</text>
-<text x="620" y="6104" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6104" fill="#1f2328" text-anchor="end">884.1 µs</text>
+<text x="500" y="6104" fill="#1f2328" text-anchor="end">1.06 ms</text>
+<text x="620" y="6104" fill="#cf222e" text-anchor="end">+14.4%</text>
 <rect x="8" y="6112" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6128" fill="#1f2328">scene-3d</text>
-<text x="400" y="6128" fill="#1f2328" text-anchor="end">10.37 ms</text>
-<text x="500" y="6128" fill="#1f2328" text-anchor="end">12.51 ms</text>
-<text x="620" y="6128" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6128" fill="#1f2328" text-anchor="end">5.79 ms</text>
+<text x="500" y="6128" fill="#1f2328" text-anchor="end">7.20 ms</text>
+<text x="620" y="6128" fill="#1a7f37" text-anchor="end">-44.1%</text>
 <text x="16" y="6152" fill="#1f2328">session-cycle.extreme/compose/burst</text>
-<text x="400" y="6152" fill="#1f2328" text-anchor="end">127.13 ms</text>
-<text x="500" y="6152" fill="#1f2328" text-anchor="end">193.69 ms</text>
-<text x="620" y="6152" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6152" fill="#1f2328" text-anchor="end">167.02 ms</text>
+<text x="500" y="6152" fill="#1f2328" text-anchor="end">206.13 ms</text>
+<text x="620" y="6152" fill="#cf222e" text-anchor="end">+31.4%</text>
 <rect x="8" y="6160" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6176" fill="#1f2328">session-cycle.extreme/compose/cold</text>
-<text x="400" y="6176" fill="#1f2328" text-anchor="end">4.2 µs</text>
-<text x="500" y="6176" fill="#1f2328" text-anchor="end">7.8 µs</text>
-<text x="620" y="6176" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6176" fill="#1f2328" text-anchor="end">4.6 µs</text>
+<text x="500" y="6176" fill="#1f2328" text-anchor="end">19.3 µs</text>
+<text x="620" y="6176" fill="#cf222e" text-anchor="end">+9.3%</text>
 <text x="16" y="6200" fill="#1f2328">session-cycle.extreme/compose/counts</text>
-<text x="400" y="6200" fill="#1f2328" text-anchor="end">296.91 ms</text>
-<text x="500" y="6200" fill="#1f2328" text-anchor="end">296.91 ms</text>
-<text x="620" y="6200" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6200" fill="#1f2328" text-anchor="end">344.12 ms</text>
+<text x="500" y="6200" fill="#1f2328" text-anchor="end">344.12 ms</text>
+<text x="620" y="6200" fill="#cf222e" text-anchor="end">+15.9%</text>
 <rect x="8" y="6208" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6224" fill="#1f2328">session-cycle.extreme/compose/settle</text>
-<text x="400" y="6224" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="500" y="6224" fill="#1f2328" text-anchor="end">2.3 µs</text>
-<text x="620" y="6224" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6224" fill="#1f2328" text-anchor="end">2.3 µs</text>
+<text x="500" y="6224" fill="#1f2328" text-anchor="end">2.8 µs</text>
+<text x="620" y="6224" fill="#cf222e" text-anchor="end">+7.4%</text>
 <text x="16" y="6248" fill="#1f2328">session-cycle.extreme/compose/steady</text>
-<text x="400" y="6248" fill="#1f2328" text-anchor="end">160.85 ms</text>
-<text x="500" y="6248" fill="#1f2328" text-anchor="end">256.28 ms</text>
-<text x="620" y="6248" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6248" fill="#1f2328" text-anchor="end">196.67 ms</text>
+<text x="500" y="6248" fill="#1f2328" text-anchor="end">280.25 ms</text>
+<text x="620" y="6248" fill="#cf222e" text-anchor="end">+22.3%</text>
 <rect x="8" y="6256" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6272" fill="#1f2328">session-cycle.extreme/compose/teardown</text>
-<text x="400" y="6272" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="500" y="6272" fill="#1f2328" text-anchor="end">2.4 µs</text>
-<text x="620" y="6272" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6272" fill="#1f2328" text-anchor="end">2.6 µs</text>
+<text x="500" y="6272" fill="#1f2328" text-anchor="end">3.4 µs</text>
+<text x="620" y="6272" fill="#cf222e" text-anchor="end">+17.4%</text>
 <text x="16" y="6296" fill="#1f2328">session-cycle.large/compose/burst</text>
-<text x="400" y="6296" fill="#1f2328" text-anchor="end">57.00 ms</text>
-<text x="500" y="6296" fill="#1f2328" text-anchor="end">74.30 ms</text>
-<text x="620" y="6296" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6296" fill="#1f2328" text-anchor="end">42.12 ms</text>
+<text x="500" y="6296" fill="#1f2328" text-anchor="end">77.61 ms</text>
+<text x="620" y="6296" fill="#1a7f37" text-anchor="end">-26.1%</text>
 <rect x="8" y="6304" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6320" fill="#1f2328">session-cycle.large/compose/cold</text>
-<text x="400" y="6320" fill="#1f2328" text-anchor="end">4.4 µs</text>
-<text x="500" y="6320" fill="#1f2328" text-anchor="end">6.6 µs</text>
-<text x="620" y="6320" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6320" fill="#1f2328" text-anchor="end">3.1 µs</text>
+<text x="500" y="6320" fill="#1f2328" text-anchor="end">5.8 µs</text>
+<text x="620" y="6320" fill="#1a7f37" text-anchor="end">-28.5%</text>
 <text x="16" y="6344" fill="#1f2328">session-cycle.large/compose/counts</text>
-<text x="400" y="6344" fill="#1f2328" text-anchor="end">128.75 ms</text>
-<text x="500" y="6344" fill="#1f2328" text-anchor="end">128.75 ms</text>
-<text x="620" y="6344" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6344" fill="#1f2328" text-anchor="end">75.81 ms</text>
+<text x="500" y="6344" fill="#1f2328" text-anchor="end">75.81 ms</text>
+<text x="620" y="6344" fill="#1a7f37" text-anchor="end">-41.1%</text>
 <rect x="8" y="6352" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6368" fill="#1f2328">session-cycle.large/compose/settle</text>
-<text x="400" y="6368" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="500" y="6368" fill="#1f2328" text-anchor="end">2.7 µs</text>
-<text x="620" y="6368" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6368" fill="#1f2328" text-anchor="end">1.6 µs</text>
+<text x="500" y="6368" fill="#1f2328" text-anchor="end">2.4 µs</text>
+<text x="620" y="6368" fill="#1a7f37" text-anchor="end">-25.3%</text>
 <text x="16" y="6392" fill="#1f2328">session-cycle.large/compose/steady</text>
-<text x="400" y="6392" fill="#1f2328" text-anchor="end">69.67 ms</text>
-<text x="500" y="6392" fill="#1f2328" text-anchor="end">96.52 ms</text>
-<text x="620" y="6392" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6392" fill="#1f2328" text-anchor="end">42.71 ms</text>
+<text x="500" y="6392" fill="#1f2328" text-anchor="end">67.29 ms</text>
+<text x="620" y="6392" fill="#1a7f37" text-anchor="end">-38.7%</text>
 <rect x="8" y="6400" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6416" fill="#1f2328">session-cycle.large/compose/teardown</text>
-<text x="400" y="6416" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="500" y="6416" fill="#1f2328" text-anchor="end">2.6 µs</text>
-<text x="620" y="6416" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6416" fill="#1f2328" text-anchor="end">1.7 µs</text>
+<text x="500" y="6416" fill="#1f2328" text-anchor="end">2.2 µs</text>
+<text x="620" y="6416" fill="#1a7f37" text-anchor="end">-23.4%</text>
 <text x="16" y="6440" fill="#1f2328">session-cycle.medium/compose/burst</text>
-<text x="400" y="6440" fill="#1f2328" text-anchor="end">14.06 ms</text>
-<text x="500" y="6440" fill="#1f2328" text-anchor="end">20.51 ms</text>
-<text x="620" y="6440" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6440" fill="#1f2328" text-anchor="end">13.64 ms</text>
+<text x="500" y="6440" fill="#1f2328" text-anchor="end">18.63 ms</text>
+<text x="620" y="6440" fill="#1a7f37" text-anchor="end">-3.0%</text>
 <rect x="8" y="6448" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6464" fill="#1f2328">session-cycle.medium/compose/cold</text>
-<text x="400" y="6464" fill="#1f2328" text-anchor="end">3.3 µs</text>
-<text x="500" y="6464" fill="#1f2328" text-anchor="end">9.0 µs</text>
-<text x="620" y="6464" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6464" fill="#1f2328" text-anchor="end">3.2 µs</text>
+<text x="500" y="6464" fill="#1f2328" text-anchor="end">6.9 µs</text>
+<text x="620" y="6464" fill="#1a7f37" text-anchor="end">-3.0%</text>
 <text x="16" y="6488" fill="#1f2328">session-cycle.medium/compose/counts</text>
-<text x="400" y="6488" fill="#1f2328" text-anchor="end">28.16 ms</text>
-<text x="500" y="6488" fill="#1f2328" text-anchor="end">28.16 ms</text>
-<text x="620" y="6488" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6488" fill="#1f2328" text-anchor="end">34.78 ms</text>
+<text x="500" y="6488" fill="#1f2328" text-anchor="end">34.78 ms</text>
+<text x="620" y="6488" fill="#cf222e" text-anchor="end">+23.5%</text>
 <rect x="8" y="6496" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6512" fill="#1f2328">session-cycle.medium/compose/settle</text>
-<text x="400" y="6512" fill="#1f2328" text-anchor="end">1.1 µs</text>
-<text x="500" y="6512" fill="#1f2328" text-anchor="end">1.9 µs</text>
-<text x="620" y="6512" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6512" fill="#1f2328" text-anchor="end">1.2 µs</text>
+<text x="500" y="6512" fill="#1f2328" text-anchor="end">1.7 µs</text>
+<text x="620" y="6512" fill="#cf222e" text-anchor="end">+6.3%</text>
 <text x="16" y="6536" fill="#1f2328">session-cycle.medium/compose/steady</text>
-<text x="400" y="6536" fill="#1f2328" text-anchor="end">16.03 ms</text>
-<text x="500" y="6536" fill="#1f2328" text-anchor="end">23.33 ms</text>
-<text x="620" y="6536" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6536" fill="#1f2328" text-anchor="end">21.65 ms</text>
+<text x="500" y="6536" fill="#1f2328" text-anchor="end">29.22 ms</text>
+<text x="620" y="6536" fill="#cf222e" text-anchor="end">+35.0%</text>
 <rect x="8" y="6544" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6560" fill="#1f2328">session-cycle.medium/compose/teardown</text>
-<text x="400" y="6560" fill="#1f2328" text-anchor="end">1.4 µs</text>
-<text x="500" y="6560" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="620" y="6560" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6560" fill="#1f2328" text-anchor="end">1.7 µs</text>
+<text x="500" y="6560" fill="#1f2328" text-anchor="end">2.9 µs</text>
+<text x="620" y="6560" fill="#cf222e" text-anchor="end">+17.8%</text>
 <text x="16" y="6584" fill="#1f2328">spatial-scene.extreme/compose/burst</text>
-<text x="400" y="6584" fill="#1f2328" text-anchor="end">122.49 ms</text>
-<text x="500" y="6584" fill="#1f2328" text-anchor="end">125.06 ms</text>
-<text x="620" y="6584" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6584" fill="#1f2328" text-anchor="end">149.82 ms</text>
+<text x="500" y="6584" fill="#1f2328" text-anchor="end">169.80 ms</text>
+<text x="620" y="6584" fill="#cf222e" text-anchor="end">+22.3%</text>
 <rect x="8" y="6592" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6608" fill="#1f2328">spatial-scene.extreme/compose/cold</text>
-<text x="400" y="6608" fill="#1f2328" text-anchor="end">9.69 ms</text>
-<text x="500" y="6608" fill="#1f2328" text-anchor="end">17.25 ms</text>
-<text x="620" y="6608" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6608" fill="#1f2328" text-anchor="end">11.82 ms</text>
+<text x="500" y="6608" fill="#1f2328" text-anchor="end">21.35 ms</text>
+<text x="620" y="6608" fill="#cf222e" text-anchor="end">+22.0%</text>
 <text x="16" y="6632" fill="#1f2328">spatial-scene.extreme/compose/counts</text>
-<text x="400" y="6632" fill="#1f2328" text-anchor="end">218.38 ms</text>
-<text x="500" y="6632" fill="#1f2328" text-anchor="end">218.38 ms</text>
-<text x="620" y="6632" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6632" fill="#1f2328" text-anchor="end">269.12 ms</text>
+<text x="500" y="6632" fill="#1f2328" text-anchor="end">269.12 ms</text>
+<text x="620" y="6632" fill="#cf222e" text-anchor="end">+23.2%</text>
 <rect x="8" y="6640" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6656" fill="#1f2328">spatial-scene.extreme/compose/settle</text>
-<text x="400" y="6656" fill="#1f2328" text-anchor="end">1.8 µs</text>
-<text x="500" y="6656" fill="#1f2328" text-anchor="end">2.1 µs</text>
-<text x="620" y="6656" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6656" fill="#1f2328" text-anchor="end">2.0 µs</text>
+<text x="500" y="6656" fill="#1f2328" text-anchor="end">3.8 µs</text>
+<text x="620" y="6656" fill="#cf222e" text-anchor="end">+12.4%</text>
 <text x="16" y="6680" fill="#1f2328">spatial-scene.extreme/compose/steady</text>
-<text x="400" y="6680" fill="#1f2328" text-anchor="end">53.87 ms</text>
-<text x="500" y="6680" fill="#1f2328" text-anchor="end">55.35 ms</text>
-<text x="620" y="6680" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6680" fill="#1f2328" text-anchor="end">66.47 ms</text>
+<text x="500" y="6680" fill="#1f2328" text-anchor="end">71.39 ms</text>
+<text x="620" y="6680" fill="#cf222e" text-anchor="end">+23.4%</text>
 <rect x="8" y="6688" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6704" fill="#1f2328">spatial-scene.extreme/compose/teardown</text>
-<text x="400" y="6704" fill="#1f2328" text-anchor="end">3.33 ms</text>
-<text x="500" y="6704" fill="#1f2328" text-anchor="end">4.72 ms</text>
-<text x="620" y="6704" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6704" fill="#1f2328" text-anchor="end">4.16 ms</text>
+<text x="500" y="6704" fill="#1f2328" text-anchor="end">6.39 ms</text>
+<text x="620" y="6704" fill="#cf222e" text-anchor="end">+24.9%</text>
 <text x="16" y="6728" fill="#1f2328">spatial-scene.large/compose/burst</text>
-<text x="400" y="6728" fill="#1f2328" text-anchor="end">30.04 ms</text>
-<text x="500" y="6728" fill="#1f2328" text-anchor="end">32.77 ms</text>
-<text x="620" y="6728" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6728" fill="#1f2328" text-anchor="end">39.77 ms</text>
+<text x="500" y="6728" fill="#1f2328" text-anchor="end">43.12 ms</text>
+<text x="620" y="6728" fill="#cf222e" text-anchor="end">+32.4%</text>
 <rect x="8" y="6736" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6752" fill="#1f2328">spatial-scene.large/compose/cold</text>
-<text x="400" y="6752" fill="#1f2328" text-anchor="end">2.80 ms</text>
-<text x="500" y="6752" fill="#1f2328" text-anchor="end">6.18 ms</text>
-<text x="620" y="6752" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6752" fill="#1f2328" text-anchor="end">3.54 ms</text>
+<text x="500" y="6752" fill="#1f2328" text-anchor="end">9.13 ms</text>
+<text x="620" y="6752" fill="#cf222e" text-anchor="end">+26.5%</text>
 <text x="16" y="6776" fill="#1f2328">spatial-scene.large/compose/counts</text>
-<text x="400" y="6776" fill="#1f2328" text-anchor="end">58.12 ms</text>
-<text x="500" y="6776" fill="#1f2328" text-anchor="end">58.12 ms</text>
-<text x="620" y="6776" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6776" fill="#1f2328" text-anchor="end">76.08 ms</text>
+<text x="500" y="6776" fill="#1f2328" text-anchor="end">76.08 ms</text>
+<text x="620" y="6776" fill="#cf222e" text-anchor="end">+30.9%</text>
 <rect x="8" y="6784" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6800" fill="#1f2328">spatial-scene.large/compose/settle</text>
-<text x="400" y="6800" fill="#1f2328" text-anchor="end">1.0 µs</text>
-<text x="500" y="6800" fill="#1f2328" text-anchor="end">1.7 µs</text>
-<text x="620" y="6800" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6800" fill="#1f2328" text-anchor="end">1.2 µs</text>
+<text x="500" y="6800" fill="#1f2328" text-anchor="end">1.9 µs</text>
+<text x="620" y="6800" fill="#cf222e" text-anchor="end">+18.5%</text>
 <text x="16" y="6824" fill="#1f2328">spatial-scene.large/compose/steady</text>
-<text x="400" y="6824" fill="#1f2328" text-anchor="end">15.60 ms</text>
-<text x="500" y="6824" fill="#1f2328" text-anchor="end">19.12 ms</text>
-<text x="620" y="6824" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6824" fill="#1f2328" text-anchor="end">21.95 ms</text>
+<text x="500" y="6824" fill="#1f2328" text-anchor="end">29.07 ms</text>
+<text x="620" y="6824" fill="#cf222e" text-anchor="end">+40.7%</text>
 <rect x="8" y="6832" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6848" fill="#1f2328">spatial-scene.large/compose/teardown</text>
-<text x="400" y="6848" fill="#1f2328" text-anchor="end">739.4 µs</text>
-<text x="500" y="6848" fill="#1f2328" text-anchor="end">1.33 ms</text>
-<text x="620" y="6848" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6848" fill="#1f2328" text-anchor="end">972.7 µs</text>
+<text x="500" y="6848" fill="#1f2328" text-anchor="end">1.39 ms</text>
+<text x="620" y="6848" fill="#cf222e" text-anchor="end">+31.6%</text>
 <text x="16" y="6872" fill="#1f2328">spatial-scene.medium/compose/burst</text>
-<text x="400" y="6872" fill="#1f2328" text-anchor="end">10.44 ms</text>
-<text x="500" y="6872" fill="#1f2328" text-anchor="end">11.56 ms</text>
-<text x="620" y="6872" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6872" fill="#1f2328" text-anchor="end">15.56 ms</text>
+<text x="500" y="6872" fill="#1f2328" text-anchor="end">18.97 ms</text>
+<text x="620" y="6872" fill="#cf222e" text-anchor="end">+49.0%</text>
 <rect x="8" y="6880" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6896" fill="#1f2328">spatial-scene.medium/compose/cold</text>
-<text x="400" y="6896" fill="#1f2328" text-anchor="end">925.2 µs</text>
-<text x="500" y="6896" fill="#1f2328" text-anchor="end">1.36 ms</text>
-<text x="620" y="6896" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6896" fill="#1f2328" text-anchor="end">1.43 ms</text>
+<text x="500" y="6896" fill="#1f2328" text-anchor="end">3.34 ms</text>
+<text x="620" y="6896" fill="#cf222e" text-anchor="end">+54.3%</text>
 <text x="16" y="6920" fill="#1f2328">spatial-scene.medium/compose/counts</text>
-<text x="400" y="6920" fill="#1f2328" text-anchor="end">27.49 ms</text>
-<text x="500" y="6920" fill="#1f2328" text-anchor="end">27.49 ms</text>
-<text x="620" y="6920" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6920" fill="#1f2328" text-anchor="end">38.43 ms</text>
+<text x="500" y="6920" fill="#1f2328" text-anchor="end">38.43 ms</text>
+<text x="620" y="6920" fill="#cf222e" text-anchor="end">+39.8%</text>
 <rect x="8" y="6928" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6944" fill="#1f2328">spatial-scene.medium/compose/settle</text>
-<text x="400" y="6944" fill="#1f2328" text-anchor="end">0.8 µs</text>
-<text x="500" y="6944" fill="#1f2328" text-anchor="end">1.1 µs</text>
-<text x="620" y="6944" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6944" fill="#1f2328" text-anchor="end">1.2 µs</text>
+<text x="500" y="6944" fill="#1f2328" text-anchor="end">1.7 µs</text>
+<text x="620" y="6944" fill="#cf222e" text-anchor="end">+42.2%</text>
 <text x="16" y="6968" fill="#1f2328">spatial-scene.medium/compose/steady</text>
-<text x="400" y="6968" fill="#1f2328" text-anchor="end">7.54 ms</text>
-<text x="500" y="6968" fill="#1f2328" text-anchor="end">8.17 ms</text>
-<text x="620" y="6968" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6968" fill="#1f2328" text-anchor="end">11.59 ms</text>
+<text x="500" y="6968" fill="#1f2328" text-anchor="end">12.62 ms</text>
+<text x="620" y="6968" fill="#cf222e" text-anchor="end">+53.9%</text>
 <rect x="8" y="6976" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="6992" fill="#1f2328">spatial-scene.medium/compose/teardown</text>
-<text x="400" y="6992" fill="#1f2328" text-anchor="end">209.5 µs</text>
-<text x="500" y="6992" fill="#1f2328" text-anchor="end">319.3 µs</text>
-<text x="620" y="6992" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="6992" fill="#1f2328" text-anchor="end">316.8 µs</text>
+<text x="500" y="6992" fill="#1f2328" text-anchor="end">380.6 µs</text>
+<text x="620" y="6992" fill="#cf222e" text-anchor="end">+51.2%</text>
 <text x="16" y="7016" fill="#1f2328">status-panel</text>
-<text x="400" y="7016" fill="#1f2328" text-anchor="end">468.9 µs</text>
-<text x="500" y="7016" fill="#1f2328" text-anchor="end">481.2 µs</text>
-<text x="620" y="7016" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7016" fill="#1f2328" text-anchor="end">653.2 µs</text>
+<text x="500" y="7016" fill="#1f2328" text-anchor="end">685.4 µs</text>
+<text x="620" y="7016" fill="#cf222e" text-anchor="end">+39.3%</text>
 <rect x="8" y="7024" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7040" fill="#1f2328">unwind</text>
-<text x="400" y="7040" fill="#1f2328" text-anchor="end">4.38 ms</text>
-<text x="500" y="7040" fill="#1f2328" text-anchor="end">5.75 ms</text>
-<text x="620" y="7040" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7040" fill="#1f2328" text-anchor="end">5.91 ms</text>
+<text x="500" y="7040" fill="#1f2328" text-anchor="end">7.17 ms</text>
+<text x="620" y="7040" fill="#cf222e" text-anchor="end">+35.0%</text>
 <text x="16" y="7064" fill="#1f2328">update-batched</text>
-<text x="400" y="7064" fill="#1f2328" text-anchor="end">3.50 ms</text>
-<text x="500" y="7064" fill="#1f2328" text-anchor="end">3.76 ms</text>
-<text x="620" y="7064" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7064" fill="#1f2328" text-anchor="end">1.72 ms</text>
+<text x="500" y="7064" fill="#1f2328" text-anchor="end">1.83 ms</text>
+<text x="620" y="7064" fill="#1a7f37" text-anchor="end">-50.8%</text>
 <rect x="8" y="7072" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7088" fill="#1f2328">update-fanout</text>
-<text x="400" y="7088" fill="#1f2328" text-anchor="end">2.18 ms</text>
-<text x="500" y="7088" fill="#1f2328" text-anchor="end">2.31 ms</text>
-<text x="620" y="7088" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7088" fill="#1f2328" text-anchor="end">955.8 µs</text>
+<text x="500" y="7088" fill="#1f2328" text-anchor="end">1.10 ms</text>
+<text x="620" y="7088" fill="#1a7f37" text-anchor="end">-56.2%</text>
 <text x="16" y="7112" fill="#1f2328">update-leaf</text>
-<text x="400" y="7112" fill="#1f2328" text-anchor="end">36.3 µs</text>
-<text x="500" y="7112" fill="#1f2328" text-anchor="end">39.2 µs</text>
-<text x="620" y="7112" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7112" fill="#1f2328" text-anchor="end">43.0 µs</text>
+<text x="500" y="7112" fill="#1f2328" text-anchor="end">56.2 µs</text>
+<text x="620" y="7112" fill="#cf222e" text-anchor="end">+18.7%</text>
 <rect x="8" y="7120" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7136" fill="#1f2328">update-repeated</text>
-<text x="400" y="7136" fill="#1f2328" text-anchor="end">393.2 µs</text>
-<text x="500" y="7136" fill="#1f2328" text-anchor="end">411.9 µs</text>
-<text x="620" y="7136" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7136" fill="#1f2328" text-anchor="end">210.7 µs</text>
+<text x="500" y="7136" fill="#1f2328" text-anchor="end">220.9 µs</text>
+<text x="620" y="7136" fill="#1a7f37" text-anchor="end">-46.4%</text>
 <text x="16" y="7160" fill="#1f2328">virtual-filtered-list.extreme/compose/burst</text>
-<text x="400" y="7160" fill="#1f2328" text-anchor="end">874.02 ms</text>
-<text x="500" y="7160" fill="#1f2328" text-anchor="end">953.79 ms</text>
-<text x="620" y="7160" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7160" fill="#1f2328" text-anchor="end">673.32 ms</text>
+<text x="500" y="7160" fill="#1f2328" text-anchor="end">694.78 ms</text>
+<text x="620" y="7160" fill="#1a7f37" text-anchor="end">-23.0%</text>
 <rect x="8" y="7168" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7184" fill="#1f2328">virtual-filtered-list.extreme/compose/cold</text>
-<text x="400" y="7184" fill="#1f2328" text-anchor="end">548.55 ms</text>
-<text x="500" y="7184" fill="#1f2328" text-anchor="end">598.39 ms</text>
-<text x="620" y="7184" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7184" fill="#1f2328" text-anchor="end">399.70 ms</text>
+<text x="500" y="7184" fill="#1f2328" text-anchor="end">420.55 ms</text>
+<text x="620" y="7184" fill="#1a7f37" text-anchor="end">-27.1%</text>
 <text x="16" y="7208" fill="#1f2328">virtual-filtered-list.extreme/compose/counts</text>
-<text x="400" y="7208" fill="#1f2328" text-anchor="end">1518.06 ms</text>
-<text x="500" y="7208" fill="#1f2328" text-anchor="end">1518.06 ms</text>
-<text x="620" y="7208" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7208" fill="#1f2328" text-anchor="end">1045.37 ms</text>
+<text x="500" y="7208" fill="#1f2328" text-anchor="end">1045.37 ms</text>
+<text x="620" y="7208" fill="#1a7f37" text-anchor="end">-31.1%</text>
 <rect x="8" y="7216" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7232" fill="#1f2328">virtual-filtered-list.extreme/compose/settle</text>
-<text x="400" y="7232" fill="#1f2328" text-anchor="end">2.2 µs</text>
-<text x="500" y="7232" fill="#1f2328" text-anchor="end">3.0 µs</text>
-<text x="620" y="7232" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7232" fill="#1f2328" text-anchor="end">2.7 µs</text>
+<text x="500" y="7232" fill="#1f2328" text-anchor="end">3.1 µs</text>
+<text x="620" y="7232" fill="#cf222e" text-anchor="end">+21.1%</text>
 <text x="16" y="7256" fill="#1f2328">virtual-filtered-list.extreme/compose/steady</text>
-<text x="400" y="7256" fill="#1f2328" text-anchor="end">21.82 ms</text>
-<text x="500" y="7256" fill="#1f2328" text-anchor="end">27.96 ms</text>
-<text x="620" y="7256" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7256" fill="#1f2328" text-anchor="end">12.91 ms</text>
+<text x="500" y="7256" fill="#1f2328" text-anchor="end">19.77 ms</text>
+<text x="620" y="7256" fill="#1a7f37" text-anchor="end">-40.8%</text>
 <rect x="8" y="7264" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7280" fill="#1f2328">virtual-filtered-list.extreme/compose/teardown</text>
-<text x="400" y="7280" fill="#1f2328" text-anchor="end">597.3 µs</text>
-<text x="500" y="7280" fill="#1f2328" text-anchor="end">734.7 µs</text>
-<text x="620" y="7280" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7280" fill="#1f2328" text-anchor="end">596.2 µs</text>
+<text x="500" y="7280" fill="#1f2328" text-anchor="end">935.6 µs</text>
+<text x="620" y="7280" fill="#1a7f37" text-anchor="end">-0.2%</text>
 <text x="16" y="7304" fill="#1f2328">virtual-filtered-list.large/compose/burst</text>
-<text x="400" y="7304" fill="#1f2328" text-anchor="end">129.60 ms</text>
-<text x="500" y="7304" fill="#1f2328" text-anchor="end">139.88 ms</text>
-<text x="620" y="7304" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7304" fill="#1f2328" text-anchor="end">152.88 ms</text>
+<text x="500" y="7304" fill="#1f2328" text-anchor="end">161.72 ms</text>
+<text x="620" y="7304" fill="#cf222e" text-anchor="end">+18.0%</text>
 <rect x="8" y="7312" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7328" fill="#1f2328">virtual-filtered-list.large/compose/cold</text>
-<text x="400" y="7328" fill="#1f2328" text-anchor="end">77.50 ms</text>
-<text x="500" y="7328" fill="#1f2328" text-anchor="end">84.50 ms</text>
-<text x="620" y="7328" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7328" fill="#1f2328" text-anchor="end">86.85 ms</text>
+<text x="500" y="7328" fill="#1f2328" text-anchor="end">96.13 ms</text>
+<text x="620" y="7328" fill="#cf222e" text-anchor="end">+12.1%</text>
 <text x="16" y="7352" fill="#1f2328">virtual-filtered-list.large/compose/counts</text>
-<text x="400" y="7352" fill="#1f2328" text-anchor="end">233.84 ms</text>
-<text x="500" y="7352" fill="#1f2328" text-anchor="end">233.84 ms</text>
-<text x="620" y="7352" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7352" fill="#1f2328" text-anchor="end">292.74 ms</text>
+<text x="500" y="7352" fill="#1f2328" text-anchor="end">292.74 ms</text>
+<text x="620" y="7352" fill="#cf222e" text-anchor="end">+25.2%</text>
 <rect x="8" y="7360" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7376" fill="#1f2328">virtual-filtered-list.large/compose/settle</text>
-<text x="400" y="7376" fill="#1f2328" text-anchor="end">1.8 µs</text>
-<text x="500" y="7376" fill="#1f2328" text-anchor="end">3.7 µs</text>
-<text x="620" y="7376" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7376" fill="#1f2328" text-anchor="end">2.5 µs</text>
+<text x="500" y="7376" fill="#1f2328" text-anchor="end">4.8 µs</text>
+<text x="620" y="7376" fill="#cf222e" text-anchor="end">+41.6%</text>
 <text x="16" y="7400" fill="#1f2328">virtual-filtered-list.large/compose/steady</text>
-<text x="400" y="7400" fill="#1f2328" text-anchor="end">16.80 ms</text>
-<text x="500" y="7400" fill="#1f2328" text-anchor="end">23.36 ms</text>
-<text x="620" y="7400" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7400" fill="#1f2328" text-anchor="end">18.07 ms</text>
+<text x="500" y="7400" fill="#1f2328" text-anchor="end">25.34 ms</text>
+<text x="620" y="7400" fill="#cf222e" text-anchor="end">+7.6%</text>
 <rect x="8" y="7408" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7424" fill="#1f2328">virtual-filtered-list.large/compose/teardown</text>
-<text x="400" y="7424" fill="#1f2328" text-anchor="end">394.3 µs</text>
-<text x="500" y="7424" fill="#1f2328" text-anchor="end">625.4 µs</text>
-<text x="620" y="7424" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7424" fill="#1f2328" text-anchor="end">415.6 µs</text>
+<text x="500" y="7424" fill="#1f2328" text-anchor="end">879.1 µs</text>
+<text x="620" y="7424" fill="#cf222e" text-anchor="end">+5.4%</text>
 <text x="16" y="7448" fill="#1f2328">virtual-filtered-list.medium/compose/burst</text>
-<text x="400" y="7448" fill="#1f2328" text-anchor="end">26.47 ms</text>
-<text x="500" y="7448" fill="#1f2328" text-anchor="end">31.61 ms</text>
-<text x="620" y="7448" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7448" fill="#1f2328" text-anchor="end">30.43 ms</text>
+<text x="500" y="7448" fill="#1f2328" text-anchor="end">35.07 ms</text>
+<text x="620" y="7448" fill="#cf222e" text-anchor="end">+15.0%</text>
 <rect x="8" y="7456" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7472" fill="#1f2328">virtual-filtered-list.medium/compose/cold</text>
-<text x="400" y="7472" fill="#1f2328" text-anchor="end">13.01 ms</text>
-<text x="500" y="7472" fill="#1f2328" text-anchor="end">17.33 ms</text>
-<text x="620" y="7472" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7472" fill="#1f2328" text-anchor="end">14.27 ms</text>
+<text x="500" y="7472" fill="#1f2328" text-anchor="end">16.19 ms</text>
+<text x="620" y="7472" fill="#cf222e" text-anchor="end">+9.7%</text>
 <text x="16" y="7496" fill="#1f2328">virtual-filtered-list.medium/compose/counts</text>
-<text x="400" y="7496" fill="#1f2328" text-anchor="end">59.59 ms</text>
-<text x="500" y="7496" fill="#1f2328" text-anchor="end">59.59 ms</text>
-<text x="620" y="7496" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7496" fill="#1f2328" text-anchor="end">61.65 ms</text>
+<text x="500" y="7496" fill="#1f2328" text-anchor="end">61.65 ms</text>
+<text x="620" y="7496" fill="#cf222e" text-anchor="end">+3.5%</text>
 <rect x="8" y="7504" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7520" fill="#1f2328">virtual-filtered-list.medium/compose/settle</text>
-<text x="400" y="7520" fill="#1f2328" text-anchor="end">1.3 µs</text>
-<text x="500" y="7520" fill="#1f2328" text-anchor="end">1.6 µs</text>
-<text x="620" y="7520" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7520" fill="#1f2328" text-anchor="end">2.0 µs</text>
+<text x="500" y="7520" fill="#1f2328" text-anchor="end">2.8 µs</text>
+<text x="620" y="7520" fill="#cf222e" text-anchor="end">+55.7%</text>
 <text x="16" y="7544" fill="#1f2328">virtual-filtered-list.medium/compose/steady</text>
-<text x="400" y="7544" fill="#1f2328" text-anchor="end">13.76 ms</text>
-<text x="500" y="7544" fill="#1f2328" text-anchor="end">17.26 ms</text>
-<text x="620" y="7544" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7544" fill="#1f2328" text-anchor="end">15.84 ms</text>
+<text x="500" y="7544" fill="#1f2328" text-anchor="end">22.11 ms</text>
+<text x="620" y="7544" fill="#cf222e" text-anchor="end">+15.2%</text>
 <rect x="8" y="7552" width="624" height="24" fill="#f6f8fa"/>
 <text x="16" y="7568" fill="#1f2328">virtual-filtered-list.medium/compose/teardown</text>
-<text x="400" y="7568" fill="#1f2328" text-anchor="end">209.7 µs</text>
-<text x="500" y="7568" fill="#1f2328" text-anchor="end">238.7 µs</text>
-<text x="620" y="7568" fill="#59636e" text-anchor="end">—</text>
+<text x="400" y="7568" fill="#1f2328" text-anchor="end">348.6 µs</text>
+<text x="500" y="7568" fill="#1f2328" text-anchor="end">497.2 µs</text>
+<text x="620" y="7568" fill="#cf222e" text-anchor="end">+66.3%</text>
 </svg>
