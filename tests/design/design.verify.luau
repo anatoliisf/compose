@@ -384,6 +384,15 @@ describe("Compose Design documents", function()
 		local code = Design.emit(value, extended)
 		expect(string.find(code, 'Chrome.Tile "Tile"', 1, true) ~= nil):toBe(true)
 		expect(Design.parse(code, extended).root.children[1].kind):toBe "Tile"
+		local perCall: Design.EmitOptions =
+			{ name = "Tiles", controls = "local UI = Toy.controls()", localControls = true }
+		local scoped = Design.emit(value, extended, perCall)
+		expect(
+			string.find(scoped, "local function Tiles(props: Props): Instance\n\tlocal UI = Toy.controls()", 1, true)
+				~= nil
+		):toBe(true)
+		expect(string.find(scoped, 'Chrome.Tile "Tile"', 1, true) ~= nil):toBe(true)
+		expect(Design.emit(Design.parse(scoped, extended), extended, perCall)):toBe(scoped)
 		expect(function()
 			Design.extend(library, { kinds = { Label = library.kinds.Label } })
 		end):toThrow "already has a kind named Label"
@@ -620,6 +629,7 @@ describe("Compose Design views as code", function()
 		local boxFields: { [string]: Design.Field } = {
 			Size = { type = "datatype", datatype = "UDim2" },
 			AutomaticSize = { type = "datatype", datatype = "Enum.AutomaticSize" },
+			TextColor3 = { type = "color", datatype = "Color3" },
 		}
 		toy.kinds = table.clone(toy.kinds)
 		toy.kinds.Box = { fields = boxFields, children = "none", call = "UI.Box", build = builder "Box" }
@@ -627,9 +637,11 @@ describe("Compose Design views as code", function()
 		local size: Design.Literal = { 1, 0, 0, 48 }
 		value = Design.document.change(value, toy, box, "Size", { literal = size })
 		value = Design.document.change(value, toy, box, "AutomaticSize", { literal = "Y" })
+		value = Design.document.change(value, toy, box, "TextColor3", { literal = "#986325" })
 		local code = Design.emit(value, toy)
 		expect(string.find(code, "Size = UDim2.new(1, 0, 0, 48)", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, "AutomaticSize = Enum.AutomaticSize.Y", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, 'TextColor3 = Color3.fromHex "986325"', 1, true) ~= nil):toBe(true)
 		expect(Design.emit(Design.parse(code, toy), toy)):toBe(code)
 		local short: Design.Literal = { 1, 0 }
 		expect(refused(function()
