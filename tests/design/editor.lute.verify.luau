@@ -1,6 +1,7 @@
 --!strict
 
 local Design = require "../../src/design"
+local DesignEditor = require "../../src/design-editor"
 local Support = require "./editor-support"
 local Test = require "../harness"
 
@@ -184,6 +185,114 @@ describe("host-neutral design editor", function()
 		w.fire(w.find(editor.root, "Theme"), "Activated")
 		w.settle()
 		expect(chosen[1]):toBe "Dark"
+		editor.dispose()
+		w.close()
+	end)
+
+	it("opens a kit workspace on an empty linked module, seeds it and releases it", function()
+		local w = Support.world()
+		local released = 0
+		local source = ""
+		local kit = DesignEditor.kit("Test", function(): DesignEditor.Workspace
+			return {
+				runtime = w.runtime,
+				environment = w.environment,
+				library = w.library,
+				root = w.document.root.kind,
+				devices = { { name = "Phone", size = { X = 390, Y = 844 } } },
+				dispose = function()
+					released += 1
+				end,
+			}
+		end)
+		local editor = kit.edit(w.screen, "Seeded", {
+			read = function(): string
+				return source
+			end,
+			write = function(expected: string, generated: string): boolean
+				if source ~= expected then
+					return false
+				end
+				source = generated
+				return true
+			end,
+			watch = function(_changed: () -> ()): () -> ()
+				return function() end
+			end,
+		})
+		w.settle()
+		expect(string.find(source, "local _design", 1, true) ~= nil):toBe(true)
+		expect(string.find(source, '"Seeded"', 1, true) ~= nil):toBe(true)
+		expect(w.find(w.screen, "ArtboardSize").Text):toBe "390 × 844"
+		editor.dispose()
+		expect(released):toBe(1)
+		w.close()
+	end)
+
+	it("lets a library provide the surroundings of the staged design", function()
+		local w = Support.world()
+		local rootKind = w.library.kinds[w.document.root.kind]
+		local provided: { unknown } = {}
+		w.library.provide = function(content: unknown): unknown
+			table.insert(provided, content)
+			return rootKind.build({}, { content }, "Provided")
+		end
+		local editor = w.mount()
+		w.settle()
+		local surround = w.find(editor.root, "Provided")
+		expect(#provided):toBe(1)
+		expect(w.read(provided[1], "Parent")):toBe(surround)
+		editor.dispose()
+		w.close()
+	end)
+
+	it("edits value fields as Luau literals and node fields by choosing a node", function()
+		local w = Support.world()
+		local rootKind = w.library.kinds[w.document.root.kind]
+		local valued = table.clone(rootKind.fields.width)
+		valued.type = "value"
+		rootKind.fields.width = valued
+		rootKind.fields.follow = { type = "node", group = "Layout", order = 99 }
+		local editor = w.mount()
+		w.settle()
+		local inspector = w.find(editor.root, "DesignInspector")
+		local box = assert(w.find(inspector, "width"):FindFirstChildWhichIsA("TextBox", true))
+		box.Text = "320"
+		w.fire(box, "FocusLost")
+		w.settle()
+		local root = editor.session.document:peek().root
+		expect(root.props.width.literal):toBe(320)
+		inspector = w.find(editor.root, "DesignInspector")
+		box = assert(w.find(inspector, "width"):FindFirstChildWhichIsA("TextBox", true))
+		expect(box.Text):toBe "320"
+		box.Text = "{ 1,"
+		w.fire(box, "FocusLost")
+		w.settle()
+		expect(editor.session.problem:peek() ~= nil):toBe(true)
+		expect(editor.session.document:peek().root.props.width.literal):toBe(320)
+		w.fire(w.find(w.find(inspector, "follow"), "Bind"), "Activated")
+		w.settle()
+		expect(editor.session.document:peek().root.props.follow.node):toBe "n1"
+		editor.dispose()
+		w.close()
+	end)
+
+	it("reports a design that fails to render and keeps editing", function()
+		local w = Support.world()
+		local rootKind = w.library.kinds[w.document.root.kind]
+		local build = rootKind.build
+		local editor = w.mount()
+		w.settle()
+		rootKind.build = function(): unknown
+			error "broken control"
+		end
+		editor.session.change("Visible", { literal = false })
+		w.settle()
+		expect(string.find(editor.session.problem:peek() or "", "broken control", 1, true) ~= nil):toBe(true)
+		rootKind.build = build
+		editor.session.change("Visible", { literal = true })
+		w.settle()
+		expect(assert(editor.stage).nodes[w.document.root.id] ~= nil):toBe(true)
 		editor.dispose()
 		w.close()
 	end)
@@ -503,6 +612,29 @@ describe("host-neutral design editor", function()
 		expect(assert(part:FindFirstChildWhichIsA "SpecialMesh").MeshId):toBe "test-mesh"
 		expect(assert(part:FindFirstChildWhichIsA "PointLight").Brightness):toBe(2)
 		expect(assert(part:FindFirstChildWhichIsA "Decal").Texture):toBe "test-image"
+		editor.dispose()
+		w.close()
+	end)
+
+	it("tiles and offsets a texture on a 3D part", function()
+		local w = Support.world "3d"
+		local editor = w.mount()
+		editor.session.select(w.first)
+		expect(editor.session.insert "Texture"):toBe(true)
+		editor.session.change("tileU", { literal = 27.2 })
+		editor.session.change("tileV", { literal = 13.6 })
+		editor.session.change("offsetU", { literal = 8.5 })
+		editor.session.change("offsetV", { literal = 2 })
+		w.settle()
+		local part = Support.instance(assert(editor.scene).nodes[w.first])
+		local texture = assert(part:FindFirstChildWhichIsA "Texture")
+		expect(texture.StudsPerTileU):toBe(27.2)
+		expect(texture.StudsPerTileV):toBe(13.6)
+		expect(texture.OffsetStudsU):toBe(8.5)
+		expect(texture.OffsetStudsV):toBe(2)
+		local document = editor.session.document:peek()
+		local source = Design.emit(document, w.library)
+		expect(Design.emit(Design.parse(source, w.library), w.library)):toBe(source)
 		editor.dispose()
 		w.close()
 	end)

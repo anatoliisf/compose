@@ -590,12 +590,58 @@ function document.insert(
 			or (container.children == "template" and parent.bind ~= nil and parent.bind.row ~= nil),
 		`{parent.kind} cannot take this node`
 	)
-	local kind = assert(library.kinds[kindName], `Unknown {library.name} kind {kindName}`)
-	local id = `n{nextValue.nextId}`
-	nextValue.nextId += 1
-	local node: Node = { id = id, kind = kindName, name = kindName, props = defaults(kind), children = {} }
+	local function create(seed: Types.Seed): Node
+		local kind = assert(library.kinds[seed.kind], `Unknown {library.name} kind {seed.kind}`)
+		local created: Node = {
+			id = `n{nextValue.nextId}`,
+			kind = seed.kind,
+			name = seed.kind,
+			props = defaults(kind),
+			children = {},
+		}
+		nextValue.nextId += 1
+		local literals = seed.props
+		if literals then
+			for key, item in literals do
+				created.props[key] = { literal = copyLiteral(item) }
+			end
+		end
+		local nested: { Types.Seed }? = seed.children or kind.seeds
+		if nested then
+			for _, child in nested do
+				table.insert(created.children, create(child))
+			end
+		end
+		return created
+	end
+	local node = create { kind = kindName }
 	table.insert(parent.children, math.clamp(at or #parent.children + 1, 1, #parent.children + 1), node)
-	return document.validate(nextValue, library), id
+	return document.validate(nextValue, library), node.id
+end
+
+function document.applies(node: Node, kind: Types.Kind, key: string): boolean
+	local field = kind.fields[key]
+	local requires = if field then field.requires else nil
+	if requires == nil then
+		return true
+	end
+	for other, allowed in requires do
+		local property = node.props[other]
+		local defaults = kind.defaults
+		local sibling = kind.fields[other]
+		local current: Literal? = if property
+			then property.literal
+			elseif defaults and defaults[other] ~= nil then defaults[other]
+			elseif sibling then sibling.default
+			else nil
+		if property ~= nil and current == nil then
+			continue
+		end
+		if current == nil or (#allowed > 0 and table.find(allowed, current) == nil) then
+			return false
+		end
+	end
+	return true
 end
 
 function document.change(value: Document, library: Library, id: string, key: string, property: Value?): Document
@@ -605,6 +651,35 @@ function document.change(value: Document, library: Library, id: string, key: str
 		node.props[key] = copyValue(property)
 	else
 		node.props[key] = nil
+	end
+	local kind = library.kinds[node.kind]
+	if kind then
+		local requires = if kind.fields[key] then kind.fields[key].requires else nil
+		if property and requires and not document.applies(node, kind, key) then
+			local needs: { string } = {}
+			for other, allowed in requires do
+				local listed: { string } = {}
+				for _, item in allowed do
+					table.insert(listed, tostring(item))
+				end
+				table.insert(
+					needs,
+					if #listed > 0 then `{other} is {table.concat(listed, " or ")}` else `{other} is set`
+				)
+			end
+			table.sort(needs)
+			error(`{key} applies only when {table.concat(needs, " and ")}`, 0)
+		end
+		local pruned = true
+		while pruned do
+			pruned = false
+			for other in node.props do
+				if not document.applies(node, kind, other) then
+					node.props[other] = nil
+					pruned = true
+				end
+			end
+		end
 	end
 	return document.validate(nextValue, library)
 end

@@ -28,9 +28,17 @@ runtime:dispose()
 
 Use a GUI container with a known extent as the parent. Use `roblox3DLibrary` to open the scene stage. The returned session owns selection and edit history. Layer dragging calls `session.move`; inspector controls call session edits. Resizing and numeric scrubbing preview values during movement and commit when released. A resize commits its width, height and fill flags together, so one undo restores the previous size.
 
+The inspector has an editor for each field type. It edits `value` and `datatype` fields as Luau literals, such as `{ top = 8, bottom = 8 }` or `{ 0, 10, 0, 20 }`. It edits `node` fields by choosing a node of the design. `Design.literal(value)` writes a literal as Luau and `Design.parseLiteral(text)` reads it back; an invalid literal sets `session.problem` and keeps the old value. A field's `requires` names the sibling fields and values it depends on, for example `{ presentation = { "gauge" } }`; an empty list requires any value. The inspector shows the field only when its requirements hold, `Design.document.change` refuses the field otherwise, and a change that breaks a requirement clears the dependent value. A kind's `seeds` are the children `insert` adds with it. After the editor mounts, a design that fails to render sets `session.problem` and leaves the editor usable.
+
 The 2D stage supports cursor-anchored zoom, pan, fit, selection outlines, resize grips and a size badge. The scene stage supports orbit, pan, filtered raycast picking and axis translation. Fit runs once on the next host frame and can also be requested through the stage or scene API.
 
 For a source link, pass a `Design.LinkStore` as `options.link`. The Roblox-only `studio/design/script-store.luau` adapter wraps `ScriptEditorService`; the editor itself only consumes the store protocol.
+
+## Studio plugin
+
+Build the plugin from `studio/design/plugin.project.json`. Its **Design** button opens the design module that is selected in the Explorer. If no design module is selected, it opens `ReplicatedStorage.Designs.Screen` and creates it when it is missing. Selecting another design module while the editor is open switches to it. The editor stays linked to the module through `studio/design/script-store.luau`. Edits in the editor write the source, and source edits from Rojo, an agent or the script editor update the editor.
+
+The plugin uses the first package kit that it finds (see [`DesignEditor.kit`](api.md#designeditorkit)). It loads that kit from the game's own copy of the package, so the editor and the game always use the same version. Without a package kit, the plugin opens the built-in Roblox library.
 
 ## Vendor the module tree
 
