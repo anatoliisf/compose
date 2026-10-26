@@ -14,22 +14,20 @@ export type Boundary = {
 	report: (failure: unknown) -> (),
 }
 
-export type Entry = {
-	release: Dispose | Owner | nil,
-	after: Dispose?,
-	previous: Entry?,
-	following: Entry?,
-}
-
 export type Owner = {
 	parent: Owner?,
-	reactor: Reactor.Reactor,
+	reactor: Reactor.Reactor?,
 	boundary: Boundary?,
-	head: Entry?,
-	count: number,
-	disposed: boolean,
-	attachment: Entry?,
+	head: Owner?,
+	count: number?,
+	disposed: boolean?,
+	previous: Owner?,
+	following: Owner?,
+	release: Dispose?,
+	after: Dispose?,
 }
+
+export type Entry = Owner
 
 local currentOwner: () -> Owner? = function(): Owner?
 	return nil
@@ -39,11 +37,6 @@ local function new(inherited: Reactor.Reactor?, parent: Owner?): Owner
 	return {
 		parent = parent or currentOwner(),
 		reactor = inherited or Reactor.create(),
-		boundary = nil,
-		head = nil,
-		count = 0,
-		disposed = false,
-		attachment = nil,
 	}
 end
 
@@ -66,24 +59,24 @@ end
 
 local disposeOwner: (owner: Owner) -> ()
 
-local function release(target: Dispose | Owner | nil)
-	if type(target) == "function" then
-		target()
-	elseif target ~= nil then
-		disposeOwner(target)
-	end
+local function reactorOf(owner: Owner): Reactor.Reactor
+	return assert(owner.reactor, "Compose: a cleanup entry is not an owner")
 end
 
 local function releaseEntry(entry: Entry, failures: { unknown })
-	local target = entry.release
+	local release = entry.release
+	if release == nil then
+		disposeOwner(entry)
+		return
+	end
 	entry.release = nil
 	local after = entry.after
 	if after == nil then
-		release(target)
+		release()
 		return
 	end
 	entry.after = nil
-	local ok, failure: unknown = pcall(release, target)
+	local ok, failure: unknown = pcall(release)
 	if not ok then
 		table.insert(failures, failure)
 	end
@@ -106,20 +99,25 @@ local function unlink(owner: Owner, entry: Entry)
 	end
 	entry.previous = nil
 	entry.following = nil
-	owner.count -= 1
+	owner.count = (owner.count or 1) - 1
 end
 
-local function link(owner: Owner, target: Dispose | Owner, after: Dispose?): Entry
+local function attach(owner: Owner, entry: Entry)
 	local first = owner.head
-	local entry: Entry = { release = target, previous = nil, following = first }
-	if after ~= nil then
-		entry.after = after
-	end
+	entry.following = first
 	if first ~= nil then
 		first.previous = entry
 	end
 	owner.head = entry
-	owner.count += 1
+	owner.count = (owner.count or 0) + 1
+end
+
+local function link(owner: Owner, release: Dispose, after: Dispose?): Entry
+	local entry: Entry = { release = release, previous = nil, following = nil }
+	if after ~= nil then
+		entry.after = after
+	end
+	attach(owner, entry)
 	return entry
 end
 
@@ -165,7 +163,9 @@ local function own(owner: Owner, dispose: Dispose, after: Dispose?): Dispose
 		if entry.after == nil then
 			local target = entry.release
 			entry.release = nil
-			release(target)
+			if target ~= nil then
+				target()
+			end
 			return
 		end
 		local failures: { unknown } = {}
@@ -217,14 +217,9 @@ disposeOwner = function(owner: Owner)
 	end
 	owner.disposed = true
 
-	local attachment = owner.attachment
-	if attachment ~= nil then
-		owner.attachment = nil
-		local parent = owner.parent
-		if parent ~= nil and not parent.disposed and attachment.release ~= nil then
-			unlink(parent, attachment)
-			attachment.release = nil
-		end
+	local parent = owner.parent
+	if parent ~= nil and not parent.disposed and (owner.previous ~= nil or parent.head == owner) then
+		unlink(parent, owner)
 	end
 	owner.parent = nil
 
@@ -256,11 +251,11 @@ disposeOwner = function(owner: Owner)
 end
 
 local function isDisposed(owner: Owner): boolean
-	return owner.disposed
+	return owner.disposed == true
 end
 
 local function size(owner: Owner): number
-	return owner.count
+	return owner.count or 0
 end
 
 local function guardWith(owner: Owner, boundary: Boundary)
@@ -272,7 +267,7 @@ local function createChild(owner: Owner): Owner
 	if owner.disposed then
 		disposeOwner(child)
 	else
-		child.attachment = link(owner, child, nil)
+		attach(owner, child)
 	end
 	if Inspect.isActive() then
 		Inspect.child(owner, child)
@@ -289,9 +284,9 @@ local function startWatch<A, B>(
 	after: Dispose?
 ): Dispose
 	if after == nil then
-		return own(owner, factory(owner.reactor, first, second))
+		return own(owner, factory(reactorOf(owner), first, second))
 	end
-	local ok, dispose = pcall(factory, owner.reactor, first, second)
+	local ok, dispose = pcall(factory, reactorOf(owner), first, second)
 	if not ok then
 		after()
 		error(dispose, 0)
@@ -410,6 +405,7 @@ end
 
 return {
 	createOwner = createOwner,
+	reactorOf = reactorOf,
 	raiseAll = raiseAll,
 	installActivationDepth = installActivationDepth,
 	installCurrentOwner = installCurrentOwner,

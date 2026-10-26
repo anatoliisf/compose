@@ -340,7 +340,7 @@ local function createRuntime(host: Host.Host): Runtime
 		end
 
 		local mountPoint = Children.wholeOf(host, target)
-		local ok, block = pcall(Block.mountBlock, mountPoint, owner, produce, label, nil)
+		local ok, block = pcall(Block.mountBlock, mountPoint, owner, produce, label, nil, false)
 		if not ok then
 			if isTopLevel then
 				Owner.dispose(owner)
