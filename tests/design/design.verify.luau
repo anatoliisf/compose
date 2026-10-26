@@ -33,6 +33,7 @@ local library: Design.Library = {
 	returnType = "Instance",
 	readable = "Toy.Readable",
 	cell = "Toy.Cell",
+	newCell = "Toy.cell",
 	token = "UI.token",
 	kinds = {
 		Stack = {
@@ -63,6 +64,19 @@ local library: Design.Library = {
 			key = "key",
 			call = "UI.List",
 			build = builder "List",
+		},
+		Flash = {
+			fields = { target = { type = "node" } },
+			children = "none",
+			call = "UI.Flash",
+			build = builder "Flash",
+		},
+		Panel = {
+			fields = { title = { type = "string" } },
+			children = "slot",
+			slot = "content",
+			call = "UI.Panel",
+			build = builder "Panel",
 		},
 		Slot = {
 			fields = { content = { type = "content" } },
@@ -193,6 +207,149 @@ describe("Compose Design documents", function()
 			expect(closed):toEqual { { "back" } }
 		end)
 	end)
+	it("builds slot content only when the slot is called and reads it back from source", function()
+		local value = Design.document.new("Panel", library, "Panel")
+		local body
+		value, body = Design.document.insert(value, library, "n1", "Label")
+		value = Design.document.change(value, library, body, "text", { literal = "Inside" })
+		expect(function()
+			Design.document.insert(value, library, "n1", "Label")
+		end):toThrow()
+		table.clear(built)
+		local panel = Design.render(value, library) :: Built
+		expect(#built):toBe(1)
+		expect(#panel.children):toBe(0)
+		local slot = assert(panel.props.content.slot)
+		local inside = slot() :: Built
+		expect(inside.kind):toBe "Label"
+		expect(inside.props.text.literal):toBe "Inside"
+		local code = Design.emit(value, library)
+		expect(string.find(code, 'content = function() return UI.Label "Label" {', 1, true) ~= nil):toBe(true)
+		local parsed = Design.parse(code, library)
+		expect(parsed.root.children[1].kind):toBe "Label"
+		expect(parsed.root.children[1].props.text.literal):toBe "Inside"
+	end)
+
+	it("passes item fields as output arguments from a row template", function()
+		local value = Design.document.new("Pick", library, "Stack")
+		value = Design.document.setContract(value, library, {
+			inputs = {
+				{ id = "rows", kind = "readable", type = "list", preview = rowsPreview, fields = rowFields },
+			},
+			outputs = { { id = "onPick" } },
+		})
+		local list, row
+		value, list = Design.document.insert(value, library, "n1", "List")
+		value = Design.document.bind(value, library, list, { from = "rows", key = "id" })
+		value, row = Design.document.insert(value, library, list, "Button")
+		value = Design.document.change(value, library, row, "onActivate", { output = "onPick", fields = { "id" } })
+		local picker: string = row
+		local current = value
+		expect(function()
+			Design.document.change(
+				current,
+				library,
+				picker,
+				"onActivate",
+				{ output = "onPick", fields = { "missing" } }
+			)
+		end):toThrow "unknown item field missing"
+		local picked: { Design.Literal } = {}
+		table.clear(built)
+		Design.render(value, library, {
+			outputs = {
+				onPick = function(args: { Design.Literal })
+					table.insert(picked, args[1])
+				end,
+			},
+		})
+		local listRecord: Built? = nil
+		for _, record in built do
+			if record.kind == "List" then
+				listRecord = record
+			end
+		end
+		local template = assert(assert(listRecord).props.render.template)
+		local button = template(Core.cell(bo)) :: Built
+		assert(button.props.onActivate.callback)()
+		expect(picked):toEqual { "b" }
+		local code = Design.emit(value, library)
+		expect(string.find(code, "props.onPick(current:peek().id)", 1, true) ~= nil):toBe(true)
+		expect(Design.parse(code, library)):toEqual(value)
+	end)
+
+	it("references another node by id through render and source", function()
+		local value = Design.document.new("Pulse", library, "Stack")
+		local label, flash
+		value, label = Design.document.insert(value, library, "n1", "Label")
+		value, flash = Design.document.insert(value, library, "n1", "Flash")
+		value = Design.document.change(value, library, flash, "target", { node = label })
+		local current = value
+		local flashId: string = flash
+		expect(function()
+			Design.document.change(current, library, flashId, "target", { node = "n99" })
+		end):toThrow "references unknown node n99"
+		expect(function()
+			Design.document.change(current, library, flashId, "target", { literal = "n2" })
+		end):toThrow "references another node"
+		table.clear(built)
+		Design.render(value, library)
+		local labelRecord: Built? = nil
+		local flashRecord: Built? = nil
+		for _, record in built do
+			if record.kind == "Label" then
+				labelRecord = record
+			elseif record.kind == "Flash" then
+				flashRecord = record
+			end
+		end
+		expect(assert(assert(flashRecord).props.target.node):peek()):toBe(labelRecord)
+		local code = Design.emit(value, library)
+		expect(string.find(code, "local refs = { " .. label .. " = Toy.cell(nil) }", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, `capture("{label}", UI.Label "Label"`, 1, true) ~= nil):toBe(true)
+		expect(string.find(code, `target = refs.{label},`, 1, true) ~= nil):toBe(true)
+		expect(Design.parse(code, library)):toEqual(value)
+	end)
+
+	it("emits a named component and reads it back", function()
+		local value = sample()
+		local code = Design.emit(value, library, { name = "Scores" })
+		expect(string.find(code, "local function Scores(UI: Toy.Controls, props: Props): Instance", 1, true) ~= nil):toBe(
+			true
+		)
+		expect(string.find(code, "\nreturn Scores\n", 1, true) ~= nil):toBe(true)
+		expect(Design.parse(code, library)):toEqual(Design.parse(Design.emit(value, library), library))
+		expect(function()
+			Design.emit(value, library, { name = "not a name" })
+		end):toThrow "identifier"
+	end)
+
+	it("extends a library with game kinds and their prelude", function()
+		local extended = Design.extend(library, {
+			kinds = {
+				Tile = {
+					fields = { label = { type = "string" } },
+					children = "none",
+					call = "Chrome.Tile",
+					build = builder "Tile",
+				},
+			},
+			prelude = { 'local Chrome = require("Chrome")', 'local Toy = require("Toy")' },
+		})
+		expect(extended.kinds.Tile.call):toBe "Chrome.Tile"
+		expect(extended.kinds.Label ~= nil):toBe(true)
+		expect(library.kinds.Tile):toBe(nil)
+		expect(#extended.prelude):toBe(2)
+		local value = Design.document.new("Tiles", extended, "Stack")
+		value = Design.document.insert(value, extended, "n1", "Tile")
+		local code = Design.emit(value, extended)
+		expect(string.find(code, 'Chrome.Tile "Tile"', 1, true) ~= nil):toBe(true)
+		expect(Design.parse(code, extended).root.children[1].kind):toBe "Tile"
+		expect(function()
+			Design.extend(library, { kinds = { Label = library.kinds.Label } })
+		end):toThrow "already has a kind named Label"
+	end)
+
 	it("edits through a session that tracks selection, problems and history", function()
 		Core.withRootOwner(function()
 			local session = Design.session(library, sample())

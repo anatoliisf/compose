@@ -12,10 +12,22 @@ export type Value = {
 	item: string?,
 	output: string?,
 	args: { Literal }?,
+	fields: { string }?,
+	node: string?,
 	token: string?,
 }
 
-export type FieldType = "string" | "number" | "boolean" | "choice" | "color" | "vector3" | "value" | "event" | "content"
+export type FieldType =
+	"string"
+	| "number"
+	| "boolean"
+	| "choice"
+	| "color"
+	| "vector3"
+	| "value"
+	| "event"
+	| "content"
+	| "node"
 
 export type Field = {
 	type: FieldType,
@@ -35,16 +47,19 @@ export type Resolved = {
 	template: ((row: ReadOnlyValue<Row>) -> unknown)?,
 	slot: (() -> unknown)?,
 	rows: ReadOnlyValue<{ Row }>?,
+	node: ReadOnlyValue<unknown>?,
 	key: string?,
 }
 
-export type Children = "none" | "list" | "template"
+export type Children = "none" | "list" | "template" | "slot"
 
 export type Kind = {
 	fields: { [string]: Field },
 	defaults: { [string]: Literal }?,
 	children: Children,
 	template: string?,
+	slot: string?,
+	category: string?,
 	source: string?,
 	key: string?,
 	call: string,
@@ -59,6 +74,7 @@ export type Library = {
 	returnType: string,
 	readable: string,
 	cell: string,
+	newCell: string?,
 	token: string?,
 	space: ("2d" | "3d")?,
 	kinds: { [string]: Kind },

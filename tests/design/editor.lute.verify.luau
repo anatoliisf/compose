@@ -133,6 +133,29 @@ describe("host-neutral design editor", function()
 		w.close()
 	end)
 
+	it("lists library kinds by category, filters them by search and inserts the activated kind", function()
+		local w = Support.world()
+		local editor = w.mount()
+		local panel = w.find(editor.root, "DesignLibrary")
+		local kinds = w.find(panel, "Kinds")
+		local before = #editor.session.document:peek().root.children
+		local search = w.find(panel, "Search")
+		search.Text = "butt"
+		w.settle()
+		expect(w.find(kinds, "Button").Visible):toBe(true)
+		expect(w.find(kinds, "Text").Visible):toBe(false)
+		w.fire(w.find(kinds, "Button"), "Activated")
+		w.settle()
+		local root = editor.session.document:peek().root
+		expect(#root.children):toBe(before + 1)
+		expect(root.children[#root.children].kind):toBe "Button"
+		search.Text = ""
+		w.settle()
+		expect(w.find(kinds, "Text").Visible):toBe(true)
+		editor.dispose()
+		w.close()
+	end)
+
 	it("commits inspector text, numeric, toggle, segmented and colour controls", function()
 		local w = Support.world()
 		local editor = w.mount()
@@ -406,6 +429,27 @@ describe("host-neutral design editor", function()
 			assert(type(value) == "number")
 			expect(value):toBeCloseTo(component, 1e-5)
 		end
+		editor.dispose()
+		w.close()
+	end)
+
+	it("builds lights, surface images, material variants and meshes on a 3D part", function()
+		local w = Support.world "3d"
+		local editor = w.mount()
+		editor.session.select(w.first)
+		editor.session.change("materialVariant", { literal = "Moss" })
+		editor.session.change("meshId", { literal = "test-mesh" })
+		expect(editor.session.insert "PointLight"):toBe(true)
+		editor.session.change("brightness", { literal = 2 })
+		editor.session.select(w.first)
+		expect(editor.session.insert "Decal"):toBe(true)
+		editor.session.change("image", { literal = "test-image" })
+		w.settle()
+		local part = Support.instance(assert(editor.scene).nodes[w.first])
+		expect(part.MaterialVariant):toBe "Moss"
+		expect(assert(part:FindFirstChildWhichIsA "SpecialMesh").MeshId):toBe "test-mesh"
+		expect(assert(part:FindFirstChildWhichIsA "PointLight").Brightness):toBe(2)
+		expect(assert(part:FindFirstChildWhichIsA "Decal").Texture):toBe "test-image"
 		editor.dispose()
 		w.close()
 	end)

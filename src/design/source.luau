@@ -99,7 +99,13 @@ local function fieldType(library: Library, input: Types.Input): string
 	return if input.type == "slot" then `({shape})` else shape
 end
 
-function source.emit(value: Types.Document, library: Library): string
+export type EmitOptions = { name: string? }
+
+function source.emit(value: Types.Document, library: Library, options: EmitOptions?): string
+	local exported = if options then options.name else nil
+	if exported ~= nil then
+		assert(string.match(exported, "^[%a_][%w_]*$") ~= nil, "A component name is a Luau identifier")
+	end
 	Document.validate(value, library)
 	local lines: { string } = { "--!strict", "" }
 	for _, line in library.prelude do
@@ -118,7 +124,27 @@ function source.emit(value: Types.Document, library: Library): string
 	local header: Record = { name = value.name, contract = contractLiteral(value.contract) }
 	table.insert(lines, "local design = " .. literal(header))
 	table.insert(lines, "")
+	local referenced: { [string]: boolean } = {}
+	local referencedIds: { string } = {}
+	local function collect(node: Node)
+		for _, property in node.props do
+			local target = property.node
+			if target ~= nil and not referenced[target] then
+				referenced[target] = true
+				table.insert(referencedIds, target)
+			end
+		end
+		for _, child in node.children do
+			collect(child)
+		end
+	end
+	collect(value.root)
+	table.sort(referencedIds)
 	local function expression(property: Value): string
+		local target = property.node
+		if target ~= nil then
+			return `refs.{target}`
+		end
 		local current, input, item, output, token =
 			property.literal, property.input, property.item, property.output, property.token
 		if current ~= nil then
@@ -129,19 +155,35 @@ function source.emit(value: Types.Document, library: Library): string
 			return `function(use) return use(current).{item} end`
 		elseif output then
 			local args = property.args
+			local passed = property.fields
 			local packed: Record = {}
 			if args then
 				for index, argument in args do
 					packed[index] = argument
 				end
 			end
-			local list = if args then string.sub(literal(packed), 3, -3) else "..."
+			local list = if args then string.sub(literal(packed), 3, -3) else if passed then "" else "..."
+			if passed then
+				local reads: { string } = {}
+				for _, name in passed do
+					table.insert(reads, `current:peek().{name}`)
+				end
+				list = if list == "" then table.concat(reads, ", ") else `{list}, {table.concat(reads, ", ")}`
+			end
 			return `function(...) if props.{output} then props.{output}({list}) end end`
 		end
 		local call = assert(library.token, `{library.name} has no theme tokens`)
 		return `{call}({literal(assert(token))})`
 	end
+	local emitNode: (node: Node, depth: number) -> string
 	local function emit(node: Node, depth: number): string
+		local built = emitNode(node, depth)
+		if referenced[node.id] then
+			return `capture("{node.id}", {built})`
+		end
+		return built
+	end
+	emitNode = function(node: Node, depth: number): string
 		local kind = assert(library.kinds[node.kind])
 		local indent = string.rep("\t", depth)
 		local body = { `{kind.call} {literal(node.name)} ` .. "{" }
@@ -154,7 +196,11 @@ function source.emit(value: Types.Document, library: Library): string
 			table.insert(body, `{indent}\t{key} = {expression(node.props[key])},`)
 		end
 		local bind, template = node.bind, node.children[1]
-		if kind.children == "template" then
+		if kind.children == "slot" then
+			if template then
+				table.insert(body, `{indent}\t{assert(kind.slot)} = function() return {emit(template, depth + 1)} end,`)
+			end
+		elseif kind.children == "template" then
 			if bind and template then
 				table.insert(body, `{indent}\t{assert(kind.source)} = props.{bind.from},`)
 				local keyProp = kind.key
@@ -174,12 +220,23 @@ function source.emit(value: Types.Document, library: Library): string
 		table.insert(body, indent .. "}")
 		return table.concat(body, "\n")
 	end
-	table.insert(
-		lines,
-		`return function({library.parameter}: {library.parameterType}, props: Props): {library.returnType}`
-	)
+	local signature = `({library.parameter}: {library.parameterType}, props: Props): {library.returnType}`
+	table.insert(lines, if exported then `local function {exported}{signature}` else `return function{signature}`)
+	if #referencedIds > 0 then
+		local newCell = assert(library.newCell, `{library.name} cannot reference nodes; it names no cell constructor`)
+		local cells: { string } = {}
+		for _, id in referencedIds do
+			table.insert(cells, `{id} = {newCell}(nil)`)
+		end
+		table.insert(lines, "\tlocal refs = { " .. table.concat(cells, ", ") .. " }")
+		table.insert(lines, "\tlocal function capture(id, node) refs[id]:set(node) return node end")
+	end
 	table.insert(lines, `\treturn {emit(value.root, 1)}`)
 	table.insert(lines, "end")
+	if exported then
+		table.insert(lines, "")
+		table.insert(lines, `return {exported}`)
+	end
 	table.insert(lines, "")
 	return table.concat(lines, "\n")
 end
@@ -396,7 +453,11 @@ function source.parse(code: string, library: Library): Types.Document
 		return path
 	end
 	local function value(): (Value?, Node?)
-		if peek() == "props" then
+		if peek() == "refs" then
+			take "refs"
+			take "."
+			return { node = name() }, nil
+		elseif peek() == "props" then
 			take "props"
 			take "."
 			return { input = name() }, nil
@@ -415,8 +476,10 @@ function source.parse(code: string, library: Library): Types.Document
 				local field = name()
 				take "end"
 				return { item = field }, nil
-			elseif peek() == "current" then
-				take "current"
+			elseif peek() == "current" or peek() == ")" then
+				if peek() == "current" then
+					take "current"
+				end
 				take ")"
 				take "return"
 				local child = node()
@@ -435,22 +498,39 @@ function source.parse(code: string, library: Library): Types.Document
 			take(id)
 			take "("
 			local args: { Literal }? = nil
+			local passed: { string }? = nil
 			if peek() == "..." then
 				take "..."
 			else
 				local supplied: { Literal } = {}
+				local fields: { string } = {}
 				while peek() ~= ")" do
-					table.insert(supplied, plain())
+					if peek() == "current" then
+						take "current"
+						take ":"
+						take "peek"
+						take "("
+						take ")"
+						take "."
+						table.insert(fields, name())
+					else
+						table.insert(supplied, plain())
+					end
 					if peek() == "," then
 						take ","
 					end
 				end
-				args = supplied
+				if #supplied > 0 or #fields == 0 then
+					args = supplied
+				end
+				if #fields > 0 then
+					passed = fields
+				end
 			end
 			take ")"
 			take "end"
 			take "end"
-			return { output = id, args = args }, nil
+			return { output = id, args = args, fields = passed }, nil
 		end
 		local tokenCall = library.token
 		if tokenCall and tokens[at] and tokens[at].kind == "name" then
@@ -466,7 +546,19 @@ function source.parse(code: string, library: Library): Types.Document
 		end
 		return { literal = plain() }, nil
 	end
+	local captured: { [string]: string } = {}
 	node = function(): Node
+		if peek() == "capture" then
+			take "capture"
+			take "("
+			local source = take()
+			assert(source.kind == "string", "A captured node names its id")
+			take ","
+			local inner = node()
+			take ")"
+			captured[unquote(source.text)] = inner.id
+			return inner
+		end
 		local call = dotted()
 		local kindName = assert(calls[call], `{call} is not a {library.name} kind`)
 		local kind = library.kinds[kindName]
@@ -489,7 +581,10 @@ function source.parse(code: string, library: Library): Types.Document
 				take "="
 				local property, template = value()
 				if template then
-					assert(prop == kind.template, `{prop} cannot hold a template`)
+					assert(
+						prop == (if kind.children == "slot" then kind.slot else kind.template),
+						`{prop} cannot hold a template`
+					)
 					table.insert(result.children, template)
 				elseif property and templated and prop == kind.source then
 					from = assert(property.input, `{prop} must read a list input`)
@@ -521,17 +616,29 @@ function source.parse(code: string, library: Library): Types.Document
 	take "="
 	local header = plain()
 	assert(type(header) == "table", "The design header is a table")
-	while peek() ~= "return" do
+	while not ((peek() == "return" or peek() == "local") and peek(1) == "function") do
 		take()
 	end
-	take "return"
+	take()
 	take "function"
-	while peek() ~= "return" do
+	while not (peek() == "return" and peek(1) ~= "node") do
 		take()
 	end
 	take "return"
 	local root = node()
 	take "end"
+	local function remap(current: Node)
+		for _, property in current.props do
+			local target = property.node
+			if target ~= nil then
+				property.node = assert(captured[target], `refs.{target} names no captured node`)
+			end
+		end
+		for _, child in current.children do
+			remap(child)
+		end
+	end
+	remap(root)
 	return Document.validate({
 		schema = "compose-design/1",
 		name = text(header, "name"),
