@@ -204,14 +204,7 @@ local function fieldType(library: Library, input: Types.Input): string
 	return if input.type == "slot" then `({shape})` else shape
 end
 
-export type EmitOptions = {
-	name: string?,
-	rowFunctions: boolean?,
-	localControls: boolean?,
-	controls: string?,
-	propsType: string?,
-	prelude: { string }?,
-}
+export type EmitOptions = Types.EmitOptions
 
 function source.emit(value: Types.Document, library: Library, options: EmitOptions?): string
 	local exported = if options then options.name else nil
@@ -251,6 +244,7 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 		table.insert(lines, "}")
 		table.insert(lines, "")
 	end
+	local rowTypesAt = #lines + 1
 	local header: Record = { name = value.name, contract = contractLiteral(value.contract) }
 	local state = value.state
 	if state and #state > 0 then
@@ -260,12 +254,31 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 	table.insert(lines, "")
 	local referenced: { [string]: boolean } = {}
 	local referencedIds: { string } = {}
+	local chosenNames: { [string]: string } = {}
+	local nodeNames: { [string]: string } = {}
+	local function nameNodes(node: Node)
+		nodeNames[node.id] = node.name
+		for _, child in node.children do
+			nameNodes(child)
+		end
+	end
+	nameNodes(value.root)
 	local function collect(node: Node)
 		for _, property in node.props do
 			local target = property.node
 			if target ~= nil and not referenced[target] then
 				referenced[target] = true
 				table.insert(referencedIds, target)
+			end
+			local candidates = property.nodes
+			if candidates then
+				for _, candidate in candidates do
+					chosenNames[nodeNames[candidate]] = candidate
+					if not referenced[candidate] then
+						referenced[candidate] = true
+						table.insert(referencedIds, candidate)
+					end
+				end
 			end
 		end
 		for _, child in node.children do
@@ -290,16 +303,18 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 	local function returning(params: string, body: string, depth: number): string
 		return `function({params})\n{tabs(depth + 1)}return {body}\n{tabs(depth)}end`
 	end
-	local function rowFunction(template: Node, depth: number): string
-		if not rowFunctions then
-			return returning("current", emit(template, depth + 1), depth)
-		end
+	local rowTypeLines: { string } = {}
+	local rowItemTypes: { [string]: string } = {}
+	local function rowBase(template: Node): string
 		local base = string.gsub(template.name, "[^%w_]", "")
 		if not string.match(base, "^%u") then
 			base = "Row" .. base
 		elseif not string.match(base, "Row$") then
 			base ..= "Row"
 		end
+		return base
+	end
+	local function unique(base: string): string
 		local name = base
 		local suffix = 1
 		while rowNames[name] do
@@ -307,7 +322,48 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 			name = base .. tostring(suffix)
 		end
 		rowNames[name] = true
-		table.insert(rowDefinitions, `\tlocal function {name}(current)\n\t\treturn {emit(template, 2)}\n\tend`)
+		return name
+	end
+	local function itemType(template: Node, from: string): string?
+		local known = rowItemTypes[template.id]
+		if known ~= nil then
+			return known
+		end
+		local declared = Document.input(value, from)
+		local fields = if declared then declared.fields else nil
+		if fields == nil or #fields == 0 then
+			return nil
+		end
+		local name = unique(rowBase(template) .. "Item")
+		rowItemTypes[template.id] = name
+		table.insert(rowTypeLines, `type {name} = {rowType(library, fields)}`)
+		return name
+	end
+	local function keyFunction(template: Node, bind: Types.Bind, depth: number): string
+		local typed = itemType(template, bind.from)
+		if typed == nil then
+			return returning("row", "row." .. bind.key, depth)
+		end
+		local declared = assert(Document.input(value, bind.from))
+		local keyType = "string"
+		local fields = declared.fields
+		if fields then
+			for _, field in fields do
+				if field.id == bind.key then
+					keyType = scalar(library, field.type)
+				end
+			end
+		end
+		return `function(row: {typed}): {keyType}\n{tabs(depth + 1)}return row.{bind.key}\n{tabs(depth)}end`
+	end
+	local function rowFunction(template: Node, depth: number, from: string): string
+		local typed = itemType(template, from)
+		local parameter = if typed then `current: {library.readable}<{typed}>` else "current"
+		if not rowFunctions then
+			return returning(parameter, emit(template, depth + 1), depth)
+		end
+		local name = unique(rowBase(template))
+		table.insert(rowDefinitions, `\tlocal function {name}({parameter})\n\t\treturn {emit(template, 2)}\n\tend`)
 		return name
 	end
 	local function layout(current: Literal, depth: number, used: number): string
@@ -389,6 +445,19 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 		if stateId ~= nil then
 			return `state.{stateId}`
 		end
+		local source = property.nodeFrom
+		if source ~= nil then
+			local read
+			if Document.stateOf(value, source) ~= nil then
+				read = `use(state.{source})`
+			elseif assert(Document.input(value, source)).kind == "value" then
+				read = `props.{source}`
+			else
+				read = `use(props.{source})`
+			end
+			return `function(use)\n{tabs(depth + 1)}local chosen = named[{read}]\n`
+				.. `{tabs(depth + 1)}return if chosen then use(chosen) else nil\n{tabs(depth)}end`
+		end
 		local current, input, item, output, token =
 			property.literal, property.input, property.item, property.output, property.token
 		if current ~= nil then
@@ -443,8 +512,11 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 		end
 		local body: { string } = {}
 		local keys: { string } = {}
+		local boundTemplate = kind.children == "template" and node.bind ~= nil
 		for key in node.props do
-			table.insert(keys, key)
+			if not (boundTemplate and (key == kind.source or key == kind.key)) then
+				table.insert(keys, key)
+			end
 		end
 		table.sort(keys)
 		for _, key in keys do
@@ -477,7 +549,19 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 				if keyProp then
 					table.insert(body, `{inner}{keyProp} = {literal(bind.key)},`)
 				end
-				table.insert(body, `{inner}{assert(kind.template)} = {rowFunction(template, depth + 1)},`)
+				local rowId = bind.row or template.id
+				local rowNode = template
+				for _, child in node.children do
+					if child.id == rowId then
+						rowNode = child
+					end
+				end
+				table.insert(body, `{inner}{assert(kind.template)} = {rowFunction(rowNode, depth + 1, bind.from)},`)
+				for _, child in node.children do
+					if child ~= rowNode then
+						table.insert(body, `{inner}{emit(child, depth + 1)},`)
+					end
+				end
 			end
 		else
 			local rowId = if bind then bind.row or (if template then template.id else nil) else nil
@@ -488,8 +572,8 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 					local field = tabs(depth + 2)
 					table.insert(body, `{inner}{keyedCall} ` .. "{")
 					table.insert(body, `{field}from = props.{bind.from},`)
-					table.insert(body, `{field}key = {returning("row", "row." .. bind.key, depth + 2)},`)
-					table.insert(body, `{field}render = {rowFunction(child, depth + 2)},`)
+					table.insert(body, `{field}key = {keyFunction(child, bind, depth + 2)},`)
+					table.insert(body, `{field}render = {rowFunction(child, depth + 2, bind.from)},`)
 					table.insert(body, `{inner}},`)
 				elseif condition == nil then
 					table.insert(body, `{inner}{emit(child, depth + 1)},`)
@@ -522,6 +606,10 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 		table.insert(lines, "\t" .. controls)
 	end
 	local rootSource = emit(value.root, 1)
+	for index, line in rowTypeLines do
+		table.insert(lines, rowTypesAt + 2 * index - 2, line)
+		table.insert(lines, rowTypesAt + 2 * index - 1, "")
+	end
 	for _, definition in hoisted do
 		table.insert(lines, definition)
 	end
@@ -540,6 +628,18 @@ function source.emit(value: Types.Document, library: Library, options: EmitOptio
 		table.insert(lines, "\t\trefs[id]:set(node)")
 		table.insert(lines, "\t\treturn node")
 		table.insert(lines, "\tend")
+		local chosen: { string } = {}
+		for name in chosenNames do
+			table.insert(chosen, name)
+		end
+		table.sort(chosen)
+		if #chosen > 0 then
+			local entries: { string } = {}
+			for _, name in chosen do
+				table.insert(entries, `{name} = refs.{chosenNames[name]}`)
+			end
+			table.insert(lines, "\tlocal named = { " .. table.concat(entries, ", ") .. " }")
+		end
 	end
 	if state and #state > 0 and readsState then
 		local newCell = assert(library.newCell, `{library.name} cannot hold state; it names no cell constructor`)
@@ -752,12 +852,27 @@ function source.parse(code: string, library: Library): Types.Document
 		assert(token.kind == "name", `Expected a name but found {token.text}`)
 		return token.text
 	end
+	local function annotation()
+		if peek() == ":" then
+			while peek() ~= ")" do
+				take()
+			end
+		end
+	end
+	local function returnAnnotation()
+		if peek() == ":" then
+			while peek() ~= "return" do
+				take()
+			end
+		end
+	end
 	local calls: { [string]: string } = {}
 	for kindName, kind in library.kinds do
 		calls[kind.call] = kindName
 	end
 	local rows: { [string]: Node } = {}
 	local typedLiterals: { [string]: Literal } = {}
+	local namedRefs: { [string]: string } = {}
 	local function plain(): Literal
 		if peek() == "function" then
 			take "function"
@@ -853,7 +968,45 @@ function source.parse(code: string, library: Library): Types.Document
 		elseif peek() == "function" then
 			take "function"
 			take "("
-			if peek() == "use" then
+			if peek() == "use" and peek(2) == "local" then
+				take "use"
+				take ")"
+				take "local"
+				take "chosen"
+				take "="
+				take "named"
+				take "["
+				local wrapped = peek() == "use"
+				if wrapped then
+					take "use"
+					take "("
+				end
+				local holder = name()
+				take "."
+				local source = name()
+				if wrapped then
+					take ")"
+				end
+				assert(holder == "props" or holder == "state", "A chosen node follows an input or state")
+				take "]"
+				take "return"
+				take "if"
+				take "chosen"
+				take "then"
+				take "use"
+				take "("
+				take "chosen"
+				take ")"
+				take "else"
+				take "nil"
+				take "end"
+				local candidates: { string } = {}
+				for _, id in namedRefs do
+					table.insert(candidates, id)
+				end
+				table.sort(candidates)
+				return { nodeFrom = source, nodes = candidates }, nil
+			elseif peek() == "use" then
 				take "use"
 				take ")"
 				take "return"
@@ -868,6 +1021,7 @@ function source.parse(code: string, library: Library): Types.Document
 			elseif peek() == "current" or peek() == ")" then
 				if peek() == "current" then
 					take "current"
+					annotation()
 				end
 				take ")"
 				take "return"
@@ -1044,6 +1198,9 @@ function source.parse(code: string, library: Library): Types.Document
 						prop == (if kind.children == "slot" then kind.slot else kind.template),
 						`{prop} cannot hold a template`
 					)
+					if templated then
+						rowId = template.id
+					end
 					table.insert(result.children, template)
 				elseif property and templated and prop == kind.source then
 					from = assert(property.input, `{prop} must read a list input`)
@@ -1101,7 +1258,9 @@ function source.parse(code: string, library: Library): Types.Document
 					take "function"
 					take "("
 					take "row"
+					annotation()
 					take ")"
+					returnAnnotation()
 					take "return"
 					take "row"
 					take "."
@@ -1115,6 +1274,7 @@ function source.parse(code: string, library: Library): Types.Document
 						take "function"
 						take "("
 						take "current"
+						annotation()
 						take ")"
 						take "return"
 						row = node()
@@ -1159,7 +1319,23 @@ function source.parse(code: string, library: Library): Types.Document
 	take()
 	take "function"
 	while not (peek() == "return" and peek(1) ~= "node") do
-		if peek() == "local" and tokens[at + 1] and tokens[at + 1].kind == "name" and peek(2) == ":" then
+		if peek() == "local" and peek(1) == "named" and peek(2) == "=" then
+			take "local"
+			take "named"
+			take "="
+			take "{"
+			while peek() ~= "}" do
+				local chosenName = name()
+				take "="
+				take "refs"
+				take "."
+				namedRefs[chosenName] = name()
+				if peek() == "," then
+					take ","
+				end
+			end
+			take "}"
+		elseif peek() == "local" and tokens[at + 1] and tokens[at + 1].kind == "name" and peek(2) == ":" then
 			take "local"
 			local literalName = name()
 			take ":"
@@ -1174,6 +1350,7 @@ function source.parse(code: string, library: Library): Types.Document
 			local rowName = name()
 			take "("
 			take "current"
+			annotation()
 			take ")"
 			take "return"
 			rows[rowName] = node()
@@ -1190,6 +1367,15 @@ function source.parse(code: string, library: Library): Types.Document
 			local target = property.node
 			if target ~= nil then
 				property.node = assert(captured[target], `refs.{target} names no captured node`)
+			end
+			local candidates = property.nodes
+			if candidates then
+				local remapped: { string } = {}
+				for _, candidate in candidates do
+					local mapped: string = assert(captured[candidate], `refs.{candidate} names no captured node`)
+					table.insert(remapped, mapped)
+				end
+				property.nodes = remapped
 			end
 		end
 		for _, child in current.children do

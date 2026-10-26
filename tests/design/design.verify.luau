@@ -658,7 +658,11 @@ describe("Compose Design views as code", function()
 		local options: Design.EmitOptions = { name = "ChooseGame", rowFunctions = true }
 		local code = Design.emit(value, toy, options)
 		expect(string.find(code, "local _design = ", 1, true) ~= nil):toBe(true)
-		expect(string.find(code, "local function LabelRow(current)", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "type LabelRowItem = { id: string, name: string }\n", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "local function LabelRow(current: Toy.Readable<LabelRowItem>)", 1, true) ~= nil):toBe(
+			true
+		)
+		expect(string.find(code, "key = function(row: LabelRowItem): string\n", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, "render = LabelRow,", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, 'UI.Label "Label" {', 1, true) ~= nil):toBe(true)
 		local parsed = Design.parse(code, toy)
@@ -743,6 +747,67 @@ describe("Compose Design views as code", function()
 		stateful = Design.document.change(stateful, toy, label, "text", { state = "detent" })
 		local withState = Design.emit(stateful, toy, options)
 		expect(string.find(withState, 'local state = { detent = Toy.cell "hug" }', 1, true) ~= nil):toBe(true)
+	end)
+
+	it("keeps static children beside a template row", function()
+		local value = sample()
+		value = Design.document.bind(value, library, "n3", { from = "rows", key = "id", row = "n4" })
+		local empty
+		value, empty = Design.document.insert(value, library, "n3", "Label")
+		value = Design.document.change(value, library, empty, "text", { literal = "No rows yet" })
+		local code = Design.emit(value, library)
+		expect(string.find(code, 'text = "No rows yet"', 1, true) ~= nil):toBe(true)
+		local parsed = Design.parse(code, library)
+		expect(#parsed.root.children[2].children):toBe(2)
+		expect(Design.emit(parsed, library)):toBe(code)
+		table.clear(built)
+		local tokens: Design.RenderContext = {
+			token = function(_name: string): Design.Literal
+				return 8
+			end,
+		}
+		Design.render(value, library, tokens)
+		local list: Built? = nil
+		for _, record in built do
+			if record.kind == "List" then
+				list = record
+			end
+		end
+		expect(#assert(list).children):toBe(1)
+	end)
+
+	it("follows a node chosen by name through state", function()
+		local toy = viewLibrary()
+		local source: Design.State = { id = "source", type = "string", initial = "Stage" }
+		local value = Design.document.setState(Design.document.new("Lucky", toy, "Stack"), toy, { source })
+		local stage: string, rewards: string, flash: string
+		value, stage = Design.document.insert(value, toy, "n1", "Label")
+		value = Design.document.rename(value, toy, stage, "Stage")
+		value, rewards = Design.document.insert(value, toy, "n1", "Label")
+		value = Design.document.rename(value, toy, rewards, "Rewards")
+		value, flash = Design.document.insert(value, toy, "n1", "Flash")
+		value = Design.document.change(value, toy, flash, "target", { nodeFrom = "source", nodes = { stage, rewards } })
+		local code = Design.emit(value, toy)
+		expect(string.find(code, "local named = { Rewards = refs.n3, Stage = refs.n2 }", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "local chosen = named[use(state.source)]", 1, true) ~= nil):toBe(true)
+		expect(Design.emit(Design.parse(code, toy), toy)):toBe(code)
+		table.clear(built)
+		Design.render(value, toy)
+		local target: Built? = nil
+		local chosen: unknown = nil
+		for _, record in built do
+			if record.kind == "Flash" then
+				local resolved = record.props.target.node
+				chosen = if resolved then resolved:peek() else nil
+			elseif record.name == "Stage" then
+				target = record
+			end
+		end
+		expect(chosen == target and target ~= nil):toBe(true)
+		local unknownState: Design.Value = { nodeFrom = "missing", nodes = { stage } }
+		expect(refused(function()
+			Design.document.change(value, toy, flash, "target", unknownState)
+		end)):toBe(true)
 	end)
 
 	it("refuses conditions, names and state the contract cannot back", function()
