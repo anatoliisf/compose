@@ -261,6 +261,21 @@ local function evaluate<A, T>(consumer: Node, body: (A) -> T, argument: A): T
 	return result
 end
 
+local function runEffect(consumer: Node)
+	local previousConsumer, previousOrder = Evaluation.enter(consumer)
+	consumer.reads = 0
+	local effect = consumer.effect
+	if effect then
+		if validationState.validating then
+			userSpace.call(effect, use)
+		else
+			effect(use)
+		end
+	end
+	Evaluation.leave(previousConsumer, previousOrder)
+	trim(consumer, (consumer.reads or 0) + 1)
+end
+
 local function track(consumer: Node, invoke: (Node) -> ())
 	local previousConsumer, previousOrder = Evaluation.enter(consumer)
 	consumer.reads = 0
@@ -408,6 +423,29 @@ function CELL_LISTENER.run(leader: Node)
 	runListeners(leader, producer)
 end
 
+local function listenEdge(reactor: Types.Reactor, producer: Node, listener: (value: unknown) -> ()): Node
+	refresh(producer)
+	local edge: Node =
+		{ producer, nil, nil, nil, version = producer.version, reactor = reactor, queued = false, listener = listener }
+	NodeCast.classify(edge, if producer.refresh ~= nil then LISTENER else CELL_LISTENER)
+	if statsOn.enabled then
+		profile.born(edge)
+		stats.bump "watchRuns"
+		profile.enterRun(edge)
+	end
+	listener(producer.value)
+	append(producer, edge)
+	return edge
+end
+
+local function unlisten(subject: unknown)
+	local edge = NodeCast.heldEdge(subject)
+	if edge.listener ~= nil then
+		edge.listener = nil
+		detach(edge)
+	end
+end
+
 local function listen(reactor: Types.Reactor, producer: Node, listener: (value: unknown) -> ()): Dispose
 	refresh(producer)
 	local edge: Node =
@@ -440,6 +478,7 @@ return {
 	refresh = refresh,
 	notANode = notANode,
 	use = use,
+	runEffect = runEffect,
 	dependenciesMoved = dependenciesMoved,
 	evaluate = evaluate,
 	track = track,
@@ -448,4 +487,6 @@ return {
 	untracked = untracked,
 	countNotification = countNotification,
 	listen = listen,
+	listenEdge = listenEdge,
+	unlisten = unlisten,
 }
