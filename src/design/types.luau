@@ -46,6 +46,7 @@ export type Field = {
 	label: string?,
 	advanced: boolean?,
 	requires: { [string]: { Literal } }?,
+	perRow: boolean?,
 }
 
 export type Row = { [string | number]: Literal }
@@ -93,6 +94,7 @@ export type Library = {
 	show: string?,
 	keyed: string?,
 	categories: { string }?,
+	tags: { call: string, apply: (built: unknown, tags: { string }) -> () }?,
 	space: ("2d" | "3d")?,
 	provide: ((content: unknown) -> unknown)?,
 	kinds: { [string]: Kind },
@@ -101,7 +103,7 @@ export type Library = {
 export type InputKind = "value" | "readable" | "cell"
 export type InputType = "string" | "number" | "boolean" | "color" | "image" | "list" | "record" | "slot"
 
-export type ItemField = { id: string, type: InputType }
+export type ItemField = { id: string, type: InputType, fields: { ItemField }? }
 
 export type Input = {
 	id: string,
@@ -130,6 +132,7 @@ export type Node = {
 	nameField: string?,
 	nameInput: string?,
 	when: string?,
+	tags: { string }?,
 }
 
 export type Document = {

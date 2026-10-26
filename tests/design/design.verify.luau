@@ -89,6 +89,9 @@ local library: Design.Library = {
 	},
 }
 
+type Cells = { { render: (Core.ReadOnlyValue<Design.Row>) -> unknown } }
+type Actions = (Core.ReadOnlyValue<Design.Row>) -> { { onActivate: () -> () } }
+
 local function sample(): Design.Document
 	local value = Design.document.new("Scores", library, "Stack")
 	value = Design.document.setContract(value, library, {
@@ -199,6 +202,178 @@ describe("Compose Design documents", function()
 		found = Design.document.find(value.root, id)
 		expect(assert(found).props.emphasis):toBe(nil)
 		label.fields = fields
+	end)
+
+	it("tags nodes for style rules and reads the tags back", function()
+		local applied: { [unknown]: { string } } = {}
+		library.tags = {
+			call = "UI.tag",
+			apply = function(built: unknown, tags: { string })
+				applied[built] = tags
+			end,
+		}
+		local value, id = Design.document.insert(Design.document.new("Tags", library, "Stack"), library, "n1", "Label")
+		value = Design.document.tag(value, library, id, { "amigos-stat", "amigos-feature" })
+		expect(function()
+			Design.document.tag(value, library, id, { "not a tag" })
+		end):toThrow()
+		local code = Design.emit(value, library)
+		expect(string.find(code, "UI.tag(", 1, true) ~= nil):toBe(true)
+		local parsed = Design.parse(code, library)
+		expect(Design.emit(parsed, library)):toBe(code)
+		local found = Design.document.find(parsed.root, id)
+		expect(table.concat(assert(assert(found).tags), " ")):toBe "amigos-stat amigos-feature"
+		Design.render(parsed, library)
+		local tagged = 0
+		for _, tags in applied do
+			if table.concat(tags, " ") == "amigos-stat amigos-feature" then
+				tagged += 1
+			end
+		end
+		expect(tagged):toBe(1)
+		library.tags = nil
+	end)
+
+	it("binds a row's own list and shows row content by an item field", function()
+		library.show = "Toy.show"
+		local rowFields: { Design.ItemField } = { { id = "id", type = "string" }, { id = "label", type = "string" } }
+		local pageFields: { Design.ItemField } = {
+			{ id = "id", type = "string" },
+			{ id = "sent", type = "boolean" },
+			{ id = "rows", type = "list", fields = rowFields },
+		}
+		local first: Design.Row = { id = "a", label = "Alpha" }
+		local second: Design.Row = { id = "b", label = "Beta" }
+		local entries: Design.Row = { first, second }
+		local sentPage: Design.Row = { id = "p1", sent = true, rows = entries }
+		local quietPage: Design.Row = { id = "p2", sent = false, rows = entries }
+		local pages: Design.Row = { sentPage, quietPage }
+		local value = Design.document.new("Board", library, "Stack")
+		value = Design.document.setContract(value, library, {
+			inputs = { { id = "pages", kind = "readable", type = "list", preview = pages, fields = pageFields } },
+			outputs = {},
+		})
+		local outer, page, sent, inner, entry
+		value, outer = Design.document.insert(value, library, "n1", "List")
+		value = Design.document.bind(value, library, outer, { from = "pages", key = "id" })
+		value, page = Design.document.insert(value, library, outer, "Stack")
+		value, sent = Design.document.insert(value, library, page, "Label")
+		value = Design.document.change(value, library, sent, "text", { literal = "Sent" })
+		value = Design.document.showWhen(value, library, sent, "sent")
+		value, inner = Design.document.insert(value, library, page, "List")
+		value = Design.document.bind(value, library, inner, { from = "rows", key = "id" })
+		value, entry = Design.document.insert(value, library, inner, "Label")
+		value = Design.document.change(value, library, entry, "text", { item = "label" })
+		local code = Design.emit(value, library)
+		expect(string.find(code, "use(current).rows", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "use(current).sent == true", 1, true) ~= nil):toBe(true)
+		expect(Design.emit(Design.parse(code, library), library)):toBe(code)
+		table.clear(built)
+		Design.render(value, library)
+		local lists: { Built } = {}
+		for _, record in built do
+			if record.kind == "List" then
+				table.insert(lists, record)
+			end
+		end
+		table.clear(built)
+		for _, record in lists do
+			local resolved = record.props.render
+			local template = if resolved then resolved.template else nil
+			if template then
+				template(Core.cell(sentPage))
+				template(Core.cell(quietPage))
+			end
+		end
+		local shown, innerRows = 0, 0
+		for _, record in built do
+			local text = record.props.text
+			if record.kind == "Label" and text ~= nil and text.literal == "Sent" then
+				shown += 1
+			elseif record.kind == "List" then
+				local rows = assert(record.props.from.rows)
+				innerRows += #rows:peek()
+			end
+		end
+		expect(shown):toBe(1)
+		expect(innerRows):toBe(4)
+		library.show = nil
+	end)
+
+	it("renders column cells and row actions for each item of a repeated list", function()
+		local kinds = library.kinds
+		local columnsField: Design.Field = { type = "value" }
+		local actionsField: Design.Field = { type = "value", perRow = true }
+		library.kinds = table.clone(kinds)
+		library.kinds.Table = {
+			fields = { columns = columnsField, actions = actionsField },
+			children = "template",
+			source = "from",
+			key = "key",
+			call = "UI.Table",
+			build = builder "Table",
+		}
+		local alpha: Design.Row = { id = "a", label = "Alpha", score = 3 }
+		local rowsPreview: Design.Row = { alpha }
+		local fields: { Design.ItemField } = {
+			{ id = "id", type = "string" },
+			{ id = "label", type = "string" },
+			{ id = "score", type = "number" },
+		}
+		local value = Design.document.new("Cells", library, "Stack")
+		value = Design.document.setContract(value, library, {
+			inputs = { { id = "rows", kind = "readable", type = "list", preview = rowsPreview, fields = fields } },
+			outputs = { { id = "onChoose" } },
+		})
+		local tableId, cellId
+		value, tableId = Design.document.insert(value, library, "n1", "Table")
+		value = Design.document.bind(value, library, tableId, { from = "rows", key = "id" })
+		value, cellId = Design.document.insert(value, library, tableId, "Label")
+		value = Design.document.change(value, library, cellId, "text", { item = "label" })
+		local scoreId
+		value, scoreId = Design.document.insert(value, library, tableId, "Label")
+		value = Design.document.change(value, library, scoreId, "text", { item = "score" })
+		local render: Design.Row = { ["$template"] = cellId }
+		local scoreRender: Design.Row = { ["$template"] = scoreId }
+		local column: Design.Row = { id = "label", render = render }
+		local scoreColumn: Design.Row = { id = "score", render = scoreRender }
+		local columns: Design.Row = { column, scoreColumn }
+		value = Design.document.change(value, library, tableId, "columns", { literal = columns })
+		local activate: Design.Row = { ["$output"] = "onChoose", ["$row"] = true }
+		local action: Design.Row = { id = "choose", label = "Choose", onActivate = activate }
+		local actions: Design.Row = { action }
+		value = Design.document.change(value, library, tableId, "actions", { literal = actions })
+		local code = Design.emit(value, library)
+		expect(string.find(code, "props.onChoose(current:peek())", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "tostring(use(current).score)", 1, true) ~= nil):toBe(true)
+		local _, itemTypes = string.gsub(code, "type %w+Item = ", "")
+		expect(itemTypes):toBe(1)
+		expect(Design.emit(Design.parse(code, library), library)):toBe(code)
+		local chosen: { Design.Literal } = {}
+		table.clear(built)
+		Design.render(value, library, {
+			outputs = {
+				onChoose = function(args: { Design.Literal })
+					table.insert(chosen, args[1])
+				end,
+			},
+		})
+		local grid: Built? = nil
+		for _, record in built do
+			if record.kind == "Table" then
+				grid = record
+			end
+		end
+		local made = assert(grid)
+		expect(#made.children):toBe(0)
+		table.clear(built)
+		local cells = made.props.columns.value :: Cells
+		cells[1].render(Core.cell(alpha))
+		expect(built[1].kind):toBe "Label"
+		local rowActions = made.props.actions.value :: Actions
+		rowActions(Core.cell(alpha))[1].onActivate()
+		expect(chosen[1]):toBe(alpha)
+		library.kinds = kinds
 	end)
 
 	it("undoes and redoes whole edits", function()
@@ -657,7 +832,8 @@ describe("Compose Design views as code", function()
 		local value, toy = view()
 		local code = Design.emit(value, toy)
 		expect(string.find(code, "\tname: string,", 1, true) ~= nil):toBe(true)
-		expect(string.find(code, "games: Toy.Readable<{ { id: string, name: string } }>?", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "export type GamesItem = { id: string, name: string }\n", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "games: Toy.Readable<{ GamesItem }>?", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, "onPick: ((string) -> ())?", 1, true) ~= nil):toBe(true)
 	end)
 
@@ -710,11 +886,11 @@ describe("Compose Design views as code", function()
 		local options: Design.EmitOptions = { name = "ChooseGame", rowFunctions = true }
 		local code = Design.emit(value, toy, options)
 		expect(string.find(code, "local _design = ", 1, true) ~= nil):toBe(true)
-		expect(string.find(code, "type LabelRowItem = { id: string, name: string }\n", 1, true) ~= nil):toBe(true)
-		expect(string.find(code, "local function LabelRow(current: Toy.Readable<LabelRowItem>)", 1, true) ~= nil):toBe(
+		expect(string.find(code, "export type GamesItem = { id: string, name: string }\n", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "local function LabelRow(current: Toy.Readable<GamesItem>)", 1, true) ~= nil):toBe(
 			true
 		)
-		expect(string.find(code, "key = function(row: LabelRowItem): string\n", 1, true) ~= nil):toBe(true)
+		expect(string.find(code, "key = function(row: GamesItem): string\n", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, "render = LabelRow,", 1, true) ~= nil):toBe(true)
 		expect(string.find(code, 'UI.Label "Label" {', 1, true) ~= nil):toBe(true)
 		local parsed = Design.parse(code, toy)
