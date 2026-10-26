@@ -1,0 +1,1265 @@
+--!strict
+--!nolint DeprecatedApi
+
+local Compose = require "../../src/core"
+local ComposeRoblox = require "../../src/roblox"
+local Design = require "../../src/design"
+local DesignEditor = require "../../src/design-editor"
+
+type Readable<T> = { peek: (self: Readable<T>) -> T }
+type OptionalNumberCell = Readable<number?> & {
+	set: (self: OptionalNumberCell, value: number?) -> (),
+	update: (self: OptionalNumberCell, body: (number?) -> number?) -> (),
+}
+
+type Use = <T>(value: Readable<T>) -> T
+type Layout = {
+	kind: ("list" | "grid")?,
+	columns: number?,
+	itemSize: number?,
+	gap: number?,
+	crossSize: number?,
+	crossGap: number?,
+}
+
+export type Check = {
+	id: string,
+	name: string,
+	requires: { string }?,
+	run: (container: Instance) -> string,
+}
+
+local function assertThat(condition: boolean, message: string)
+	if not condition then
+		error(message, 0)
+	end
+end
+
+local checks: { Check } = {
+	{
+		id = "styled-property-observation",
+		name = "observes native style changes, raw overrides and resets through shared channels",
+		requires = { "roblox-engine", "roblox-client" },
+		run = function(_container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			return Compose.withRootOwner(function(): string
+				Compose.cleanup(function()
+					runtime:dispose()
+				end)
+				local screen = Instance.new "ScreenGui"
+				runtime.adopt(screen)
+				screen.Enabled = false
+				local sheet = Instance.new "StyleSheet"
+				sheet.Parent = screen
+				local rule = Instance.new "StyleRule"
+				rule.Selector = "TextLabel"
+				rule:SetProperties { TextSize = 23, FontFace = Font.fromEnum(Enum.Font.SourceSans) }
+				rule.Parent = sheet
+				local link = Instance.new "StyleLink"
+				link.StyleSheet = sheet
+				link.Parent = screen
+				local label = Instance.new "TextLabel"
+				label.Parent = screen
+				screen.Parent = assert(game:GetService("Players").LocalPlayer):WaitForChild "PlayerGui"
+				local render = game:GetService("RunService").PreRender
+				local function settled(expected: number)
+					local deadline = os.clock() + 2
+					repeat
+						render:Wait()
+					until label:GetStyled "TextSize" == expected or os.clock() >= deadline
+					assertThat(
+						label:GetStyled "TextSize" == expected,
+						"native stylesheet did not settle: " .. rule.SelectorError
+					)
+				end
+				settled(23)
+				local raw = runtime.observe(label, "TextSize")
+				local size = runtime.observe(label, "TextSize", { styled = true })
+				local font = runtime.observe(label, "FontFace", { styled = true })
+				assertThat(raw ~= size, "raw and styled observations shared a cache entry")
+				assertThat(
+					size == runtime.observe(label, "TextSize", { styled = true }),
+					"styled acquisition was not shared"
+				)
+				assertThat(size:peek() == 23, "the initial stylesheet value was not observed")
+				rule:SetProperties { TextSize = 31, FontFace = Font.fromEnum(Enum.Font.Gotham) }
+				settled(31)
+				assertThat(size:peek() == 31, "a stylesheet write did not update TextSize")
+				assertThat(
+					(font:peek() :: Font).Family == (label:GetStyled "FontFace" :: Font).Family,
+					"FontFace did not update"
+				)
+				assertThat(raw:peek() == label.TextSize, "style changes corrupted the raw observation")
+				label.TextSize = 41
+				settled(41)
+				assertThat(size:peek() == 41 and raw:peek() == 41, "a raw override did not update both observations")
+				rule:SetProperties { TextSize = 35, FontFace = Font.fromEnum(Enum.Font.SourceSans) }
+				render:Wait()
+				assertThat(size:peek() == 41, "a masked stylesheet write replaced the raw override")
+				label:ResetPropertyToDefault "TextSize"
+				settled(35)
+				assertThat(size:peek() == 35, "reset did not reveal the current stylesheet value")
+				assertThat(raw:peek() == label.TextSize, "reset left the raw observation stale")
+				return "styled TextSize and FontFace followed native style changes; raw overrides masked style until reset; cache identities remained distinct"
+			end, runtime.reactor)
+		end,
+	},
+	{
+		id = "styled-valuebase-observation",
+		name = "observes ValueBase Value and Name writes and resets without depending on Changed",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			return Compose.withRootOwner(function(): string
+				Compose.cleanup(function()
+					runtime:dispose()
+				end)
+				for _, class in { "StringValue", "NumberValue" } do
+					local node = Instance.new(class)
+					runtime.adopt(node)
+					node.Parent = container
+					local originalName = node.Name
+					local originalValue: unknown = if class == "StringValue"
+						then (node :: StringValue).Value
+						else (node :: NumberValue).Value
+					local name = runtime.observe(node, "Name", { styled = true })
+					local value = runtime.observe(node, "Value", { styled = true })
+					node.Name = "ChangedName"
+					if class == "StringValue" then
+						(node :: StringValue).Value = "changed value"
+					else
+						(node :: NumberValue).Value = 42
+					end
+					game:GetService("RunService").Heartbeat:Wait()
+					assertThat(name:peek() == "ChangedName", class .. " Name write was missed")
+					assertThat(
+						value:peek() == (if class == "StringValue" then "changed value" else 42),
+						class .. " Value write was missed"
+					)
+					node:ResetPropertyToDefault "Name"
+					if class == "StringValue" then
+						(node :: StringValue):ResetPropertyToDefault "Value"
+					else
+						(node :: NumberValue):ResetPropertyToDefault "Value"
+					end
+					game:GetService("RunService").Heartbeat:Wait()
+					assertThat(name:peek() == originalName, class .. " Name reset was missed")
+					assertThat(value:peek() == originalValue, class .. " Value reset was missed")
+				end
+				return "StringValue and NumberValue Name and Value writes and resets matched GetStyled"
+			end, runtime.reactor)
+		end,
+	},
+	{
+		id = "property-readables-before-render",
+		name = "shares property readables and samples settled layout before showing it",
+		requires = { "roblox-engine", "roblox-client" },
+		run = function(_container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local player = assert(game:GetService("Players").LocalPlayer)
+			local render = game:GetService("RunService").PreRender
+			return Compose.withRootOwner(function(): string
+				local screen = Instance.new "ScreenGui"
+				runtime.adopt(screen)
+				screen.Enabled = false
+				screen.Parent = player:WaitForChild "PlayerGui"
+				local _, node = runtime.mount(function()
+					return runtime.constructors.TextLabel {
+						Size = UDim2.fromOffset(300, 80),
+						Position = UDim2.fromOffset(24, 32),
+						Text = "Measured before presentation",
+						TextSize = 20,
+					}
+				end, screen)
+				local bounds = runtime.observe(node, "TextBounds")
+				assertThat(bounds == runtime.observe(node, "TextBounds"), "TextBounds acquisition was not shared")
+				local position = runtime.observe(node, "AbsolutePosition")
+				local size = runtime.observe(node, "AbsoluteSize")
+				local read = assert(runtime.host.observation).readProperty
+				local settled = runtime.settled {
+					sample = function(): string
+						return tostring(read(node, "TextBounds"))
+							.. tostring(read(node, "AbsoluteSize"))
+							.. tostring(read(node, "AbsolutePosition"))
+					end,
+					ready = function(): boolean
+						return (read(node, "TextBounds") :: Vector2).X > 0
+					end,
+				}
+				for _ = 1, 120 do
+					if settled:peek() then
+						break
+					end
+					render:Wait()
+				end
+				assertThat(settled:peek(), "hidden text layout did not settle within 120 render frames")
+				assertThat(bounds:peek() == read(node, "TextBounds"), "TextBounds readable lagged the settled property")
+				assertThat(
+					size:peek() == read(node, "AbsoluteSize"),
+					"AbsoluteSize readable lagged the settled property"
+				)
+				screen.Enabled = true
+				render:Wait()
+				assertThat(
+					position:peek() == read(node, "AbsolutePosition"),
+					"AbsolutePosition readable lagged the first visible frame"
+				)
+				return "hidden layout settled; shared TextBounds, AbsoluteSize and AbsolutePosition matched engine reads before presentation"
+			end, runtime.reactor)
+		end,
+	},
+	{
+		id = "instance-lifecycle",
+		name = "creates and destroys a real Instance",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local dispose, frame = runtime.mount(function()
+				return runtime.constructors.Frame { Name = "Probe" }
+			end, container)
+
+			assertThat(typeof(frame) == "Instance", "expected an Instance, got " .. typeof(frame))
+			assertThat((frame :: Frame).Parent == container, "the frame was not parented to the container")
+			dispose()
+			assertThat((frame :: Instance).Parent == nil, "the frame survived disposal")
+			assertThat(container.Parent ~= nil, "Compose destroyed the mount target")
+			return "Instance created, parented, and destroyed; mount target untouched"
+		end,
+	},
+	{
+		id = "typed-property-refusal",
+		name = "the engine rejects a badly typed property, and Compose unwinds",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local before = #container:GetChildren()
+			local ok, err = pcall(function()
+				runtime.mount(function()
+					return runtime.constructors.Frame { BackgroundColor3 = "not a colour" }
+				end, container)
+			end)
+			assertThat(not ok, "the engine accepted a string for a Color3 property")
+			assertThat(
+				#container:GetChildren() == before,
+				("a failed render left %d child(ren) behind"):format(#container:GetChildren() - before)
+			)
+			return ("engine rejected the write and Compose unwound: %s"):format(
+				string.sub(tostring(err):gsub("\n.*", ""), 1, 80)
+			)
+		end,
+	},
+	{
+		id = "clear-property-default",
+		name = "clearProperty restores the real class default on a borrowed Instance",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local borrowed = Instance.new "Frame"
+			borrowed.Parent = container
+			local originalOrder = borrowed.LayoutOrder
+			local originalVisible = borrowed.Visible
+
+			local dispose = runtime.mount(function()
+				runtime.decorate(borrowed, { LayoutOrder = 99, Visible = false })
+				return runtime.constructors.Frame {}
+			end, container)
+
+			assertThat(borrowed.LayoutOrder == 99, "the decoration did not apply")
+			dispose()
+			assertThat(
+				borrowed.LayoutOrder == originalOrder,
+				("LayoutOrder left at %d, expected %d"):format(borrowed.LayoutOrder, originalOrder)
+			)
+			assertThat(borrowed.Visible == originalVisible, "Visible was not restored")
+			assertThat(borrowed.Parent == container, "Compose destroyed a borrowed Instance")
+			borrowed:Destroy()
+			return ("restored LayoutOrder to %d and Visible to %s"):format(originalOrder, tostring(originalVisible))
+		end,
+	},
+	{
+		id = "attributes-key",
+		name = "the Attributes key writes, clears and refuses on a real Instance",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local tier = Compose.cell(1 :: number?) :: OptionalNumberCell
+
+			local dispose, frame = runtime.mount(function()
+				return runtime.constructors.Frame {
+					Attributes = { Tier = tier, Faction = "north" },
+				}
+			end, container)
+
+			assertThat((frame :: Frame):GetAttribute "Tier" == 1, "the attribute was not written")
+			assertThat((frame :: Frame):GetAttribute "Faction" == "north", "the static attribute was not written")
+
+			tier:set(7)
+			runtime:settle()
+			assertThat((frame :: Frame):GetAttribute "Tier" == 7, "the attribute did not follow its cell")
+
+			tier:set(nil)
+			runtime:settle()
+			assertThat((frame :: Frame):GetAttribute "Tier" == nil, "nil did not clear the attribute")
+			dispose()
+
+			local before = #container:GetChildren()
+			local ok, err = pcall(function()
+				runtime.mount(function()
+					return runtime.constructors.Frame { Attributes = { Tier = { deep = true } } }
+				end, container)
+			end)
+			assertThat(not ok, "the engine stored a table in an attribute")
+			assertThat(
+				string.find(tostring(err), "props/attribute-value", 1, true) ~= nil,
+				("the refusal was not reported as props/attribute-value: %s"):format(tostring(err))
+			)
+			assertThat(
+				#container:GetChildren() == before,
+				("a refused attribute left %d child(ren) behind"):format(#container:GetChildren() - before)
+			)
+			return "attribute written, followed a cell, cleared by nil, and a rejected value reported by name"
+		end,
+	},
+	{
+		id = "event-connection",
+		name = "an event key connects to a real RBXScriptSignal and releases on disposal",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local fired = 0
+			local dispose, button = runtime.mount(function()
+				return runtime.constructors.TextButton {
+					Text = "probe",
+					Activated = function()
+						fired += 1
+					end,
+				}
+			end, container)
+
+			assertThat(
+				typeof((button :: TextButton).Activated) == "RBXScriptSignal",
+				"Activated was written as a property instead of being connected"
+			)
+			dispose()
+			assertThat(fired == 0, "the handler ran without user input")
+			return "Activated resolved to an RBXScriptSignal and was not overwritten"
+		end,
+	},
+	{
+		id = "property-changed-signal",
+		name = "GetPropertyChangedSignal fires for an engine-driven change",
+		run = function(container: Instance): string
+			local host = ComposeRoblox.createHost()
+			local observation = assert(host.observation)
+			local frame = Instance.new "Frame"
+			frame.Parent = container
+
+			local seen = 0
+			local unsubscribe = observation.observeProperty(frame, "Visible", function()
+				seen += 1
+			end)
+			frame.Visible = false
+			task.wait()
+			assertThat(seen >= 1, "the property observer did not fire")
+
+			local afterFirst = seen
+			unsubscribe()
+			unsubscribe()
+			frame.Visible = true
+			task.wait()
+			assertThat(seen == afterFirst, "the observer fired after being unsubscribed")
+			frame:Destroy()
+			return ("fired %d time(s), then stopped after unsubscribe"):format(afterFirst)
+		end,
+	},
+	{
+		id = "keyed-layout-order",
+		name = "LayoutOrder from a keyed collection actually reorders a UIListLayout",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local rows = Compose.cell { "a", "b", "c" }
+
+			local screen = Instance.new "ScreenGui"
+			screen.Parent = container
+
+			local dispose, frame = runtime.mount(function()
+				return runtime.constructors.Frame {
+					Size = UDim2.fromOffset(200, 200),
+					runtime.constructors.UIListLayout { SortOrder = Enum.SortOrder.LayoutOrder },
+					Compose.keyed {
+						from = rows,
+						render = function(value, index)
+							return runtime.constructors.TextLabel {
+								Size = UDim2.new(1, 0, 0, 20),
+								Text = function(use)
+									return use(value)
+								end,
+								LayoutOrder = function(use)
+									return use(index)
+								end,
+							}
+						end,
+					},
+				}
+			end, screen)
+
+			rows:set { "c", "a", "b" }
+			runtime:settle()
+			task.wait()
+			task.wait()
+
+			local byText: { [string]: number } = {}
+			for _, child in (frame :: Instance):GetChildren() do
+				if child:IsA "TextLabel" then
+					byText[child.Text] = child.LayoutOrder
+				end
+			end
+			assertThat(byText.c == 1 and byText.a == 2 and byText.b == 3, "LayoutOrder did not follow the keyed index")
+
+			local positions: { { text: string, y: number } } = {}
+			for _, child in (frame :: Instance):GetChildren() do
+				if child:IsA "TextLabel" then
+					table.insert(positions, { text = child.Text, y = (child :: TextLabel).AbsolutePosition.Y })
+				end
+			end
+			table.sort(positions, function(left: { text: string, y: number }, right: { text: string, y: number })
+				return left.y < right.y
+			end)
+			assertThat(#positions == 3, "expected three rows, found " .. tostring(#positions))
+			assertThat(
+				positions[1].text == "c" and positions[2].text == "a" and positions[3].text == "b",
+				("the layout did not honour LayoutOrder: %s, %s, %s"):format(
+					positions[1].text,
+					positions[2].text,
+					positions[3].text
+				)
+			)
+			dispose()
+			screen:Destroy()
+			return "UIListLayout placed rows in c, a, b -- the keyed order"
+		end,
+	},
+	{
+		id = "spring-heartbeat",
+		name = "a spring settles on the real Heartbeat and then stops",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local target = Compose.cell(UDim2.fromScale(0, 0))
+			local dispose, frame = runtime.mount(function()
+				local smooth = runtime.spring(function(use)
+					return use(target)
+				end, { period = 0.2, damping = 1 })
+				return runtime.constructors.Frame {
+					Size = function(use)
+						return use(smooth)
+					end,
+				}
+			end, container)
+
+			target:set(UDim2.fromScale(1, 0.5))
+			runtime:settle()
+
+			local frames = 0
+			local deadline = os.clock() + 5
+			while os.clock() < deadline and (frame :: Frame).Size ~= UDim2.fromScale(1, 0.5) do
+				frames += 1
+				task.wait()
+			end
+			assertThat(
+				(frame :: Frame).Size == UDim2.fromScale(1, 0.5),
+				("the spring did not settle: %s"):format(tostring((frame :: Frame).Size))
+			)
+
+			local settledSize = (frame :: Frame).Size
+			for _ = 1, 5 do
+				task.wait()
+			end
+			assertThat((frame :: Frame).Size == settledSize, "the spring kept moving after settling")
+			dispose()
+			return ("settled exactly on target after %d frames, then stopped"):format(frames)
+		end,
+	},
+	{
+		id = "disposed-tree-collectable",
+		name = "a disposed tree is collectable",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local alive = setmetatable({}, { __mode = "v" })
+			do
+				local dispose, frame = runtime.mount(function()
+					return runtime.constructors.Frame { runtime.constructors.TextLabel {} }
+				end, container)
+				alive[1] = frame
+				dispose()
+			end
+			for _ = 1, 5 do
+				task.wait()
+			end
+
+			return ("weak reference after disposal: %s"):format(
+				if alive[1] == nil then "released" else "still held (collector has not run)"
+			)
+		end,
+	},
+	{
+		id = "heap-baseline",
+		name = "heap returns to baseline after repeated mount and dispose",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+
+			local function cycle()
+				local children = table.create(200)
+				local dispose = runtime.mount(function()
+					for index = 1, 200 do
+						children[index] = runtime.constructors.TextLabel { Text = "row " .. tostring(index) }
+					end
+					return runtime.constructors.Frame(children)
+				end, container)
+				dispose()
+			end
+
+			local function settle(): number
+				local lowest = collectgarbage "count"
+				for _ = 1, 40 do
+					local junk: { { number } }? = table.create(2000) :: { { number } }
+					for index = 1, 2000 do
+						(junk :: { { number } })[index] = { index }
+					end
+					junk = nil
+					task.wait()
+					local sample = collectgarbage "count"
+					if sample < lowest then
+						lowest = sample
+					end
+				end
+				return lowest
+			end
+
+			cycle()
+			local first = settle()
+			for _ = 1, 8 do
+				cycle()
+			end
+			local last = settle()
+			local perCycle = (last - first) / 8
+
+			assertThat(perCycle < 64, ("heap grew %.1f KB per mount/dispose cycle, which is a leak"):format(perCycle))
+			return ("%.2f KB per cycle across 9 cycles of a 201-node tree"):format(perCycle)
+		end,
+	},
+	{
+		id = "direct-instance-race",
+		name = "Compose against direct Instance work, on the engine",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local COUNT = 400
+			local ROUNDS = 5
+
+			local function race(first: () -> (), second: () -> ()): (number, number)
+				first()
+				second()
+				local firstSamples: { number } = table.create(ROUNDS) :: { number }
+				local secondSamples: { number } = table.create(ROUNDS) :: { number }
+				for index = 1, ROUNDS do
+					local startedFirst = os.clock()
+					first()
+					firstSamples[index] = os.clock() - startedFirst
+					local startedSecond = os.clock()
+					second()
+					secondSamples[index] = os.clock() - startedSecond
+				end
+				table.sort(firstSamples)
+				table.sort(secondSamples)
+				local middle = (ROUNDS // 2) + 1
+				return firstSamples[middle], secondSamples[middle]
+			end
+
+			local directBuild, composeBuild = race(function()
+				local frame = Instance.new "Frame"
+				for index = 1, COUNT do
+					local label = Instance.new "TextLabel"
+					label.Text = "row " .. tostring(index)
+					label.Parent = frame
+				end
+				frame.Parent = container
+				frame:Destroy()
+			end, function()
+				local dispose = runtime.mount(function()
+					local children = table.create(COUNT)
+					for index = 1, COUNT do
+						children[index] = runtime.constructors.TextLabel { Text = "row " .. tostring(index) }
+					end
+					return runtime.constructors.Frame(children)
+				end, container)
+				dispose()
+			end)
+
+			local plain = Instance.new "TextLabel"
+			plain.Parent = container
+			local text = Compose.cell "value 0"
+			local disposeBound = runtime.mount(function()
+				return runtime.constructors.TextLabel {
+					Text = function(use)
+						return use(text)
+					end,
+				}
+			end, container)
+			local directUpdate, composeUpdate = race(function()
+				for index = 1, COUNT do
+					plain.Text = "value " .. tostring(index)
+				end
+			end, function()
+				for index = 1, COUNT do
+					text:set("value " .. tostring(index))
+				end
+			end)
+			disposeBound()
+			plain:Destroy()
+
+			local buildRatio = composeBuild / directBuild
+			local updateRatio = composeUpdate / directUpdate
+
+			assertThat(
+				buildRatio < 10,
+				("building through Compose cost %.1fx direct Instance work, which is out of band"):format(buildRatio)
+			)
+			assertThat(
+				updateRatio < 40,
+				("a reactive write cost %.1fx a direct assignment, which is out of band"):format(updateRatio)
+			)
+
+			return (
+				"%d nodes: build+teardown %.3f ms direct, %.3f ms Compose (%.2fx); "
+				.. "%d writes: %.3f ms direct, %.3f ms Compose (%.2fx)"
+			):format(
+				COUNT,
+				directBuild * 1000,
+				composeBuild * 1000,
+				buildRatio,
+				COUNT,
+				directUpdate * 1000,
+				composeUpdate * 1000,
+				updateRatio
+			)
+		end,
+	},
+	{
+		id = "screen-frame-budget",
+		name = "representative screens hold a frame budget on the engine",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local FRAMES = 60
+
+			local function perFrame(body: (number) -> ()): number
+				local samples: { number } = table.create(FRAMES) :: { number }
+				for tick = 1, FRAMES do
+					local started = os.clock()
+					body(tick)
+					samples[tick] = os.clock() - started
+				end
+				table.sort(samples)
+				return samples[(FRAMES // 2) + 1]
+			end
+
+			local before = #container:GetChildren()
+			local report = {}
+
+			do
+				local level = Compose.cell(100)
+				local mana = Compose.cell(100)
+				local cast = Compose.cell(0)
+				local started = os.clock()
+				local dispose = runtime.mount(function()
+					local bars = table.create(24)
+					for index = 1, 24 do
+						local source = if index % 3 == 0 then level elseif index % 3 == 1 then mana else cast
+						bars[index] = runtime.constructors.Frame {
+							LayoutOrder = index,
+							Transparency = function(use)
+								return (use(source) :: number) / 100
+							end,
+						}
+					end
+					return runtime.constructors.Frame(bars)
+				end, container)
+				local cold = os.clock() - started
+				local frame = perFrame(function(tick)
+					runtime:batch(function()
+						level:set(60 + (tick % 40))
+						mana:set(50 + (tick % 50))
+						cast:set(tick % 100)
+					end)
+				end)
+				local released = os.clock()
+				dispose()
+				table.insert(
+					report,
+					("hud cold %.2f ms, frame %.1f us, teardown %.2f ms"):format(
+						cold * 1000,
+						frame * 1e6,
+						(os.clock() - released) * 1000
+					)
+				)
+			end
+
+			do
+				local COUNT = 200
+				type LevelItem = { id: number, level: typeof(Compose.cell(0)) }
+				local units: { LevelItem } = table.create(COUNT) :: { LevelItem }
+				for index = 1, COUNT do
+					units[index] = { id = index, level = Compose.cell(index % 100) }
+				end
+				local entities = Compose.cell(units)
+				local started = os.clock()
+				local dispose = runtime.mount(function()
+					return runtime.constructors.Frame {
+						Compose.keyed {
+							from = entities,
+							key = function(unit: LevelItem)
+								return unit.id
+							end,
+							render = function(value: Readable<LevelItem>, index: Readable<number>)
+								local unit = value:peek()
+								return runtime.constructors.Frame {
+									LayoutOrder = index,
+									Transparency = function(use)
+										return (use(unit.level) :: number) / 100
+									end,
+								}
+							end,
+						},
+					}
+				end, container)
+				local cold = os.clock() - started
+				local frame = perFrame(function(tick)
+					runtime:batch(function()
+						for offset = 0, 9 do
+							local at = ((tick * 7 + offset * 13) % COUNT) + 1
+							units[at].level:set((tick + offset) % 100)
+						end
+					end)
+				end)
+				local released = os.clock()
+				dispose()
+				table.insert(
+					report,
+					("list(%d) cold %.2f ms, frame %.1f us, teardown %.2f ms"):format(
+						COUNT,
+						cold * 1000,
+						frame * 1e6,
+						(os.clock() - released) * 1000
+					)
+				)
+			end
+
+			do
+				local TOTAL, VISIBLE = 2000, 40
+				local pool = table.create(TOTAL) :: { { id: number, label: number } }
+				for index = 1, TOTAL do
+					pool[index] = { id = index, label = index }
+				end
+				local logical = Compose.cell(pool)
+				local first = Compose.cell(1)
+				local started = os.clock()
+				local dispose = runtime.mount(function()
+					return runtime.constructors.Frame {
+						Compose.OrderedCollection {
+							from = logical,
+							mode = "windowed",
+							viewport = function(use: Compose.Use): Compose.OrderedCollectionViewport
+								return { offset = use(first) - 1, size = VISIBLE }
+							end,
+							layout = { itemSize = 1 } :: Layout,
+							key = function(item: { id: number, label: number })
+								return item.id
+							end,
+							render = function(
+								value: Readable<{ id: number, label: number }>,
+								placement: Readable<{ index: number, row: number, column: number, offset: number, size: number, crossOffset: number, crossSize: number }>
+							)
+								return runtime.constructors.Frame {
+									LayoutOrder = function(use: Use)
+										return use(placement).index
+									end,
+									Name = function(use): string
+										return ("row-%d"):format(use(value).label)
+									end,
+								}
+							end,
+						},
+					}
+				end, container)
+				local cold = os.clock() - started
+				local frame = perFrame(function(tick)
+					first:set(((tick * 3) % (TOTAL - VISIBLE)) + 1)
+				end)
+				local released = os.clock()
+				dispose()
+				table.insert(
+					report,
+					("window(%d of %d) cold %.2f ms, frame %.1f us, teardown %.2f ms"):format(
+						VISIBLE,
+						TOTAL,
+						cold * 1000,
+						frame * 1e6,
+						(os.clock() - released) * 1000
+					)
+				)
+			end
+
+			do
+				local COUNT = 100
+				local targets: { typeof(Compose.cell(0)) } = table.create(COUNT) :: { typeof(Compose.cell(0)) }
+				for index = 1, COUNT do
+					targets[index] = Compose.cell(0)
+				end
+				local started = os.clock()
+				local dispose = runtime.mount(function()
+					local panels = table.create(COUNT)
+					for index = 1, COUNT do
+						local moved = runtime.spring(function(use): number
+							return use(targets[index]) :: number
+						end, { period = 0.3, damping = 1 })
+						panels[index] = runtime.constructors.Frame {
+							LayoutOrder = index,
+							Transparency = function(use)
+								return math.clamp(use(moved) :: number, 0, 1)
+							end,
+						}
+					end
+					return runtime.constructors.Frame(panels)
+				end, container)
+				local cold = os.clock() - started
+				local frame = perFrame(function(tick)
+					runtime:batch(function()
+						for offset = 0, 9 do
+							targets[((tick * 11 + offset * 7) % COUNT) + 1]:set(((tick + offset) % 50) / 50)
+						end
+					end)
+				end)
+				local released = os.clock()
+				dispose()
+				table.insert(
+					report,
+					("springs(%d) cold %.2f ms, retarget %.1f us, teardown %.2f ms"):format(
+						COUNT,
+						cold * 1000,
+						frame * 1e6,
+						(os.clock() - released) * 1000
+					)
+				)
+			end
+
+			local after = #container:GetChildren()
+			assertThat(after == before, ("%d child(ren) survived teardown, expected %d"):format(after, before))
+
+			return table.concat(report, "; ")
+		end,
+	},
+
+	{
+		id = "entity-scene-3d",
+		name = "a 3D entity scene composes, updates sparsely and tears down on the engine",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local COUNT = 200
+			local FRAMES = 60
+
+			local function perFrame(body: (number) -> ()): number
+				local samples: { number } = table.create(FRAMES) :: { number }
+				for tick = 1, FRAMES do
+					local started = os.clock()
+					body(tick)
+					samples[tick] = os.clock() - started
+				end
+				table.sort(samples)
+				return samples[(FRAMES // 2) + 1]
+			end
+
+			local before = #container:GetChildren()
+
+			type Unit = {
+				id: number,
+				level: typeof(Compose.cell(0)),
+				distance: typeof(Compose.cell(0)),
+				visible: typeof(Compose.cell(false)),
+				selected: typeof(Compose.cell(false)),
+			}
+			local units: { Unit } = table.create(COUNT) :: { Unit }
+			for index = 1, COUNT do
+				units[index] = {
+					id = index,
+					level = Compose.cell((index % 100) + 1),
+					distance = Compose.cell((index * 7) % 400),
+					visible = Compose.cell(index % 2 == 0),
+					selected = Compose.cell(false),
+				}
+			end
+			local entities = Compose.cell(units)
+
+			local asset = Instance.new "Model"
+			asset.Name = "AuthoredProp"
+			for index = 1, 8 do
+				local piece = Instance.new "Part"
+				piece.Name = ("Piece%d"):format(index)
+				piece.Anchored = true
+				piece.Parent = asset
+			end
+
+			local started = os.clock()
+			local dispose = runtime.mount(function()
+				return runtime.constructors.Folder {
+					Name = "World",
+					runtime.adopt(asset),
+					Compose.keyed {
+						from = entities,
+						key = function(unit: Unit)
+							return unit.id
+						end,
+						render = function(value: Readable<Unit>)
+							local unit = value:peek()
+							return runtime.constructors.Model {
+								Name = ("Item%d"):format(unit.id),
+								runtime.constructors.MeshPart {
+									Name = "Body",
+									Anchored = true,
+									Transparency = function(use: Use)
+										return math.clamp((use(use(value).distance) :: number) / 800, 0, 1)
+									end,
+								},
+								runtime.constructors.Attachment {
+									Name = "Anchor",
+									Compose.show(function(use: Use)
+										return use(use(value).visible) :: boolean
+									end, function()
+										return runtime.constructors.BillboardGui {
+											Name = "Plate",
+											AlwaysOnTop = true,
+											runtime.constructors.TextLabel {
+												Name = "Health",
+												Text = function(use)
+													return tostring(use(use(value).level))
+												end,
+											},
+										}
+									end),
+								},
+								Compose.show(function(use: Use)
+									return use(use(value).selected) :: boolean
+								end, function()
+									return runtime.constructors.Highlight {
+										Name = "Selected",
+										FillTransparency = 0.5,
+									}
+								end),
+							}
+						end,
+					},
+				}
+			end, container)
+			local cold = os.clock() - started
+
+			local selectedAt = 0
+			local frame = perFrame(function(tick)
+				runtime:batch(function()
+					for offset = 0, COUNT // 10 - 1 do
+						local unit = units[((tick * 13 + offset * 7) % COUNT) + 1]
+						unit.level:set(((tick + offset) % 100) + 1)
+						unit.distance:set((tick * 3 + offset * 11) % 400)
+					end
+					local wanted = ((tick * 5) % COUNT) + 1
+					if wanted ~= selectedAt then
+						if selectedAt ~= 0 then
+							units[selectedAt].selected:set(false)
+						end
+						selectedAt = wanted
+						units[wanted].selected:set(true)
+					end
+				end)
+			end)
+
+			local sweepStarted = os.clock()
+			runtime:batch(function()
+				for index = 1, COUNT // 4 do
+					local unit = units[index]
+					unit.visible:set(not unit.visible:peek())
+				end
+			end)
+			local sweep = os.clock() - sweepStarted
+
+			local released = os.clock()
+			dispose()
+			local teardown = os.clock() - released
+
+			local after = #container:GetChildren()
+			assertThat(after == before, ("%d child(ren) survived teardown, expected %d"):format(after, before))
+			assertThat(asset.Parent == nil, "the adopted asset survived teardown")
+
+			return ("scene(%d) cold %.2f ms, frame %.1f us, sweep %.2f ms, teardown %.2f ms"):format(
+				COUNT,
+				cold * 1000,
+				frame * 1e6,
+				sweep * 1000,
+				teardown * 1000
+			)
+		end,
+	},
+
+	{
+		id = "sprite-scene-2d",
+		name = "a culled 2D sprite scene mounts and unmounts continuously on the engine",
+		run = function(container: Instance): string
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local POPULATION = 2000
+			local VISIBLE = 120
+			local FRAMES = 60
+
+			type Entity = { id: number, depth: number }
+			local entities: { Entity } = table.create(POPULATION) :: { Entity }
+			for index = 1, POPULATION do
+				entities[index] = { id = index, depth = index % 8 }
+			end
+
+			local function windowAt(tick: number): { Entity }
+				local first = ((tick * 8) % (POPULATION - VISIBLE)) + 1
+				local shown: { Entity } = table.create(VISIBLE) :: { Entity }
+				for offset = 0, VISIBLE - 1 do
+					shown[offset + 1] = entities[first + offset]
+				end
+				return shown
+			end
+
+			local visible = Compose.cell(windowAt(0))
+			local positions: { typeof(Compose.cell(0)) } = table.create(POPULATION) :: { typeof(Compose.cell(0)) }
+			for index = 1, POPULATION do
+				positions[index] = Compose.cell(0)
+			end
+
+			local started = os.clock()
+			local dispose = runtime.mount(function()
+				return runtime.constructors.Frame {
+					Name = "Scene",
+					BackgroundTransparency = 1,
+					Compose.keyed {
+						from = visible,
+						key = function(entity: Entity)
+							return entity.id
+						end,
+						render = function(value: Readable<Entity>, index: Readable<number>)
+							local entity = value:peek()
+							local offset = positions[entity.id]
+							return runtime.constructors.ImageLabel {
+								Name = ("Sprite%d"):format(entity.id),
+								BackgroundTransparency = 1,
+								LayoutOrder = function(use)
+									return use(index) :: number
+								end,
+								ImageTransparency = function(use)
+									return math.clamp((use(offset) :: number) / 100, 0, 1)
+								end,
+							}
+						end,
+					},
+				}
+			end, container)
+			local cold = os.clock() - started
+
+			local samples: { number } = table.create(FRAMES) :: { number }
+			for tick = 1, FRAMES do
+				local at = os.clock()
+				runtime:batch(function()
+					local shown = windowAt(tick)
+					for _, entity in shown do
+						positions[entity.id]:set((tick * 3 + entity.id) % 100)
+					end
+					visible:set(shown)
+				end)
+				samples[tick] = os.clock() - at
+			end
+			table.sort(samples)
+			local frame = samples[(FRAMES // 2) + 1]
+
+			local before = #container:GetChildren()
+			local released = os.clock()
+			dispose()
+			local teardown = os.clock() - released
+			assertThat(#container:GetChildren() == before - 1, "the culled scene did not release its root on disposal")
+
+			return ("sprites(%d of %d) cold %.2f ms, frame %.1f us, teardown %.2f ms"):format(
+				VISIBLE,
+				POPULATION,
+				cold * 1000,
+				frame * 1e6,
+				teardown * 1000
+			)
+		end,
+	},
+	{
+		id = "design-editor-edits-and-outlines",
+		name = "the Compose Design editor renders, outlines, edits, undoes and round-trips a design",
+		requires = { "roblox-engine", "roblox-client" },
+		run = function(container: Instance): string
+			local Players = game:GetService "Players"
+			local player = assert(Players.LocalPlayer, "a client player")
+			local screen = Instance.new "ScreenGui"
+			screen.Name = "ComposeDesignProbe"
+			screen.ResetOnSpawn = false
+			screen.Parent = player:WaitForChild "PlayerGui"
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local environment = ComposeRoblox.designEnvironment()
+			local RobloxLibrary = DesignEditor.robloxLibrary(runtime, environment)
+			local value = Design.document.new("Probe", RobloxLibrary, "Stack")
+			local text, button
+			value, text = Design.document.insert(value, RobloxLibrary, "n1", "Text")
+			value, button = Design.document.insert(value, RobloxLibrary, "n1", "Button")
+			local exported: string? = nil
+			local editor = DesignEditor.create(RobloxLibrary, value, screen, {
+				runtime = runtime,
+				environment = environment,
+				stageSize = { X = 480, Y = 320 },
+				onExport = function(source: string)
+					exported = source
+				end,
+			})
+			local function settle()
+				for _ = 1, 6 do
+					game:GetService("RunService").RenderStepped:Wait()
+				end
+			end
+			settle()
+			local stage = assert(editor.stage, "a 2D library opens the 2D stage")
+			local nodes = stage.nodes
+			local label = nodes[text]
+			assert(typeof(label) == "Instance" and label:IsA "GuiObject")
+			assertThat(label and label:IsA "TextLabel" or false, "the Text layer renders a TextLabel")
+			local pressable = nodes[button]
+			assert(typeof(pressable) == "Instance" and pressable:IsA "GuiObject")
+			assertThat(pressable and pressable:IsA "TextButton" or false, "the Button layer renders a TextButton")
+			editor.session.select(text)
+			settle()
+			local overlay = stage.overlay
+			assert(typeof(overlay) == "Instance")
+			local outline = overlay:FindFirstChild "DesignSelected"
+			assertThat(outline ~= nil and outline:IsA "GuiObject", "the selection outline exists")
+			if outline and outline:IsA "GuiObject" and label then
+				local offset = (outline.AbsolutePosition - label.AbsolutePosition).Magnitude
+				local extent = (outline.AbsoluteSize - label.AbsoluteSize).Magnitude
+				assertThat(
+					outline.Visible and offset <= 1 and extent <= 1,
+					`the outline covers the layer ({offset}, {extent})`
+				)
+			end
+			assertThat(editor.session.change("text", { literal = "Hello" }), "the text edit applies")
+			settle()
+			local edited = stage.nodes[text]
+			assert(typeof(edited) == "Instance" and edited:IsA "GuiObject")
+			assertThat(
+				edited and edited:IsA "TextLabel" and edited.Text == "Hello" or false,
+				"the stage shows the edited text"
+			)
+			assertThat(editor.session.undo(), "undo applies")
+			settle()
+			local restored = stage.nodes[text]
+			assert(typeof(restored) == "Instance" and restored:IsA "GuiObject")
+			assertThat(
+				restored and restored:IsA "TextLabel" and restored.Text == "Text" or false,
+				"undo restores the text"
+			)
+			editor.session.select(text)
+			stage.zoomTo(2)
+			settle()
+			local zoomed = stage.nodes[text]
+			assert(typeof(zoomed) == "Instance" and zoomed:IsA "GuiObject")
+			local zoomedOutline = overlay:FindFirstChild "DesignSelected"
+			if zoomed and zoomedOutline and zoomedOutline:IsA "GuiObject" then
+				local offset = (zoomedOutline.AbsolutePosition - zoomed.AbsolutePosition).Magnitude
+				local extent = (zoomedOutline.AbsoluteSize - zoomed.AbsoluteSize).Magnitude
+				assertThat(offset <= 1 and extent <= 1, `the outline follows the layer at 200% ({offset}, {extent})`)
+			else
+				assertThat(false, "the zoomed layer and outline exist")
+			end
+			stage.fit()
+			assertThat(stage.zoom:peek() <= 1, "fit never enlarges past 100%")
+			local root = editor.root
+			assert(typeof(root) == "Instance")
+			local layers = root:FindFirstChild("DesignLayers", true)
+			local rows = 0
+			if layers then
+				for _, child in layers:GetChildren() do
+					if child:IsA "TextButton" then
+						rows += 1
+					end
+				end
+			end
+			assertThat(rows == 3, `the layers panel lists three layers ({rows})`)
+			local exportButton = root:FindFirstChild("Export", true)
+			assertThat(exportButton ~= nil, "the toolbar offers Export")
+			local source = Design.emit(editor.session.document:peek(), RobloxLibrary)
+			local parsed = Design.parse(source, RobloxLibrary)
+			assertThat(
+				Design.emit(parsed, RobloxLibrary) == source,
+				"the exported source parses back to the same design"
+			)
+			local _ = exported
+			editor.dispose()
+			runtime:dispose()
+			screen:Destroy()
+			return "editor rendered three layers, outlined the selection, edited, undid and round-tripped its source"
+		end,
+	},
+	{
+		id = "design-scene-renders-picks-and-moves",
+		name = "the Compose Design editor opens a 3D library in a scene that renders, picks and moves parts",
+		requires = { "roblox-engine", "roblox-client" },
+		run = function(container: Instance): string
+			local Players = game:GetService "Players"
+			local player = assert(Players.LocalPlayer, "a client player")
+			local screen = Instance.new "ScreenGui"
+			screen.Name = "ComposeDesignSceneProbe"
+			screen.ResetOnSpawn = false
+			screen.Parent = player:WaitForChild "PlayerGui"
+			local runtime: Compose.Runtime = ComposeRoblox.createRuntime()
+			local environment = ComposeRoblox.designEnvironment()
+			local Roblox3D = DesignEditor.roblox3DLibrary(runtime, environment)
+			local value = Design.document.new("Probe", Roblox3D, "Model")
+			local block
+			value, block = Design.document.insert(value, Roblox3D, "n1", "Part")
+			value = Design.document.change(value, Roblox3D, block, "size", { literal = { 6, 6, 6 } })
+			value = Design.document.change(value, Roblox3D, block, "position", { literal = { 0, 3, 0 } })
+			local editor = DesignEditor.create(
+				Roblox3D,
+				value,
+				screen,
+				{ stageSize = { X = 0, Y = 0 }, runtime = runtime, environment = environment }
+			)
+			local function settle()
+				for _ = 1, 6 do
+					game:GetService("RunService").RenderStepped:Wait()
+				end
+			end
+			settle()
+			assertThat(editor.stage == nil, "a 3D library does not open the 2D stage")
+			local scene = assert(editor.scene, "a 3D library opens the scene")
+			local part = scene.nodes[block]
+			assert(typeof(part) == "Instance")
+			assertThat(part:IsA "BasePart", "the Part layer renders a BasePart")
+			scene.fit()
+			settle()
+			local viewport = scene.viewport
+			assert(typeof(viewport) == "Instance" and viewport:IsA "ViewportFrame")
+			local center = viewport.AbsolutePosition + viewport.AbsoluteSize / 2
+			assertThat(scene.pick { X = center.X, Y = center.Y } == block, "picking the scene centre finds the part")
+			editor.session.select(block)
+			assertThat(editor.session.change("position", { literal = { 4, 3, 0 } }), "the position edit applies")
+			settle()
+			local moved = scene.nodes[block]
+			assert(typeof(moved) == "Instance" and moved:IsA "PVInstance")
+			assertThat(
+				(moved:GetPivot().Position - Vector3.new(4, 3, 0)).Magnitude < 0.01,
+				"the scene shows the moved part"
+			)
+			local source = Design.emit(editor.session.document:peek(), Roblox3D)
+			assertThat(Design.emit(Design.parse(source, Roblox3D), Roblox3D) == source, "the 3D source round-trips")
+			editor.dispose()
+			runtime:dispose()
+			screen:Destroy()
+			return "the scene rendered, picked, moved and round-tripped a part"
+		end,
+	},
+}
+
+return checks
