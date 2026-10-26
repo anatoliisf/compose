@@ -20,7 +20,14 @@ Lute.worker {
 					harness:suite(entry.id, function()
 						if memory then
 							harness:case("retained Luau heap", function(context)
-								entry.memory()
+								local settled = entry.memory().teardownRetainedKb
+								for _ = 1, 3 do
+									local next = entry.memory().teardownRetainedKb
+									if math.abs(next - settled) <= 1 then
+										break
+									end
+									settled = next
+								end
 								local mounted, teardown = {}, {}
 								local count = if round then 1 else 3
 								for sample = 1, count do
