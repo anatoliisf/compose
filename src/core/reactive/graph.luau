@@ -174,7 +174,10 @@ local function record(consumer: Node, producer: Node)
 			edge = attached
 		end
 	end
-	refresh(producer)
+	local update = producer.refresh
+	if update then
+		update(producer)
+	end
 	if edge ~= nil then
 		edge.version = producer.version
 	end
