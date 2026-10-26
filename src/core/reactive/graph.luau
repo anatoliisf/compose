@@ -3,6 +3,7 @@
 
 local Diagnostics = require "../diagnostics"
 local Evaluation = require "./evaluation"
+local evaluationCache = Evaluation.cache
 local NodeCast = require "./node"
 local Reactor = require "./reactor"
 local Types = require "./types"
@@ -203,7 +204,12 @@ local function observe(node: Node, value: unknown)
 	if type(value) ~= "table" or node.version == nil then
 		notANode("use", value)
 	end
-	local consumer = Evaluation.context()
+	local frame = evaluationCache.frame
+	local consumer = if frame ~= nil
+			and frame.order > 0
+			and evaluationCache.thread == coroutine.running()
+		then frame.consumer
+		else Evaluation.context()
 	if consumer == nil then
 		Diagnostics.raise("reactive/no-evaluation", "use() was called outside a reactive body", {
 			contract = "use reads a cell or formula and records a dependency, which only means "
