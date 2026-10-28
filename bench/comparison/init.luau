@@ -8,6 +8,7 @@ local FusionCharm = require "@self/fusion-charm"
 local ReactUpstream = require "@self/react-upstream"
 
 local Blend = require "@self/blend"
+local ComposeAdapter = require "@self/compose-adapter"
 local Fusion = require "@self/fusion"
 local React = require "@self/react"
 local Vide = require "@self/vide"
@@ -90,6 +91,13 @@ return {
 		what = "fusion-charm public APIs",
 		workCounters = false,
 		load = Workloads.include("fusion-charm", FusionCharm.create),
+	},
+	{
+		name = "compose-adapter",
+		version = "0.1.0-dev",
+		what = "Compose through the shared comparison adapter",
+		workCounters = false,
+		load = Workloads.include("compose-adapter", ComposeAdapter.create),
 	},
 	{
 		name = "react-upstream",

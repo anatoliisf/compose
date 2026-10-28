@@ -359,6 +359,13 @@ local function include(name: string, factory: Factory, unsupported: ((string) ->
 	end
 	return function(environment: Environment.Environment): { library: unknown, extras: WorkloadTypes.Extras }
 		local driver = factory(environment)
+		local dispose = driver.mount(environment.container(), function(scope: Types.Scope): unknown
+			local text = scope.value "primer"
+			return scope.node("Frame", {}, { scope.node("TextLabel", { Text = text.binding }) })
+		end)
+		environment.drain()
+		dispose()
+		environment.drain()
 		drivers[environment] = driver
 		return { library = driver, extras = {} }
 	end

@@ -68,6 +68,8 @@ These sources stay in the ignored `.lute/dependencies` directory. They are not p
 The loader reads only the benchmark surfaces in the lock. It runs upstream source without edits.
 It resolves Roblox module paths (including `WaitForChild`), Nevermore module names, React package names and upstream Roblox package layouts against those surfaces.
 It gives each loaded framework a separate cost-model environment and module cache.
+Each sample reloads the framework, so each comparison lane mounts and disposes one small tree after loading and before timing. One-time first-render work then stays outside the timed samples, as it does for Compose, whose modules load once.
+The `compose-adapter` lane runs Compose through the same comparison adapter as the other frameworks. Its ratio to `compose` is the adapter's own cost.
 
 Fusion uses the latest GitHub release that GitHub marks as a non-prerelease.
 Its upstream tag contains `beta`; the upstream version table marks it as a release.
