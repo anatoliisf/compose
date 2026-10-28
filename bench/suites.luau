@@ -200,6 +200,9 @@ local function workloadMember(
 		finalize = function(state: unknown)
 			samples[state].environment.drain()
 		end,
+		teardown = function()
+			Frameworks.close(framework)
+		end,
 		afterSample = function(state: unknown, sampler: Benchmark.Sampler)
 			local sample = samples[state]
 			local counters = sample.environment.counters()

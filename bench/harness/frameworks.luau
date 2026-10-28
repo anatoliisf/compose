@@ -83,6 +83,10 @@ local function open(framework: Framework): Opened
 	return opened
 end
 
+local function close(framework: Framework)
+	sessions[framework.name] = nil
+end
+
 local function available(comparison: boolean?): { Framework }
 	if not comparison then
 		return FRAMEWORKS
@@ -104,4 +108,5 @@ end
 return {
 	available = available,
 	open = open,
+	close = close,
 }
