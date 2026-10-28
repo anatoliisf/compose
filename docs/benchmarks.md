@@ -54,9 +54,11 @@ Run the same comparison locally with these commands:
 lute run tools/sync-dependencies.luau --benchmarks
 lute run bench/compare.luau --verify --out build/framework-parity
 lute run bench/compare.luau --out build/framework-comparison
+lute run bench/compare.luau --mode like-for-like --out build/framework-like-for-like
 ```
 
 Use `--filter text` to select workload ids. Use `--out directory` to select the output directory.
+Use `--mode as-shipped` or `--mode like-for-like` to select the compilation mode. The default is `as-shipped`. The published results use `as-shipped`.
 `--verify` runs only the comparison correctness cases.
 This entry point covers the 24 runtime workloads. It does not add the screen and entity scenarios to this comparison.
 
@@ -69,16 +71,20 @@ The loader reads only the benchmark surfaces in the lock and the Compose `src` t
 It resolves Roblox module paths (including `WaitForChild`), Nevermore module names, React package names and upstream Roblox package layouts against those surfaces.
 It gives each loaded framework a separate cost-model environment and module cache.
 
-### Compilation
+### Compilation modes
 
-The comparison loads every framework lane, Compose included, through the same loader.
-The loader adds `--!optimize 2` before each source file and compiles it with `luau.compile`.
-It loads each chunk with `luau.load` and the cost-model global table as its environment.
-Thus all framework lanes use optimization level 2, the interpreter and the same environment table.
-`luau.load` does not generate native code. The Compose `--!native` directives have no effect in this comparison.
-The added directive line moves line numbers in loaded source by one.
-The bare lane, the comparison driver and the workload code load through Lute `require`. They also use optimization level 2.
-The normal `bench/run.luau` suites still load Compose through Lute `require`, with native code for the `--!native` modules. Do not compare those numbers with the comparison table.
+The comparison has two modes.
+
+`as-shipped` is the default mode. The published results use this mode. It measures each library as it ships:
+
+- Compose loads through Lute `require`, as a consumer gets it. Compose ships with `--!native` on its reactive core, so that code runs as native code. Lute `require` compiles at optimization level 2.
+- The other libraries run as they ship. The loader adds no directive to their source. It compiles each file with `luau.compile` at its default level, optimization level 1, because `luau.compile` has no level option. A library that ships `--!optimize` or `--!native` keeps its directive, but `luau.load` generates no native code. No pinned library ships `--!native`.
+- Roblox uses optimization level 2 by default in live experiences and level 1 in Studio testing ([Roblox creator documentation, Luau comments](https://create.roblox.com/docs/luau/comments)). Thus the other libraries run at the Studio testing level, not the live level. The `like-for-like` mode shows the effect of this difference.
+- The other libraries load with `luau.load` and a copy of the cost-model global table as their environment, because they need the cost-model `Instance`, `game`, `script` and `require`. Compose, the bare lane, the comparison driver and the workload code load through `require` with the Lute global environment. A control that loads the Compose source both ways, without native code, measures the cost of the separate environment. The evidence artifact reports it.
+
+`like-for-like` is an internal optimization target. It is not a published result. Every framework lane, Compose included, loads through the same loader. The loader adds `--!optimize 2` before each source file, so all framework lanes use optimization level 2, the interpreter and the same environment table. The Compose `--!native` directives have no effect in this mode. The added directive line moves line numbers in loaded source by one.
+
+The normal `bench/run.luau` suites load Compose through Lute `require`, as in `as-shipped` mode.
 
 Fusion uses the latest GitHub release that GitHub marks as a non-prerelease.
 Its upstream tag contains `beta`; the upstream version table marks it as a release.
@@ -101,7 +107,7 @@ The summary prints the exact source identities for all these dependencies.
 | `cold-mount-100`, `cold-mount-1000`, `cold-mount-10000` | Yes | Yes | Yes | Yes | Yes | Yes |
 | `mount-dispose` | Yes | Yes | Yes | Yes | Yes | Yes |
 | `update-leaf`, `update-fanout`, `update-batched` | Yes | Yes | Yes | Yes | Yes | Yes |
-| `update-repeated` | Yes | Yes | U | Yes | Yes | Yes |
+| `update-repeated` | Yes | Yes | Yes | Yes | Yes | Yes |
 | `branch-swap` | Yes | Yes | Yes | Yes | Yes | Yes |
 | `ordered-window-scroll` | U | Yes | U | U | U | U |
 | `keyed-append`, `keyed-prepend`, `keyed-insert`, `keyed-remove` | Yes | Yes | U | Yes | Yes | Yes |
@@ -114,7 +120,6 @@ The summary prints the exact source identities for all these dependencies.
 The unsupported reasons are:
 
 - The ordered-window workload measures a Compose collection contract. The other libraries have no matching native primitive.
-- Fusion has no public transaction that reduces 500 repeated source writes to one host property write.
 - At the pinned Fusion release, native `ForPairs` can assign a removed key's scope to a retained key. The four keyed workloads that shrink a list fail the retained-node identity check.
 - React and ReactRoblox have no native spring. This comparison does not add an animation library to that lane.
 - Vide releases Instances only through cleanup registrations. The Vide lane registers cleanup on each owned root. A build that fails before its root exists leaves its created parts without an owner. This fails the partial-build rollback contract.
@@ -125,12 +130,14 @@ The additional lanes classify the same 24 workloads:
 
 | Lane | Supported | Unsupported | Unsupported workload ids and reasons |
 | --- | --- | --- | --- |
-| Roact | 19 | 5 | `ordered-window-scroll`: no matching ordered window primitive. `update-repeated`: no public binding batch transaction. `animate-many`: no spring. `unwind`: failed-render rollback is not guaranteed by the public mount handle. `scene-3d`: Roact sets names from reconciliation keys; named dictionary children do not preserve the required mounting order. |
+| Roact | 20 | 4 | `ordered-window-scroll`: no matching ordered window primitive. `animate-many`: no spring. `unwind`: failed-render rollback is not guaranteed by the public mount handle. `scene-3d`: Roact sets names from reconciliation keys; named dictionary children do not preserve the required mounting order. |
 | Seam | 22 | 2 | `ordered-window-scroll`: no matching ordered window primitive. `status-panel`: the native computed-property type guard rejects the workload's synthetic `Frame.Text`, whose initial type is nil. |
 | signals | 12 | 12 | All eight `keyed-*` workloads and `status-panel`: no native keyed Instance collection or row lifetime primitive. `branch-swap`: no conditional Instance ownership primitive. `animate-many`: no spring. `ordered-window-scroll`: no matching ordered window primitive. |
 | React + Reflex | 21 | 3 | `ordered-window-scroll`, `animate-many`, `unwind`: the same rendering limitations as the existing React lane. |
 | Fusion + Charm | 19 | 5 | `ordered-window-scroll` and the same four shrinking keyed workloads as Fusion. Charm batching supports `update-repeated`. |
 | Roblox React | 21 | 3 | `ordered-window-scroll`, `animate-many`, `unwind`: the same rendering limitations as the existing React lane. |
+| React (useState) | 1 | 23 | Only `update-repeated`. In the other workloads this lane is the React lane. |
+| Compose direct | 24 | 0 | None. This is a control lane. It runs the direct Compose workload cases, without the comparison driver. |
 
 ### Measurement and fairness
 
@@ -138,7 +145,7 @@ The comparison first runs the existing observable-tree parity check.
 It also compares the prepared tree and every update checkpoint, checks retained row identity, and checks disposal.
 The mount-and-release workloads (`mount-dispose`, `events`, `mount-cycles`) record the built tree before they release it. Parity compares those trees.
 The animation workload compares `LayoutOrder` after 300 more frames, when every spring is at rest.
-The leaf and repeated-write workloads must commit exactly one property write per run.
+The leaf workload must commit exactly one property write per run. The repeated-write workload must commit one property write per run in each lane that merges writes. Fusion, Roact, React and Roblox React write every value. Their write counter shows those writes.
 Each lane must create the same number of instances as the first lane in the timed iterations.
 Each lane must make at least as many connections as the first lane. Library lifetime and flush connections, for example in Seam and Reflex, can add connections, so the counts are not equal.
 A missing implementation without an unsupported reason fails parity.
@@ -148,6 +155,7 @@ Timing uses the existing Verify workload collections, sample counts, warmup, CPU
 Each workload runs in its own timing worker. The worker rotates the lane order by the position of the workload in the comparison. Thus each lane runs first in some workloads and last in others.
 Each worker loads each framework one time, in one cost-model environment. Each sample uses a new container and a new root in that environment. The worker releases the framework and its environment after the last sample of that framework, so the next lane does not collect a larger heap.
 The first sample loads the framework, outside timing. Verify then runs one unmeasured complete sample and the declared warmup samples before it measures. Thus the measured samples use a warm library.
+After each sample's setup and before its timer, the worker runs two full garbage collection cycles with the Verify collection-witness API (`memory.settle`). Thus no lane pays collection debt from its setup or from another lane.
 The timed region includes every authored iteration and the final environment drain.
 Setup, framework loading, snapshots and release are outside timing, as in the normal runtime suite.
 Mount-and-release workloads include their own release inside the timed region.
@@ -166,12 +174,13 @@ It does not measure exact reachable bytes, RSS or native engine memory. Teardown
 The adapters use each library's public construction and state APIs.
 Compose uses the same comparison driver as the other libraries: cells, formula properties, `keyed`, `show`, `event`, runtime springs and `batch`.
 The ordered-window workload has no driver equivalent. It keeps its direct Compose case.
+The `compose-direct` control lane runs the direct Compose cases. The difference between `compose` and `compose-direct` is the cost of the driver and its adapter calls. The comparison table reports both lanes. The other libraries pay a similar adapter cost.
 Fusion uses scopes and `ForPairs`. Vide uses sources, `values`, `show` and cleanup on each owned root: the mounted tree, each shown branch and each keyed row.
 Vide's public `defaults` flag keeps its library default (true), so Vide writes its default properties on each created Instance.
 Vide's public `strict` runtime flag is false so its development check does not evaluate each effect twice.
 All maintained adapter code still uses strict Luau checking.
-React uses production settings, ReactRoblox legacy roots, property bindings and keyed function components.
-React's repeated-write lane uses batched React state; binding writes do not provide that coalescing contract.
+React uses production settings, ReactRoblox legacy roots, property bindings and keyed function components. It uses bindings in every workload, so it writes every value in the repeated-write workload.
+The `react-usestate` lane uses batched React state in the repeated-write workload, which merges the writes.
 The repeated-write lanes use numeric sources. They convert the final value to text after coalescing.
 Blend uses states, computed properties and `ComputedPairs` with native subscriptions and Maids.
 Its row-position map uses the public `Shared` operator so it is computed once per list update.
@@ -185,7 +194,6 @@ React + Reflex keeps all values in one producer. Each value has a key in the pro
 Fusion + Charm subscribes Fusion values to native atoms, releases each subscription with its Fusion scope, and uses Charm's public batch transaction.
 These combined lanes retain their rendering library's native collection and animation behavior. Their measurements include the bridge and subscription costs.
 
-The animation workload checks tree structure only. Its existing snapshot omits numeric animation properties.
 Fusion and Blend use their native analytic springs. Vide uses its native solver. The target, damping and nominal period match the workload.
 The solvers can produce different intermediate numbers. This lane does not prove equal trajectories, equal numerical error or equal animation quality.
 
@@ -194,6 +202,15 @@ All lanes use the same cost-model host, which adds dispatch and counter costs.
 The adapters add small Luau call and table costs. The results include those costs.
 These results describe this workload, host, runtime and machine. They do not establish native rendering, played quality or a general speedup.
 Hosted-runner noise and garbage collection can affect the results. Read the raw samples and calibration records before drawing a conclusion.
+
+### Workloads with Compose contracts
+
+Some workloads measure a contract that Compose was built for. Other libraries can fail them, skip them or pay for a different design. Do not read the totals across all workloads as a neutral summary. Leave these workloads out of a summary count:
+
+- `ordered-window-scroll` measures a Compose collection primitive. Only Compose runs it.
+- `unwind` measures Compose's partial-build rollback contract. React, Roblox React, React + Reflex, Blend, Roact and Vide do not satisfy it with their public APIs.
+- `update-repeated` measures merging of 500 writes into one host write. Compose merges them by design. Libraries without a transaction write every value.
+- `status-panel` writes a synthetic `Frame.Text` property. Seam's type guard rejects it.
 
 The workflow writes `comparison.md` to the job summary and retains the output directory as the `framework-comparison` artifact for seven days.
 The table gives median time in microseconds, mounted retained heap in KiB, and each value divided by Compose.
