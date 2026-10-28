@@ -146,7 +146,7 @@ Unsupported lanes have no timing or heap measurement.
 
 Timing uses the existing Verify workload collections, sample counts, warmup, CPU reference and calibration retry.
 Each workload runs in its own timing worker. The worker rotates the lane order by the position of the workload in the comparison. Thus each lane runs first in some workloads and last in others.
-Each worker loads each framework one time, in one cost-model environment. Each sample uses a new container and a new root in that environment.
+Each worker loads each framework one time, in one cost-model environment. Each sample uses a new container and a new root in that environment. The worker releases the framework and its environment after the last sample of that framework, so the next lane does not collect a larger heap.
 The first sample loads the framework, outside timing. Verify then runs one unmeasured complete sample and the declared warmup samples before it measures. Thus the measured samples use a warm library.
 The timed region includes every authored iteration and the final environment drain.
 Setup, framework loading, snapshots and release are outside timing, as in the normal runtime suite.
