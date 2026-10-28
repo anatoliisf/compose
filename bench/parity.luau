@@ -49,21 +49,25 @@ local function mismatch(order: { Frameworks.Framework }, snapshots: { [string]: 
 end
 
 local function workloadSnapshot(workload: Workloads.Workload, framework: Frameworks.Framework): (string?, string?)
-	local environment = Environment.create()
-	local result: Frameworks.Loaded? = nil
+	local result: Frameworks.Opened? = nil
 	local loaded, problem: unknown = pcall(function()
-		result = framework.load(environment)
+		result = Frameworks.open(framework)
 	end)
 	if not loaded then
 		return nil, ("could not load: %s"):format(tostring(problem))
 	end
 	local resolved = assert(result)
+	local environment = resolved.environment
 	local case = workload.cases[framework.name]
+	local observed: { string } = {}
 	local context: Workloads.Context = {
 		env = environment,
-		library = resolved.library,
-		extras = resolved.extras,
+		library = resolved.loaded.library,
+		extras = resolved.loaded.extras,
 		container = environment.container(),
+		observe = function(snapshot: string)
+			table.insert(observed, snapshot)
+		end,
 	}
 	local snapshot: string? = nil
 	local ran, err: unknown = pcall(function()
@@ -72,7 +76,8 @@ local function workloadSnapshot(workload: Workloads.Workload, framework: Framewo
 			case.run(state, context)
 		end
 		environment.drain()
-		snapshot = case.snapshot(state, context)
+		table.insert(observed, case.snapshot(state, context))
+		snapshot = table.concat(observed, "\n")
 		case.release(state, context)
 		environment.drain()
 	end)

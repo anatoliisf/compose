@@ -5,7 +5,11 @@ local Environment = require "../cost-model"
 local Types = require "./types"
 
 type Value<T> = { Value: T }
-type NativeScope = { AddObject: <T>(NativeScope, T) -> T, Destroy: (NativeScope) -> () }
+type NativeScope = {
+	AddObject: <T>(NativeScope, T) -> T,
+	InnerScope: (NativeScope) -> unknown,
+	Destroy: (NativeScope) -> (),
+}
 type Use = (unknown) -> unknown
 type Seam = {
 	Scope: () -> NativeScope,
@@ -100,9 +104,19 @@ local function create(environment: Environment.Environment): Types.Driver
 				end)
 			end,
 			branch = function(open: Types.Source<boolean>, build: (Types.Scope) -> unknown): unknown
+				local current: NativeScope? = nil
 				return computed(function(use: Use): unknown
 					use(open.binding)
-					return if open.read() then build(scopeFor(native)) else {}
+					if current ~= nil then
+						current:Destroy()
+						current = nil
+					end
+					if not open.read() then
+						return {}
+					end
+					local inner = native:InnerScope() :: NativeScope
+					current = inner
+					return build(scopeFor(inner))
 				end)
 			end,
 			keyed = function(list: Types.Source<{ Types.Row }>): unknown
@@ -115,21 +129,32 @@ local function create(environment: Environment.Environment): Types.Driver
 					positions = result
 					return result
 				end)
+				local rowReleases: { [Types.Row]: () -> () } = {}
 				local keyed = list.bind(function(rows: { Types.Row }): unknown
 					local result: { [Types.Row]: boolean } = {}
 					for _, row in rows do
 						result[row] = true
 					end
+					for row, release in rowReleases do
+						if not result[row] then
+							rowReleases[row] = nil
+							release()
+						end
+					end
 					return result
 				end)
 				local result = native:AddObject(
 					seam.ForPairs(keyed, function(_use: Use, row: Types.Row, _present: boolean): unknown
-						return node("TextLabel", {
+						local rowScope = native:InnerScope() :: NativeScope
+						rowReleases[row] = function()
+							rowScope:Destroy()
+						end
+						return scopeFor(rowScope).node("TextLabel", {
 							Text = tostring(row.id),
-							LayoutOrder = computed(function(use: Use): unknown
+							LayoutOrder = rowScope:AddObject(seam.Computed(function(use: Use): unknown
 								use(order)
 								return positions[row] or 0
-							end),
+							end)),
 						})
 					end)
 				)

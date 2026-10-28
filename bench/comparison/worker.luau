@@ -32,7 +32,10 @@ Lute.worker {
 						assert(problem == nil, problem)
 					end)
 				elseif lane == "timing" then
-					for _, entry in Suites.entries { suite = "workloads", filter = id, comparison = true } do
+					local offset = tonumber(name) or 0
+					for _, entry in
+						Suites.entries { suite = "workloads", filter = id, comparison = true, offset = offset }
+					do
 						if entry.id ~= id then
 							continue
 						end

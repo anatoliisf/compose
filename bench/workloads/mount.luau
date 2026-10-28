@@ -98,6 +98,10 @@ local mountDispose: Workload = {
 					end
 					return Host.Frame(children)
 				end, context.container)
+				local observe = context.observe
+				if observe ~= nil then
+					observe(context.env.snapshot(context.container, { "Text" }))
+				end
 				dispose()
 			end,
 			snapshot = function(_state: {}, context: ComposeContext): string
@@ -111,6 +115,10 @@ local mountDispose: Workload = {
 			end,
 			run = function(_state: {}, context: BareContext)
 				local _frame, made = BareSupport.buildList(context, 200, labelText)
+				local observe = context.observe
+				if observe ~= nil then
+					observe(context.env.snapshot(context.container, { "Text" }))
+				end
 				BareSupport.destroyAll(made)
 			end,
 			snapshot = function(_state: {}, context: BareContext): string

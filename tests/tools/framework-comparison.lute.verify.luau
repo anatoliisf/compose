@@ -9,6 +9,10 @@ local Workloads = require "../../bench/workloads"
 local WorkloadTypes = require "../../bench/workloads/types"
 local Environment = require "../../bench/cost-model"
 local Lock = require "../../dependencies.lock"
+local Upstream = require "../../bench/harness/upstream"
+local Suites = require "../../bench/suites"
+local ComposeCore = require "../../src/core"
+local luau = require "@lute/luau"
 
 local describe, it, expect = Test.describe, Test.it, Test.expect
 
@@ -160,6 +164,43 @@ describe("framework comparison", function()
 		for name in names do
 			expect(seen[name]):toBe(true)
 		end
+	end)
+
+	it("comparison loader compiles every lane at optimization level 2", function()
+		local probe = luau.load(
+			Upstream.compile "local function inlined() return debug.info(1, 'n') end local name = inlined() return name",
+			"probe",
+			{ debug = debug }
+		)
+		expect(probe()).never:toBe "inlined"
+	end)
+
+	it("comparison lanes load once per process and Compose loads through the shared loader", function()
+		local compose: Frameworks.Framework? = nil
+		for _, candidate in Frameworks.available(true) do
+			expect(candidate.shared):toBe(true)
+			if candidate.name == "compose" then
+				compose = candidate
+			end
+		end
+		local lane = assert(compose)
+		local first = Frameworks.open(lane)
+		local second = Frameworks.open(lane)
+		expect(second.environment):toBe(first.environment)
+		expect(second.loaded.library):toBe(first.loaded.library)
+		expect(first.loaded.library == ComposeCore):toBe(false)
+		local normal = Frameworks.available()[2]
+		expect(Frameworks.open(normal).environment == Frameworks.open(normal).environment):toBe(false)
+	end)
+
+	it("comparison timing workers rotate lane order by their offset", function()
+		local function first(offset: number): string
+			local entries =
+				Suites.entries { suite = "workloads", filter = "update-leaf", comparison = true, offset = offset }
+			return entries[1].collection.benchmarks[1].name
+		end
+		expect(first(0)):toBe "update-leaf/bare"
+		expect(first(1)):toBe "update-leaf/compose"
 	end)
 
 	it("comparison host models native vector defaults and ancestry", function()

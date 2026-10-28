@@ -8,9 +8,14 @@ local Workloads = require "../workloads"
 local WorkloadTypes = require "../workloads/types"
 
 local function contextFor(framework: Frameworks.Framework): Workloads.Context
-	local environment = Environment.create()
-	local loaded = framework.load(environment)
-	return { env = environment, library = loaded.library, extras = loaded.extras, container = environment.container() }
+	local opened = Frameworks.open(framework)
+	local environment = opened.environment
+	return {
+		env = environment,
+		library = opened.loaded.library,
+		extras = opened.loaded.extras,
+		container = environment.container(),
+	}
 end
 
 local function unchangedRows(context: Workloads.Context): { [string]: Environment.Instance }
@@ -32,23 +37,38 @@ local function parity(workload: Workloads.Workload, frameworks: { Frameworks.Fra
 		return problem
 	end
 	local reference: { string }? = nil
+	local referenceName = ""
+	local referenceCreated: number? = nil
+	local referenceConnections: number? = nil
 	for _, framework in frameworks do
 		local case = workload.cases[framework.name]
 		if not case then
 			continue
 		end
 		local context = contextFor(framework)
+		local observed: { string } = {}
+		context.observe = function(snapshot: string)
+			table.insert(observed, snapshot)
+		end
 		local instances, connections = context.env.liveInstances(), context.env.liveConnections()
 		local state = case.prepare(context)
 		context.env.drain()
 		local snapshots = { case.snapshot(state, context) }
 		local previous = unchangedRows(context)
+		local created, connected = 0, 0
 		local detail: unknown = nil
 		local ok = xpcall(function()
 			for _ = 1, workload.iterations do
 				context.env.resetCounters()
+				table.clear(observed)
 				case.run(state, context)
 				context.env.drain()
+				local counters = context.env.counters()
+				created += counters.instancesCreated
+				connected += counters.connectionsMade
+				if #observed > 0 then
+					table.insert(snapshots, table.concat(observed, "\n"))
+				end
 				if workload.id == "update-leaf" or workload.id == "update-repeated" then
 					assert(
 						context.env.counters().propertyWrites == 1,
@@ -79,13 +99,35 @@ local function parity(workload: Workloads.Workload, frameworks: { Frameworks.Fra
 			return framework.name .. " retained scene instances or connections after release"
 		end
 		if reference then
+			if #reference ~= #snapshots then
+				return framework.name .. " has a different number of checkpoints from " .. referenceName
+			end
 			for index, snapshot in snapshots do
 				if reference[index] ~= snapshot then
 					return framework.name .. " differs at checkpoint " .. tostring(index - 1)
 				end
 			end
+			if created ~= referenceCreated then
+				return ("%s created %d instances; %s created %d"):format(
+					framework.name,
+					created,
+					referenceName,
+					assert(referenceCreated)
+				)
+			end
+			if connected < assert(referenceConnections) then
+				return ("%s made %d connections; %s made %d"):format(
+					framework.name,
+					connected,
+					referenceName,
+					assert(referenceConnections)
+				)
+			end
 		else
 			reference = snapshots
+			referenceName = framework.name
+			referenceCreated = created
+			referenceConnections = connected
 		end
 	end
 	return nil

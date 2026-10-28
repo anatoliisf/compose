@@ -24,6 +24,7 @@ export type Context<L = unknown, E = Extras> = {
 	library: L,
 	extras: E,
 	container: Environment.Instance,
+	observe: ((string) -> ())?,
 }
 
 export type ComposeContext = Context<typeof(Compose), { runtime: Compose.Runtime }>

@@ -6,7 +6,13 @@ local Lock = require "../../dependencies.lock"
 local Environment = require "../cost-model"
 
 type Module = { path: string }
+local OPTIMIZATION = "--!optimize 2\n"
+local COMPOSE_ROOT = "src"
 local boundary = luau.load(luau.compile "return ...", "benchmark-boundary")
+
+local function compile(source: string): luau.Bytecode
+	return luau.compile(OPTIMIZATION .. source)
+end
 
 local bytecode: { [string]: luau.Bytecode } = {}
 
@@ -56,6 +62,7 @@ local function create(environment: Environment.Environment)
 			end
 		end
 	end
+	table.insert(allowed, COMPOSE_ROOT)
 	local function resolve(path: string): string
 		path = normal(path)
 		local present = false
@@ -146,6 +153,9 @@ local function create(environment: Environment.Environment)
 		end
 		local globals = table.clone(environment.globals)
 		local directory = assert(path:match "^(.*)/[^/]+$")
+		local relative = if path:sub(1, #COMPOSE_ROOT + 1) == COMPOSE_ROOT .. "/" and path:match "/init%.luau$"
+			then directory .. "/.."
+			else directory
 		globals.script = module(if path:match "/init%.lua[u]?$" then directory else path:gsub("%.lua[u]?$", ""))
 		globals.require = function(target: string | Module): unknown
 			if type(target) == "table" then
@@ -178,11 +188,11 @@ local function create(environment: Environment.Environment)
 			elseif target:sub(1, 6) == "@self/" then
 				return load(directory .. "/" .. target:sub(7))
 			end
-			return load(directory .. "/" .. target)
+			return load(relative .. "/" .. target)
 		end
 		local compiled = bytecode[path]
 		if compiled == nil then
-			compiled = luau.compile(fs.readFileToString(path))
+			compiled = compile(fs.readFileToString(path))
 			bytecode[path] = compiled
 		end
 		local result: unknown = luau.load(compiled, "@" .. path, globals)()
@@ -199,6 +209,7 @@ end
 
 return {
 	create = create,
+	compile = compile,
 	callback = function(value: unknown): (...unknown) -> ()
 		assert(type(value) == "function", "event handler must be a function")
 		return boundary(value)

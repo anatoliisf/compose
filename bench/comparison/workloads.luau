@@ -10,6 +10,7 @@ type State = {
 	release: () -> (),
 	keys: { string },
 	sortBy: string?,
+	settle: boolean,
 }
 type Factory = (Environment.Environment) -> Types.Driver
 
@@ -59,12 +60,11 @@ local function changed(id: string, initial: { Types.Row }): { Types.Row }
 	return result
 end
 
-local function prepare(
-	id: string,
-	environment: Environment.Environment,
-	container: Environment.Instance,
-	driver: Types.Driver
-): State
+local SETTLE_FRAMES = 300
+
+local function prepare(id: string, context: Workloads.Context, driver: Types.Driver): State
+	local environment = context.env
+	local container = context.container
 	local function labels(scope: Types.Scope, count: number, text: (number) -> unknown): unknown
 		local children: { unknown } = {}
 		for index = 1, count do
@@ -72,7 +72,7 @@ local function prepare(
 		end
 		return scope.node("Frame", {}, children)
 	end
-	local state: State = { run = function() end, release = function() end, keys = { "Text" } }
+	local state: State = { run = function() end, release = function() end, keys = { "Text" }, settle = false }
 	if id == "unwind" then
 		state.keys = { "Name" }
 		state.run = function()
@@ -116,6 +116,10 @@ local function prepare(
 					end)
 				end)
 				environment.drain()
+				local observe = context.observe
+				if observe ~= nil and not count then
+					observe(environment.snapshot(container, state.keys))
+				end
 				if id == "events" then
 					local before = fired
 					for _, button in environment.children(environment.children(container)[1]) do
@@ -142,7 +146,8 @@ local function prepare(
 	local dispose = driver.mount(container, function(scope: Types.Scope): unknown
 		if id == "animate-many" then
 			local target = scope.value(0)
-			state.keys = {}
+			state.keys = { "LayoutOrder" }
+			state.settle = true
 			state.run = function()
 				driver.batch(function()
 					target.write(100)
@@ -292,10 +297,15 @@ local function caseFor(id: string, factory: Factory): Workloads.Case
 	return {
 		prepare = function(context: Workloads.Context): WorkloadTypes.State
 			local driver = factory(context.env)
-			local state = prepare(id, context.env, context.container, driver)
+			local state = prepare(id, context, driver)
 			return {
 				run = state.run,
 				snapshot = function(): string
+					if state.settle then
+						for _ = 1, SETTLE_FRAMES do
+							context.env.step(1 / 60)
+						end
+					end
 					return context.env.snapshot(context.container, state.keys, state.sortBy)
 				end,
 				release = state.release,
@@ -316,9 +326,7 @@ end
 local function include(name: string, factory: Factory, unsupported: ((string) -> string?)?)
 	local drivers: { [Environment.Environment]: Types.Driver } = {}
 	local function take(environment: Environment.Environment): Types.Driver
-		local driver = assert(drivers[environment], "framework must be loaded before preparation")
-		drivers[environment] = nil
-		return driver
+		return assert(drivers[environment], "framework must be loaded before preparation")
 	end
 	for _, workload in Workloads.all do
 		local reasons = workload.unsupported or {}
@@ -328,6 +336,8 @@ local function include(name: string, factory: Factory, unsupported: ((string) ->
 		local fusion = name == "fusion" or name == "fusion-charm"
 		if reason then
 			reasons[name] = reason
+		elseif workload.id == "ordered-window-scroll" and name == "compose" then
+			continue
 		elseif workload.id == "ordered-window-scroll" then
 			reasons[name] =
 				"No native ordered window collection with the workload's retained range and geometry contract."
@@ -358,8 +368,11 @@ local function include(name: string, factory: Factory, unsupported: ((string) ->
 		end
 	end
 	return function(environment: Environment.Environment): { library: unknown, extras: WorkloadTypes.Extras }
-		local driver = factory(environment)
-		drivers[environment] = driver
+		local driver = drivers[environment]
+		if driver == nil then
+			driver = factory(environment)
+			drivers[environment] = driver
+		end
 		return { library = driver, extras = {} }
 	end
 end

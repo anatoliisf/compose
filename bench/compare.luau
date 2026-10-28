@@ -46,7 +46,7 @@ local function main(): number
 		end
 	end
 	local producers: { Gate.ProducerDraft } = {}
-	for _, entry in entries do
+	for position, entry in entries do
 		local parity: Gate.ProducerDraft = {
 			id = "parity-" .. entry.id,
 			kind = "tests",
@@ -64,7 +64,7 @@ local function main(): number
 			id = "timing-" .. entry.id,
 			kind = "tests",
 			worker = "bench/comparison/worker.luau",
-			locators = { "timing:" .. entry.id },
+			locators = { "timing:" .. entry.id .. ":" .. tostring(position - 1) },
 			exclusive = true,
 			after = { "parity-" .. entry.id },
 			tier = "timing",

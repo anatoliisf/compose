@@ -31,6 +31,7 @@ export type Filter = {
 	scale: string?,
 	paired: boolean?,
 	comparison: boolean?,
+	offset: number?,
 }
 
 local pairedRun = false
@@ -98,8 +99,9 @@ local function rotated<T>(values: { T }, by: number): { T }
 end
 
 local function makeContext(framework: Frameworks.Framework): (Environment.Environment, Types.Context)
-	local environment = Environment.create()
-	local loaded = framework.load(environment)
+	local opened = Frameworks.open(framework)
+	local environment = opened.environment
+	local loaded = opened.loaded
 	return environment,
 		{
 			env = environment,
@@ -507,7 +509,7 @@ local function entries(settings: Filter): { Entry }
 	local observed = identity()
 	local found: { Entry } = {}
 	if settings.suite == "workloads" or settings.suite == "all" then
-		local position = 0
+		local position = settings.offset or 0
 		local workloads = table.clone(Workloads.all)
 		if not settings.comparison then
 			for _, workload in Projections do
