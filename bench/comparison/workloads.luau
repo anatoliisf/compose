@@ -325,6 +325,7 @@ end
 
 local function include(name: string, factory: Factory, unsupported: ((string) -> string?)?)
 	local drivers: { [Environment.Environment]: Types.Driver } = {}
+	setmetatable(drivers, { __mode = "k" })
 	local function take(environment: Environment.Environment): Types.Driver
 		return assert(drivers[environment], "framework must be loaded before preparation")
 	end

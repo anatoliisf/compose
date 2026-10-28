@@ -7,6 +7,7 @@ local Gate = require "../.lute/dependencies/verify/src/gate"
 local Lute = require "../.lute/dependencies/verify/src/lute"
 local Verify = require "../.lute/dependencies/verify/src/core"
 local Frameworks = require "./harness/frameworks"
+local Upstream = require "./harness/upstream"
 local Report = require "./comparison/report"
 local Suites = require "./suites"
 local Workloads = require "./workloads"
@@ -16,11 +17,20 @@ local function main(): number
 	local out = "bench/results/comparison"
 	local filter: string? = nil
 	local verify = false
+	local mode: Upstream.Mode = "as-shipped"
 	local index = 2
 	while index <= #process.args do
 		local option = process.args[index]
 		if option == "--verify" then
 			verify = true
+		elseif option == "--mode" then
+			index += 1
+			local value = process.args[index]
+			if value == "as-shipped" or value == "like-for-like" then
+				mode = value
+			else
+				error("--mode must be as-shipped or like-for-like", 0)
+			end
 		elseif option == "--out" or option == "--filter" then
 			index += 1
 			local value = assert(process.args[index], "missing value for " .. option)
@@ -30,12 +40,17 @@ local function main(): number
 				filter = value
 			end
 		else
-			error("usage: lute run bench/compare.luau [--verify] [--filter text] [--out directory]", 0)
+			error(
+				"usage: lute run bench/compare.luau [--verify] [--mode as-shipped|like-for-like] [--filter text] [--out directory]",
+				0
+			)
 		end
 		index += 1
 	end
 	local synced = process.run { "lute", "run", "tools/sync-dependencies.luau", "--check", "--benchmarks" }
 	assert(synced.ok, synced.stdout .. synced.stderr .. "\nRun lute run tools/sync-dependencies.luau --benchmarks")
+	Upstream.setMode(mode)
+	local prefix = if mode == "like-for-like" then "like-for-like/" else ""
 	local frameworks = Frameworks.available(true)
 	local entries = Suites.entries { suite = "workloads", filter = filter, comparison = true }
 	assert(#entries > 0, "no comparison workload matches")
@@ -51,7 +66,7 @@ local function main(): number
 			id = "parity-" .. entry.id,
 			kind = "tests",
 			worker = "bench/comparison/worker.luau",
-			locators = { "parity:" .. entry.id },
+			locators = { prefix .. "parity:" .. entry.id },
 			tier = "parity",
 			why = "observable trees, intermediate states, retained identity and teardown agree",
 		}
@@ -64,7 +79,7 @@ local function main(): number
 			id = "timing-" .. entry.id,
 			kind = "tests",
 			worker = "bench/comparison/worker.luau",
-			locators = { "timing:" .. entry.id .. ":" .. tostring(position - 1) },
+			locators = { prefix .. "timing:" .. entry.id .. ":" .. tostring(position - 1) },
 			exclusive = true,
 			after = { "parity-" .. entry.id },
 			tier = "timing",
@@ -86,7 +101,7 @@ local function main(): number
 				id = "memory-" .. entry.id .. "-" .. framework.name,
 				kind = "tests",
 				worker = "bench/comparison/worker.luau",
-				locators = { "memory:" .. entry.id .. ":" .. framework.name },
+				locators = { prefix .. "memory:" .. entry.id .. ":" .. framework.name },
 				exclusive = true,
 				after = { "parity-" .. entry.id },
 				tier = "memory",
@@ -113,6 +128,7 @@ local function main(): number
 		environment = Suites.identity(),
 		command = process.args,
 		concurrency = "exclusive timing and memory workers",
+		mode = mode,
 		runtime = process.run({ "lute", "--version" }).stdout,
 		dependencies = Lock,
 	} .. "\n")
@@ -127,7 +143,9 @@ local function main(): number
 		local stored = Report.store(commit, outcome.execution.report)
 		fs.writeStringToFile(out .. "/stored.json", Lute.encode(stored) .. "\n")
 		local tableMarkdown, hasEvidence = Report.markdown(stored, selected, frameworks)
-		local markdown = "Comparison verdict: **"
+		local markdown = "Comparison mode: **"
+			.. mode
+			.. "**. Comparison verdict: **"
 			.. outcome.acceptance.verdict
 			.. "**. Only passed measurements appear below. Rejected calibration and other failures remain in the raw report.\n\n"
 			.. tableMarkdown

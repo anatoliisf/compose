@@ -10,9 +10,9 @@ local WorkloadTypes = require "../../bench/workloads/types"
 local Environment = require "../../bench/cost-model"
 local Lock = require "../../dependencies.lock"
 local Upstream = require "../../bench/harness/upstream"
+local luau = require "@lute/luau"
 local Suites = require "../../bench/suites"
 local ComposeCore = require "../../src/core"
-local luau = require "@lute/luau"
 
 local describe, it, expect = Test.describe, Test.it, Test.expect
 
@@ -166,16 +166,16 @@ describe("framework comparison", function()
 		end
 	end)
 
-	it("comparison loader compiles every lane at optimization level 2", function()
-		local probe = luau.load(
-			Upstream.compile "local function inlined() return debug.info(1, 'n') end local name = inlined() return name",
-			"probe",
-			{ debug = debug }
-		)
-		expect(probe()).never:toBe "inlined"
+	it("comparison as-shipped mode adds no directive and like-for-like mode compiles at level 2", function()
+		local source = "local function inlined() return debug.info(1, 'n') end local name = inlined() return name"
+		expect(luau.load(Upstream.compile(source), "probe", { debug = debug })()):toBe "inlined"
+		Upstream.setMode "like-for-like"
+		local optimized = luau.load(Upstream.compile(source), "probe", { debug = debug })()
+		Upstream.setMode "as-shipped"
+		expect(optimized).never:toBe "inlined"
 	end)
 
-	it("comparison lanes load once per process and Compose loads through the shared loader", function()
+	it("comparison lanes load once per process and Compose loads as it ships", function()
 		local compose: Frameworks.Framework? = nil
 		for _, candidate in Frameworks.available(true) do
 			expect(candidate.shared):toBe(true)
@@ -188,10 +188,15 @@ describe("framework comparison", function()
 		local second = Frameworks.open(lane)
 		expect(second.environment):toBe(first.environment)
 		expect(second.loaded.library):toBe(first.loaded.library)
-		expect(first.loaded.library == ComposeCore):toBe(false)
+		expect(first.loaded.library):toBe(ComposeCore)
 		Frameworks.close(lane)
 		expect(Frameworks.open(lane).environment == first.environment):toBe(false)
 		Frameworks.close(lane)
+		Upstream.setMode "like-for-like"
+		local equalTerms = Frameworks.open(lane).loaded.library
+		Frameworks.close(lane)
+		Upstream.setMode "as-shipped"
+		expect(equalTerms == ComposeCore):toBe(false)
 		local normal = Frameworks.available()[2]
 		expect(Frameworks.open(normal).environment == Frameworks.open(normal).environment):toBe(false)
 	end)

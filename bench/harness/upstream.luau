@@ -6,15 +6,29 @@ local Lock = require "../../dependencies.lock"
 local Environment = require "../cost-model"
 
 type Module = { path: string }
-local OPTIMIZATION = "--!optimize 2\n"
+export type Mode = "as-shipped" | "like-for-like"
+
+local LIKE_FOR_LIKE_DIRECTIVE = "--!optimize 2\n"
 local COMPOSE_ROOT = "src"
 local boundary = luau.load(luau.compile "return ...", "benchmark-boundary")
+local currentMode: Mode = "as-shipped"
 
-local function compile(source: string): luau.Bytecode
-	return luau.compile(OPTIMIZATION .. source)
+local function setMode(mode: Mode)
+	currentMode = mode
 end
 
-local bytecode: { [string]: luau.Bytecode } = {}
+local function mode(): Mode
+	return currentMode
+end
+
+local function compile(source: string): luau.Bytecode
+	if currentMode == "like-for-like" then
+		return luau.compile(LIKE_FOR_LIKE_DIRECTIVE .. source)
+	end
+	return luau.compile(source)
+end
+
+local bytecode: { [string]: { [string]: luau.Bytecode } } = {}
 
 local function normal(path: string): string
 	local parts: { string } = {}
@@ -190,10 +204,15 @@ local function create(environment: Environment.Environment)
 			end
 			return load(relative .. "/" .. target)
 		end
-		local compiled = bytecode[path]
+		local compiledForMode = bytecode[currentMode]
+		if compiledForMode == nil then
+			compiledForMode = {}
+			bytecode[currentMode] = compiledForMode
+		end
+		local compiled = compiledForMode[path]
 		if compiled == nil then
 			compiled = compile(fs.readFileToString(path))
-			bytecode[path] = compiled
+			compiledForMode[path] = compiled
 		end
 		local result: unknown = luau.load(compiled, "@" .. path, globals)()
 		cache[path] = result
@@ -210,6 +229,8 @@ end
 return {
 	create = create,
 	compile = compile,
+	mode = mode,
+	setMode = setMode,
 	callback = function(value: unknown): (...unknown) -> ()
 		assert(type(value) == "function", "event handler must be a function")
 		return boundary(value)

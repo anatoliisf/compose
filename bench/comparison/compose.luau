@@ -1,7 +1,7 @@
 --!strict
 
-local Upstream = require "../harness/upstream"
 local ComposeEngine = require "../harness/compose-engine"
+local Upstream = require "../harness/upstream"
 local Environment = require "../cost-model"
 local Core = require "../../src/core"
 local Roblox = require "../../src/roblox"
@@ -11,15 +11,23 @@ type Compose = typeof(Core)
 export type Session = { library: Compose, runtime: Core.Runtime }
 
 local sessions: { [Environment.Environment]: Session } = {}
+setmetatable(sessions, { __mode = "k" })
 
 local function session(environment: Environment.Environment): Session
 	local existing = sessions[environment]
 	if existing ~= nil then
 		return existing
 	end
-	local loader = Upstream.create(environment)
-	local library: Compose = loader.load "src/core"
-	local adapter: typeof(Roblox) = loader.load "src/roblox"
+	local library: Compose = Core
+	local adapter: typeof(Roblox) = Roblox
+	if Upstream.mode() == "like-for-like" then
+		local loader = Upstream.create(environment)
+		library = loader.load "src/core"
+		adapter = loader.load "src/roblox"
+	else
+		Core.__resetForTests()
+		Roblox.__resetForTests()
+	end
 	local opened: Session = {
 		library = library,
 		runtime = adapter.createRuntime(ComposeEngine.engineFor(environment)),
