@@ -134,7 +134,7 @@ local function create(environment: Environment.Environment)
 		end
 	end
 	for _, root in allowed do
-		if root:find("/blend/", 1, true) then
+		if root:find("/blend/", 1, true) and fs.exists(root) then
 			if fs.type(root) == "dir" then
 				scan(root)
 			else
