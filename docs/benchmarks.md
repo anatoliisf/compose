@@ -65,9 +65,20 @@ All added surfaces have the `benchmark` role. The default dependency sync and th
 The explicit `--benchmarks` sync checks each commit, tree, remote and clean checkout.
 It uses sparse checkouts for benchmark dependencies. Blend uses only its 29 listed modules and its license notice.
 These sources stay in the ignored `.lute/dependencies` directory. They are not part of `src` or the package.
-The loader reads only the benchmark surfaces in the lock. It runs upstream source without edits.
+The loader reads only the benchmark surfaces in the lock and the Compose `src` tree. It runs upstream source without edits.
 It resolves Roblox module paths (including `WaitForChild`), Nevermore module names, React package names and upstream Roblox package layouts against those surfaces.
 It gives each loaded framework a separate cost-model environment and module cache.
+
+### Compilation
+
+The comparison loads every framework lane, Compose included, through the same loader.
+The loader adds `--!optimize 2` before each source file and compiles it with `luau.compile`.
+It loads each chunk with `luau.load` and the cost-model global table as its environment.
+Thus all framework lanes use optimization level 2, the interpreter and the same environment table.
+`luau.load` does not generate native code. The Compose `--!native` directives have no effect in this comparison.
+The added directive line moves line numbers in loaded source by one.
+The bare lane, the comparison driver and the workload code load through Lute `require`. They also use optimization level 2.
+The normal `bench/run.luau` suites still load Compose through Lute `require`, with native code for the `--!native` modules. Do not compare those numbers with the comparison table.
 
 Fusion uses the latest GitHub release that GitHub marks as a non-prerelease.
 Its upstream tag contains `beta`; the upstream version table marks it as a release.
@@ -98,7 +109,7 @@ The summary prints the exact source identities for all these dependencies.
 | `events` | Yes | Yes | Yes | Yes | Yes | Yes |
 | `animate-many` | Yes | Yes | Yes | Yes | U | Yes |
 | `status-panel`, `mount-cycles`, `scene-3d` | Yes | Yes | Yes | Yes | Yes | Yes |
-| `unwind` | Yes | Yes | Yes | Yes | U | U |
+| `unwind` | Yes | Yes | Yes | U | U | U |
 
 The unsupported reasons are:
 
@@ -106,6 +117,7 @@ The unsupported reasons are:
 - Fusion has no public transaction that reduces 500 repeated source writes to one host property write.
 - At the pinned Fusion release, native `ForPairs` can assign a removed key's scope to a retained key. The four keyed workloads that shrink a list fail the retained-node identity check.
 - React and ReactRoblox have no native spring. This comparison does not add an animation library to that lane.
+- Vide releases Instances only through cleanup registrations. The Vide lane registers cleanup on each owned root. A build that fails before its root exists leaves its created parts without an owner. This fails the partial-build rollback contract.
 - At the pinned React release, a failed render leaves abandoned cost-model nodes after root unmount. An error boundary does not release those nodes. This fails the partial-build rollback contract.
 - At the pinned Blend revision, an error during observable subscription can leave created cost-model nodes without a returned cleanup resource. This fails the partial-build rollback contract.
 
@@ -124,11 +136,18 @@ The additional lanes classify the same 24 workloads:
 
 The comparison first runs the existing observable-tree parity check.
 It also compares the prepared tree and every update checkpoint, checks retained row identity, and checks disposal.
+The mount-and-release workloads (`mount-dispose`, `events`, `mount-cycles`) record the built tree before they release it. Parity compares those trees.
+The animation workload compares `LayoutOrder` after 300 more frames, when every spring is at rest.
 The leaf and repeated-write workloads must commit exactly one property write per run.
+Each lane must create the same number of instances as the first lane in the timed iterations.
+Each lane must make at least as many connections as the first lane. Library lifetime and flush connections, for example in Seam and Reflex, can add connections, so the counts are not equal.
 A missing implementation without an unsupported reason fails parity.
 Unsupported lanes have no timing or heap measurement.
 
-Timing uses the existing Verify workload collections, sample counts, warmup, CPU reference, rotated order and calibration retry.
+Timing uses the existing Verify workload collections, sample counts, warmup, CPU reference and calibration retry.
+Each workload runs in its own timing worker. The worker rotates the lane order by the position of the workload in the comparison. Thus each lane runs first in some workloads and last in others.
+Each worker loads each framework one time, in one cost-model environment. Each sample uses a new container and a new root in that environment.
+The first sample loads the framework, outside timing. Verify then runs one unmeasured complete sample and the declared warmup samples before it measures. Thus the measured samples use a warm library.
 The timed region includes every authored iteration and the final environment drain.
 Setup, framework loading, snapshots and release are outside timing, as in the normal runtime suite.
 Mount-and-release workloads include their own release inside the timed region.
@@ -136,7 +155,8 @@ The comparison does not apply performance thresholds between libraries.
 
 Each supported lane also has a separate, exclusive heap worker.
 It first runs one unreported full memory lifecycle. It then records three full memory lifecycles.
-Each lifecycle loads the framework and creates the environment and borrowed container before the heap baseline.
+The worker loads the framework one time. The unreported lifecycle and the three recorded lifecycles use that loaded framework, so first-use module state stays outside the scene heap.
+Each lifecycle creates its borrowed container before the heap baseline.
 It builds the scene, runs the authored iterations, measures mounted heap, releases the scene, and measures teardown heap.
 The table uses the median of those three estimates. It uses the same bounded collection-witness method as paired performance.
 The framework's loaded modules and permanent scheduler are outside the scene baseline.
@@ -144,7 +164,10 @@ The estimate includes the cost-model nodes, bindings, framework state and adapte
 It does not measure exact reachable bytes, RSS or native engine memory. Teardown heap can include framework caches and estimator noise even when scene nodes and connections are all released.
 
 The adapters use each library's public construction and state APIs.
-Fusion uses scopes and `ForPairs`. Vide uses sources, `values` and explicit scoped cleanup.
+Compose uses the same comparison driver as the other libraries: cells, formula properties, `keyed`, `show`, `event`, runtime springs and `batch`.
+The ordered-window workload has no driver equivalent. It keeps its direct Compose case.
+Fusion uses scopes and `ForPairs`. Vide uses sources, `values`, `show` and cleanup on each owned root: the mounted tree, each shown branch and each keyed row.
+Vide's public `defaults` flag keeps its library default (true), so Vide writes its default properties on each created Instance.
 Vide's public `strict` runtime flag is false so its development check does not evaluate each effect twice.
 All maintained adapter code still uses strict Luau checking.
 React uses production settings, ReactRoblox legacy roots, property bindings and keyed function components.
@@ -155,10 +178,10 @@ Its row-position map uses the public `Shared` operator so it is computed once pe
 Blend's repeated-write lane uses its public `Throttled` operator to emit the last value at the end of the defer lane.
 Fusion and Blend apply independent writes eagerly. The batched workload has one independent source per node, so it does not require those libraries to merge writes to the same sink.
 Roact uses public bindings, class components, fragments and mount handles. Its structural subscriptions update component state.
-Seam uses public scopes, values, computeds, `ForPairs`, `Batch` and springs. Its property bindings flush on a native frame callback, so each batch includes a zero-delta cost-model frame.
+Seam uses public scopes, values, computeds, `ForPairs`, `Batch` and springs. Each shown branch and each keyed row has an inner scope. The adapter destroys that scope when the branch closes or the row leaves the list. Its property bindings flush on a native frame callback, so each batch includes a zero-delta cost-model frame.
 The cost-model host provides ancestry notifications, native vector defaults and the pre-render callback needed by these bindings.
 Signals uses its public signals, computeds, effects and batch scheduler. Its small host bridge assigns properties and owns node and effect cleanup; it adds no scene reconciler or keyed collection.
-React + Reflex subscribes React bindings to native producers and flushes the producers within the React batch. Its repeated-write workload converts the flushed numeric state to text once.
+React + Reflex keeps all values in one producer. Each value has a key in the producer state, a `set` action and a selector subscription. The adapter flushes the producer within the React batch. Its repeated-write workload converts the flushed numeric state to text once.
 Fusion + Charm subscribes Fusion values to native atoms, releases each subscription with its Fusion scope, and uses Charm's public batch transaction.
 These combined lanes retain their rendering library's native collection and animation behavior. Their measurements include the bridge and subscription costs.
 
@@ -207,7 +230,7 @@ The command builds one Verify gate. For each workload or scenario scale it decla
    prior unrelated collections cannot leave their allocation debt in its process.
 3. `memory-<id>` runs the Compose lifecycle in a fresh worker after parity. It records mounted and teardown heap measurements outside timing. A CPU calibration failure does not block it. It does not run in `--verify` mode.
 
-A collection has one member per framework. Member order rotates by one position for each workload. Before calibration, Verify runs one unmeasured complete sample per member to prepare its fixture and lifecycle. It retains all declared warmup and measured samples. It measures the CPU reference before and after the members. Each endpoint warms up for 16 batches. It then records 32 samples of 64 calls each as time per call. Median drift above 25 percent makes members unsupported. A paired round with `--paired-round` permits 100 percent drift. Both arms alternate within each round. This ceiling rejects a broken machine rather than ordinary drift.
+A collection has one member per framework. Member order rotates by one position for each workload. The comparison timing workers apply the same rotation. Before calibration, Verify runs one unmeasured complete sample per member to prepare its fixture and lifecycle. It retains all declared warmup and measured samples. It measures the CPU reference before and after the members. Each endpoint warms up for 16 batches. It then records 32 samples of 64 calls each as time per call. Median drift above 25 percent makes members unsupported. A paired round with `--paired-round` permits 100 percent drift. Both arms alternate within each round. This ceiling rejects a broken machine rather than ordinary drift.
 
 Paired execution divides the 32 CPU samples and 16 warmup batches across the first three rounds. It also divides each member's timing samples. A 31-sample scene uses 11, 10 and 10 samples. Six-round confirmation repeats that budget. Each round includes diagnostic count passes and fixture preparation. Process startup and preparation add overhead.
 

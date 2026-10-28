@@ -5,7 +5,7 @@ This page records measurements of Compose and other Roblox UI libraries on the s
 - Compose commit: `00a663b` (main, 2026-10-26)
 - Run: [Framework comparison #40459848319](https://github.com/voidmeld/compose/actions/runs/40459848319) on the GitHub-hosted Ubuntu runner
 - Verdict: release. Only passed measurements appear in the table.
-- Method: [Manual framework comparison](benchmarks.md#manual-framework-comparison). The workflow runs the parity checks before timing, and both are headless cost-model measurements. They do not measure Roblox engine rendering.
+- Method: [Manual framework comparison](benchmarks.md#manual-framework-comparison). This record predates the current method. That method compiles every lane the same way, loads each library one time per worker, rotates lane order and runs Compose through the shared driver. Run the workflow again to replace these results. The workflow runs the parity checks before timing, and both are headless cost-model measurements. They do not measure Roblox engine rendering.
 
 Each ratio divides a measurement by the Compose measurement. A value below 1.00x is smaller. To update this record, run the workflow again. Then replace this page with its results.
 
