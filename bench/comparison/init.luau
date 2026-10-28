@@ -14,10 +14,19 @@ local React = require "@self/react"
 local Vide = require "@self/vide"
 local Workloads = require "@self/workloads"
 local WorkloadTypes = require "@self/../workloads/types"
+local WorkloadList = require "@self/../workloads"
 local Environment = require "@self/../cost-model"
 local Lock = require "@self/../../dependencies.lock"
 
+for _, workload in WorkloadList.all do
+	workload.cases["compose-direct"] = workload.cases.compose
+end
 local composeLoad = Workloads.include("compose", Compose.create)
+
+local function composeDirect(environment: Environment.Environment): { library: unknown, extras: WorkloadTypes.Extras }
+	local session = Compose.session(environment)
+	return { library = session.library, extras = { runtime = session.runtime } }
+end
 
 local function version(name: string): string
 	for _, dependency in Lock.dependencies do
@@ -35,6 +44,7 @@ return {
 		what = "this repository through the shared loader and comparison driver",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = function(environment: Environment.Environment): { library: unknown, extras: WorkloadTypes.Extras }
 			composeLoad(environment)
 			local session = Compose.session(environment)
@@ -42,11 +52,21 @@ return {
 		end,
 	},
 	{
+		name = "compose-direct",
+		version = "0.1.0-dev",
+		what = "Compose direct workload cases, the control for the comparison driver",
+		workCounters = false,
+		shared = true,
+		writesEveryValue = false,
+		load = composeDirect,
+	},
+	{
 		name = "fusion",
 		version = version "fusion",
 		what = "Fusion scoped values and Instances",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = true,
 		load = Workloads.include("fusion", function(environment)
 			return Fusion.create(environment)
 		end),
@@ -57,6 +77,7 @@ return {
 		what = "Vide sources, values and scoped cleanup",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = Workloads.include("vide", Vide.create, Vide.unsupported),
 	},
 	{
@@ -65,9 +86,19 @@ return {
 		what = "React bindings and ReactRoblox legacy roots",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = true,
 		load = Workloads.include("react", function(environment)
 			return React.create(environment)
 		end),
+	},
+	{
+		name = "react-usestate",
+		version = version "react",
+		what = "React with useState for the repeated-write workload",
+		workCounters = false,
+		shared = true,
+		writesEveryValue = false,
+		load = Workloads.include("react-usestate", React.createWithState, React.stateUnsupported),
 	},
 	{
 		name = "blend",
@@ -75,6 +106,7 @@ return {
 		what = "Blend states, observables and computed pairs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = Workloads.include("blend", Blend.create),
 	},
 	{
@@ -83,6 +115,7 @@ return {
 		what = "roact public APIs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = true,
 		load = Workloads.include("roact", Roact.create, Roact.unsupported),
 	},
 	{
@@ -91,6 +124,7 @@ return {
 		what = "seam public APIs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = Workloads.include("seam", Seam.create, Seam.unsupported),
 	},
 	{
@@ -99,6 +133,7 @@ return {
 		what = "signals public APIs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = Workloads.include("signals", Signals.create, Signals.unsupported),
 	},
 	{
@@ -107,6 +142,7 @@ return {
 		what = "react-reflex public APIs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = Workloads.include("react-reflex", ReactReflex.create),
 	},
 	{
@@ -115,6 +151,7 @@ return {
 		what = "fusion-charm public APIs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = false,
 		load = Workloads.include("fusion-charm", FusionCharm.create),
 	},
 	{
@@ -123,6 +160,7 @@ return {
 		what = "react-upstream public APIs",
 		workCounters = false,
 		shared = true,
+		writesEveryValue = true,
 		load = Workloads.include("react-upstream", ReactUpstream.create),
 	},
 }

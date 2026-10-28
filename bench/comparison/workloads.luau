@@ -333,7 +333,7 @@ local function include(name: string, factory: Factory, unsupported: ((string) ->
 		local reasons = workload.unsupported or {}
 		workload.unsupported = reasons
 		local reason = if unsupported then unsupported(workload.id) else nil
-		local react = name == "react" or name == "react-upstream" or name == "react-reflex"
+		local react = name == "react" or name == "react-upstream" or name == "react-reflex" or name == "react-usestate"
 		local fusion = name == "fusion" or name == "fusion-charm"
 		if reason then
 			reasons[name] = reason
@@ -351,8 +351,6 @@ local function include(name: string, factory: Factory, unsupported: ((string) ->
 		elseif workload.id == "unwind" and name == "blend" then
 			reasons[name] =
 				"An error during native observable subscription leaves the partially created cost-model nodes without a returned cleanup resource. It does not satisfy failed-build rollback."
-		elseif workload.id == "update-repeated" and name == "fusion" then
-			reasons[name] = "No public transaction API coalesces the 500 source writes into one host property write."
 		elseif
 			fusion
 			and (

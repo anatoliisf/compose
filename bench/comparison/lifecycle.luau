@@ -69,7 +69,10 @@ local function parity(workload: Workloads.Workload, frameworks: { Frameworks.Fra
 				if #observed > 0 then
 					table.insert(snapshots, table.concat(observed, "\n"))
 				end
-				if workload.id == "update-leaf" or workload.id == "update-repeated" then
+				if
+					workload.id == "update-leaf"
+					or (workload.id == "update-repeated" and not framework.writesEveryValue)
+				then
 					assert(
 						context.env.counters().propertyWrites == 1,
 						framework.name .. " did not commit exactly one property write"

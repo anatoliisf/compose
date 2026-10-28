@@ -18,6 +18,7 @@ export type Framework = {
 	what: string,
 	workCounters: boolean,
 	shared: boolean?,
+	writesEveryValue: boolean?,
 	load: (environment: Environment.Environment) -> Loaded,
 }
 
@@ -99,6 +100,7 @@ local function available(comparison: boolean?): { Framework }
 			what = entry.what,
 			workCounters = entry.workCounters,
 			shared = true,
+			writesEveryValue = entry.writesEveryValue,
 			load = entry.load,
 		})
 	end

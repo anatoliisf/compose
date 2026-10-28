@@ -22,7 +22,8 @@ type ReactRoblox = {
 local function create(
 	environment: Environment.Environment,
 	stateDriver: State.State?,
-	dependency: string?
+	dependency: string?,
+	counter: "binding" | "state" | nil
 ): Types.Driver
 	local loader = Upstream.create(environment)
 	local root = ".lute/dependencies/" .. (dependency or "react") .. "/modules/"
@@ -103,7 +104,7 @@ local function create(
 			return roblox.Event[name]
 		end,
 		counterState = function(initial: number): Types.CounterState
-			if stateDriver then
+			if counter ~= "state" then
 				local source = scope.value(initial)
 				return {
 					node = scope.node(
@@ -168,4 +169,15 @@ local function create(
 	}
 end
 
-return { create = create }
+local function createWithState(environment: Environment.Environment): Types.Driver
+	return create(environment, nil, nil, "state")
+end
+
+local function stateUnsupported(id: string): string?
+	if id ~= "update-repeated" then
+		return "This variant differs from the react lane only in update-repeated, where it uses useState; the other workloads are the react lane."
+	end
+	return nil
+end
+
+return { create = create, createWithState = createWithState, stateUnsupported = stateUnsupported }

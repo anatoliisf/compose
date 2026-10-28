@@ -160,7 +160,8 @@ end
 local function workloadMember(
 	workload: Workloads.Workload,
 	framework: Frameworks.Framework,
-	observed: string
+	observed: string,
+	collect: boolean
 ): Benchmark.Spec
 	local case = workload.cases[framework.name]
 	local samples: { [unknown]: Sample<WorkloadTypes.State> } = {}
@@ -189,6 +190,9 @@ local function workloadMember(
 			environment.drain()
 			environment.resetCounters()
 			samples[sample] = sample
+			if collect then
+				Lute.memory.settle { cycles = 2 }
+			end
 			return sample
 		end,
 		workload = function(state: unknown)
@@ -223,7 +227,7 @@ local function workloadEntry(
 	local members: { Benchmark.Spec } = {}
 	for _, framework in order do
 		if workload.cases[framework.name] ~= nil then
-			table.insert(members, workloadMember(workload, framework, observed))
+			table.insert(members, workloadMember(workload, framework, observed, comparison == true))
 		end
 	end
 	return {
