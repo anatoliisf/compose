@@ -29,9 +29,6 @@ local function unsupported(id: string): string?
 	if id == "animate-many" then
 		return "Roact has no native spring primitive."
 	end
-	if id == "update-repeated" then
-		return "Roact has no public batch transaction that coalesces 500 binding writes into one host property write."
-	end
 	if id == "unwind" then
 		return "Roact's public mount API returns its cleanup handle only after a successful mount; failed render rollback is not guaranteed."
 	end

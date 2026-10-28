@@ -6,45 +6,68 @@ local Types = require "./types"
 local State = require "./state"
 local React = require "./react"
 
-type Producer<T> = {
-	getState: (Producer<T>) -> T,
-	setState: (Producer<T>, T) -> (),
-	subscribe: (Producer<T>, (T) -> ()) -> () -> (),
-	flush: (Producer<T>) -> (),
-	destroy: (Producer<T>) -> (),
+type Cells = { [number]: unknown }
+type Producer = {
+	getState: (Producer) -> Cells,
+	subscribe: (Producer, (Cells) -> unknown, (unknown) -> ()) -> () -> (),
+	flush: (Producer) -> (),
+	set: (number, unknown) -> (),
+	remove: (number) -> (),
 }
-type Reflex = { createProducer: <T>(T, {}) -> Producer<T> }
+type Reflex = {
+	createProducer: (
+		Cells,
+		{
+			set: (Cells, number, unknown) -> Cells,
+			remove: (Cells, number) -> Cells,
+		}
+	) -> Producer,
+}
 
 local function create(environment: Environment.Environment): Types.Driver
 	local reflex: Reflex = Upstream.create(environment).load ".lute/dependencies/reflex/src"
-	local flushers: { [() -> ()]: boolean } = {}
+	local producer = reflex.createProducer({}, {
+		set = function(cells: Cells, key: number, value: unknown): Cells
+			local nextCells = table.clone(cells)
+			nextCells[key] = value
+			return nextCells
+		end,
+		remove = function(cells: Cells, key: number): Cells
+			local nextCells = table.clone(cells)
+			nextCells[key] = nil
+			return nextCells
+		end,
+	})
+	local nextKey = 0
 	local state: State.State = {
 		value = function<T>(initial: T, emit: (T) -> ()): State.Cell<T>
-			local producer = reflex.createProducer(initial, {})
-			local disconnect = producer:subscribe(emit)
-			local function flush()
-				producer:flush()
+			nextKey += 1
+			local key = nextKey
+			producer.set(key, initial)
+			producer:flush()
+			local function select(cells: Cells): unknown
+				return cells[key]
 			end
-			flushers[flush] = true
+			local disconnect = producer:subscribe(select, function(next: unknown)
+				emit(next :: T)
+			end)
 			return {
 				read = function(): T
-					return producer:getState()
+					return producer:getState()[key] :: T
 				end,
 				write = function(next: T)
-					producer:setState(next)
+					producer.set(key, next)
 				end,
 				release = function()
-					flushers[flush] = nil
 					disconnect()
-					producer:destroy()
+					producer.remove(key)
+					producer:flush()
 				end,
 			}
 		end,
 		batch = function(run: () -> ())
 			run()
-			for flush in flushers do
-				flush()
-			end
+			producer:flush()
 		end,
 	}
 	return React.create(environment, state)

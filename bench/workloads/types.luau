@@ -10,6 +10,7 @@ export type Context<L = unknown, E = Extras> = {
 	library: L,
 	extras: E,
 	container: Environment.Instance,
+	observe: ((string) -> ())?,
 }
 
 export type ComposeContext = Context<typeof(Core), { runtime: Core.Runtime }>
@@ -74,16 +75,23 @@ local function compose<S>(case: Case<S, ComposeContext>): Case
 	return pack(case, function(context: Context): ComposeContext
 		return {
 			env = context.env,
-			library = Core,
+			library = (context.library :: unknown) :: typeof(Core),
 			extras = { runtime = assert(context.extras.runtime) },
 			container = context.container,
+			observe = context.observe,
 		}
 	end)
 end
 
 local function bare<S>(case: Case<S, BareContext>): Case
 	return pack(case, function(context: Context): BareContext
-		return { env = context.env, library = context.env.globals, extras = {}, container = context.container }
+		return {
+			env = context.env,
+			library = context.env.globals,
+			extras = {},
+			container = context.container,
+			observe = context.observe,
+		}
 	end)
 end
 

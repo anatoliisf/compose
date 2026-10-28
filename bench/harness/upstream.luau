@@ -6,9 +6,29 @@ local Lock = require "../../dependencies.lock"
 local Environment = require "../cost-model"
 
 type Module = { path: string }
-local boundary = luau.load(luau.compile "return ...", "benchmark-boundary")
+export type Mode = "as-shipped" | "like-for-like"
 
-local bytecode: { [string]: luau.Bytecode } = {}
+local LIKE_FOR_LIKE_DIRECTIVE = "--!optimize 2\n"
+local COMPOSE_ROOT = "src"
+local boundary = luau.load(luau.compile "return ...", "benchmark-boundary")
+local currentMode: Mode = "as-shipped"
+
+local function setMode(mode: Mode)
+	currentMode = mode
+end
+
+local function mode(): Mode
+	return currentMode
+end
+
+local function compile(source: string): luau.Bytecode
+	if currentMode == "like-for-like" then
+		return luau.compile(LIKE_FOR_LIKE_DIRECTIVE .. source)
+	end
+	return luau.compile(source)
+end
+
+local bytecode: { [string]: { [string]: luau.Bytecode } } = {}
 
 local function normal(path: string): string
 	local parts: { string } = {}
@@ -56,6 +76,7 @@ local function create(environment: Environment.Environment)
 			end
 		end
 	end
+	table.insert(allowed, COMPOSE_ROOT)
 	local function resolve(path: string): string
 		path = normal(path)
 		local present = false
@@ -127,7 +148,7 @@ local function create(environment: Environment.Environment)
 		end
 	end
 	for _, root in allowed do
-		if root:find("/blend/", 1, true) then
+		if root:find("/blend/", 1, true) and fs.exists(root) then
 			if fs.type(root) == "dir" then
 				scan(root)
 			else
@@ -146,6 +167,9 @@ local function create(environment: Environment.Environment)
 		end
 		local globals = table.clone(environment.globals)
 		local directory = assert(path:match "^(.*)/[^/]+$")
+		local relative = if path:sub(1, #COMPOSE_ROOT + 1) == COMPOSE_ROOT .. "/" and path:match "/init%.luau$"
+			then directory .. "/.."
+			else directory
 		globals.script = module(if path:match "/init%.lua[u]?$" then directory else path:gsub("%.lua[u]?$", ""))
 		globals.require = function(target: string | Module): unknown
 			if type(target) == "table" then
@@ -178,12 +202,17 @@ local function create(environment: Environment.Environment)
 			elseif target:sub(1, 6) == "@self/" then
 				return load(directory .. "/" .. target:sub(7))
 			end
-			return load(directory .. "/" .. target)
+			return load(relative .. "/" .. target)
 		end
-		local compiled = bytecode[path]
+		local compiledForMode = bytecode[currentMode]
+		if compiledForMode == nil then
+			compiledForMode = {}
+			bytecode[currentMode] = compiledForMode
+		end
+		local compiled = compiledForMode[path]
 		if compiled == nil then
-			compiled = luau.compile(fs.readFileToString(path))
-			bytecode[path] = compiled
+			compiled = compile(fs.readFileToString(path))
+			compiledForMode[path] = compiled
 		end
 		local result: unknown = luau.load(compiled, "@" .. path, globals)()
 		cache[path] = result
@@ -199,6 +228,9 @@ end
 
 return {
 	create = create,
+	compile = compile,
+	mode = mode,
+	setMode = setMode,
 	callback = function(value: unknown): (...unknown) -> ()
 		assert(type(value) == "function", "event handler must be a function")
 		return boundary(value)

@@ -47,6 +47,14 @@ local function badgePrefix(count: number): { { id: number } }
 	return list
 end
 local CYCLES = 30
+local SETTLE_FRAMES = 300
+
+local function settledSnapshot(context: { env: Environment.Environment, container: Environment.Instance }): string
+	for _ = 1, SETTLE_FRAMES do
+		context.env.step(1 / 60)
+	end
+	return context.env.snapshot(context.container, { "LayoutOrder" })
+end
 
 local events: Workload = {
 	id = "events",
@@ -81,6 +89,10 @@ local events: Workload = {
 					end
 					return Host.Frame(children)
 				end, context.container)
+				local observe = context.observe
+				if observe ~= nil then
+					observe(context.env.snapshot(context.container, { "Text" }))
+				end
 				for _, button in buttons do
 					context.env.fire(context.env.instance(button), "Activated")
 				end
@@ -113,6 +125,10 @@ local events: Workload = {
 					made[index + 1] = button
 				end
 				frame.Parent = context.container
+				local observe = context.observe
+				if observe ~= nil then
+					observe(context.env.snapshot(context.container, { "Text" }))
+				end
 
 				for index = 2, #made do
 					context.env.fire(made[index], "Activated")
@@ -171,7 +187,7 @@ local animateMany: Workload = {
 				end
 			end,
 			snapshot = function(_state: AnimatedState, context: ComposeContext): string
-				return context.env.snapshot(context.container)
+				return settledSnapshot(context)
 			end,
 			release = function(state: AnimatedState, _context: ComposeContext)
 				state.dispose()
@@ -227,7 +243,7 @@ local animateMany: Workload = {
 				end
 			end,
 			snapshot = function(_state: AnimatedBare, context: BareContext): string
-				return context.env.snapshot(context.container)
+				return settledSnapshot(context)
 			end,
 			release = function(state: AnimatedBare, _context: BareContext)
 				BareSupport.destroyAll(state.made)
@@ -397,6 +413,10 @@ local mountCycles: Workload = {
 						end
 						return Host.Frame(children)
 					end, context.container)
+					local observe = context.observe
+					if observe ~= nil then
+						observe(context.env.snapshot(context.container, { "Text" }))
+					end
 					dispose()
 				end
 			end,
@@ -427,6 +447,10 @@ local mountCycles: Workload = {
 						made[index + 1] = button
 					end
 					frame.Parent = context.container
+					local observe = context.observe
+					if observe ~= nil then
+						observe(context.env.snapshot(context.container, { "Text" }))
+					end
 					for index = #connections, 1, -1 do
 						connections[index]:Disconnect()
 					end

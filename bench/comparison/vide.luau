@@ -19,6 +19,10 @@ type Vide = {
 local function create(environment: Environment.Environment): Types.Driver
 	local vide: Vide = Upstream.create(environment).load ".lute/dependencies/vide/src"
 	vide.strict = false
+	local function owned(instance: unknown): unknown
+		vide.cleanup(instance)
+		return instance
+	end
 	local scope: Types.Scope
 	scope = {
 		spring = function(target: Types.Source<number>, offset: number): unknown
@@ -63,9 +67,7 @@ local function create(environment: Environment.Environment): Types.Driver
 			if children then
 				props[1] = children
 			end
-			local instance = vide.create(class)(props)
-			vide.cleanup(instance)
-			return instance
+			return vide.create(class)(props)
 		end,
 		keyed = function(list: Types.Source<{ Types.Row }>): unknown
 			return vide.values(list.read, function(row: Types.Row, index: () -> number): unknown
@@ -76,7 +78,7 @@ local function create(environment: Environment.Environment): Types.Driver
 		end,
 		branch = function(open: Types.Source<boolean>, build: (Types.Scope) -> unknown): unknown
 			return vide.show(open.read, function(): unknown
-				return build(scope)
+				return owned(build(scope))
 			end)
 		end,
 		event = function(name: string): unknown
@@ -86,7 +88,7 @@ local function create(environment: Environment.Environment): Types.Driver
 	return {
 		mount = function(container: Environment.Instance, build: (Types.Scope) -> unknown): () -> ()
 			return vide.mount(function(): unknown
-				return build(scope)
+				return owned(build(scope))
 			end, container)
 		end,
 		batch = function(run: () -> ())
@@ -96,4 +98,11 @@ local function create(environment: Environment.Environment): Types.Driver
 	}
 end
 
-return { create = create }
+local function unsupported(id: string): string?
+	if id == "unwind" then
+		return "Vide releases Instances only through cleanup registrations. This lane registers cleanup on each owned root, so a build that fails before its root exists leaves the created parts without an owner."
+	end
+	return nil
+end
+
+return { create = create, unsupported = unsupported }

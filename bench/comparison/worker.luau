@@ -4,13 +4,17 @@ local Benchmark = require "../../.lute/dependencies/verify/src/benchmark"
 local Lute = require "../../.lute/dependencies/verify/src/lute"
 local Verify = require "../../.lute/dependencies/verify/src/core"
 local Frameworks = require "../harness/frameworks"
+local Upstream = require "../harness/upstream"
 local Lifecycle = require "./lifecycle"
 local Report = require "./report"
 local Suites = require "../suites"
 local Workloads = require "../workloads"
 
 Lute.worker {
-	load = function(locator: string): unknown
+	load = function(request: string): unknown
+		local requestedMode, rest = request:match "^(like%-for%-like)/(.+)$"
+		Upstream.setMode(if requestedMode ~= nil then "like-for-like" else "as-shipped")
+		local locator = rest or request
 		local parsedLane, parsedId, parsedName = locator:match "^(%w+):([^:]+):?(.*)$"
 		local lane = assert(parsedLane, "invalid framework comparison locator")
 		local id = assert(parsedId, "invalid framework comparison locator")
@@ -32,7 +36,10 @@ Lute.worker {
 						assert(problem == nil, problem)
 					end)
 				elseif lane == "timing" then
-					for _, entry in Suites.entries { suite = "workloads", filter = id, comparison = true } do
+					local offset = tonumber(name) or 0
+					for _, entry in
+						Suites.entries { suite = "workloads", filter = id, comparison = true, offset = offset }
+					do
 						if entry.id ~= id then
 							continue
 						end

@@ -17,8 +17,19 @@ export type Framework = {
 	version: string,
 	what: string,
 	workCounters: boolean,
+	shared: boolean?,
+	writesEveryValue: boolean?,
 	load: (environment: Environment.Environment) -> Loaded,
 }
+
+export type Opened = {
+	environment: Environment.Environment,
+	loaded: Loaded,
+}
+
+local function bareLoad(environment: Environment.Environment): Loaded
+	return { library = environment.globals, extras = {} }
+end
 
 local FRAMEWORKS: { Framework } = {
 	{
@@ -26,9 +37,7 @@ local FRAMEWORKS: { Framework } = {
 		version = "n/a",
 		what = "no framework: plain imperative Luau against the same cost-model environment",
 		workCounters = false,
-		load = function(environment: Environment.Environment): Loaded
-			return { library = environment.globals, extras = {} }
-		end,
+		load = bareLoad,
 	},
 	{
 		name = "compose",
@@ -48,17 +57,58 @@ local FRAMEWORKS: { Framework } = {
 	},
 }
 
+local SHARED_BARE: Framework = {
+	name = "bare",
+	version = "n/a",
+	what = "no framework: plain imperative Luau against the same cost-model environment",
+	workCounters = false,
+	shared = true,
+	load = bareLoad,
+}
+
+local sessions: { [string]: Opened } = {}
+
+local function open(framework: Framework): Opened
+	if framework.shared then
+		local existing = sessions[framework.name]
+		if existing ~= nil then
+			return existing
+		end
+	end
+	local environment = Environment.create()
+	local opened: Opened = { environment = environment, loaded = framework.load(environment) }
+	if framework.shared then
+		sessions[framework.name] = opened
+		environment.drain()
+	end
+	return opened
+end
+
+local function close(framework: Framework)
+	sessions[framework.name] = nil
+end
+
 local function available(comparison: boolean?): { Framework }
 	if not comparison then
 		return FRAMEWORKS
 	end
-	local result = table.clone(FRAMEWORKS)
-	for _, framework in require "../comparison" do
-		table.insert(result, framework)
+	local result: { Framework } = { SHARED_BARE }
+	for _, entry in require "../comparison" do
+		table.insert(result, {
+			name = entry.name,
+			version = entry.version,
+			what = entry.what,
+			workCounters = entry.workCounters,
+			shared = true,
+			writesEveryValue = entry.writesEveryValue,
+			load = entry.load,
+		})
 	end
 	return result
 end
 
 return {
 	available = available,
+	open = open,
+	close = close,
 }
