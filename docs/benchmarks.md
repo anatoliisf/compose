@@ -67,7 +67,7 @@ All added surfaces have the `benchmark` role. The default dependency sync and th
 The explicit `--benchmarks` sync checks each commit, tree, remote and clean checkout.
 It uses sparse checkouts for benchmark dependencies. Blend uses only its 29 listed modules and its license notice.
 These sources stay in the ignored `.lute/dependencies` directory. They are not part of `src` or the package.
-The loader reads only the benchmark surfaces in the lock and the Compose `src` tree. It runs upstream source without edits.
+The loader reads only the benchmark surfaces in the lock and the Compose `src` tree. It changes no upstream statement. It binds globals on the first line of each file, as [Global binding](#global-binding) describes.
 It resolves Roblox module paths (including `WaitForChild`), Nevermore module names, React package names and upstream Roblox package layouts against those surfaces.
 It gives each loaded framework a separate cost-model environment and module cache.
 
@@ -80,9 +80,19 @@ The comparison has two modes.
 - Compose loads through Lute `require`, as a consumer gets it. Compose ships with `--!native` on its reactive core, so that code runs as native code. Lute `require` compiles at optimization level 2.
 - The other libraries run as they ship. The loader adds no directive to their source. It compiles each file with `luau.compile` at its default level, optimization level 1, because `luau.compile` has no level option. A library that ships `--!optimize` or `--!native` keeps its directive, but `luau.load` generates no native code. No pinned library ships `--!native`.
 - Roblox uses optimization level 2 by default in live experiences and level 1 in Studio testing ([Roblox creator documentation, Luau comments](https://create.roblox.com/docs/luau/comments)). Thus the other libraries run at the Studio testing level, not the live level. The `like-for-like` mode shows the effect of this difference.
-- The other libraries load with `luau.load` and a copy of the cost-model global table as their environment, because they need the cost-model `Instance`, `game`, `script` and `require`. Compose, the bare lane, the comparison driver and the workload code load through `require` with the Lute global environment. A control that loads the Compose source both ways, without native code, measures the cost of the separate environment. The evidence artifact reports it.
+- The other libraries load with `luau.load` in the Lute global environment, as Compose, the bare lane, the comparison driver and the workload code do. [Global binding](#global-binding) supplies their cost-model globals.
 
-`like-for-like` is an internal optimization target. It is not a published result. Every framework lane, Compose included, loads through the same loader. The loader adds `--!optimize 2` before each source file, so all framework lanes use optimization level 2, the interpreter and the same environment table. The Compose `--!native` directives have no effect in this mode. The added directive line moves line numbers in loaded source by one.
+`like-for-like` is an internal optimization target. It is not a published result. Every framework lane, Compose included, loads through the same loader. The loader adds `--!optimize 2` before each source file, so all framework lanes use optimization level 2, the interpreter and the same global binding. The Compose `--!native` directives have no effect in this mode. The added directive line moves line numbers in loaded source by one.
+
+### Global binding
+
+A chunk that `luau.load` runs with its own environment table loses the Luau fast paths for globals and builtin calls. On a builtin-heavy loop, such a chunk runs about 2.3 times slower than the same chunk in the Lute global environment. The loader therefore runs every loaded file in the Lute global environment and binds its cost-model globals as locals.
+
+- The loader parses each file and finds every global that it reads or assigns.
+- It binds a global when the cost-model value differs from the Lute value, when the file assigns it, or when it is `script` or `require`. Each file thus keeps its own `script`, `require` and assigned globals, as it did with its own environment table. Lute builtins that the file only reads stay unbound and keep their fast paths.
+- The binding is one `local ... = ...;` statement on the first line, so line numbers do not move.
+- A file whose own locals leave no registers for the binding runs inside one added function on the same lines. In that file, `export type` becomes `type`. At the pinned revisions, only `ReactFiberBeginWork` in both React lanes needs this form.
+- A type function cannot read a binding. The loader leaves such a global unbound in that file. At the pinned revisions, only `print` in the Seam `Types` module is unbound this way, and only its type functions read it.
 
 The normal `bench/run.luau` suites load Compose through Lute `require`, as in `as-shipped` mode.
 

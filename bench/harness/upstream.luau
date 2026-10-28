@@ -1,6 +1,7 @@
 --!strict
 
 local fs = require "@std/fs"
+local parser = require "@std/syntax/parser"
 local luau = require "@lute/luau"
 local Lock = require "../../dependencies.lock"
 local Environment = require "../cost-model"
@@ -21,14 +22,115 @@ local function mode(): Mode
 	return currentMode
 end
 
-local function compile(source: string): luau.Bytecode
+local function compile(source: string, prefix: string?): luau.Bytecode
+	local bound = (prefix or "") .. source
 	if currentMode == "like-for-like" then
-		return luau.compile(LIKE_FOR_LIKE_DIRECTIVE .. source)
+		return luau.compile(LIKE_FOR_LIKE_DIRECTIVE .. bound)
 	end
-	return luau.compile(source)
+	return luau.compile(bound)
 end
 
-local bytecode: { [string]: { [string]: luau.Bytecode } } = {}
+type Node = { [string]: unknown }
+
+local function globalNames(source: string): ({ [string]: boolean }, { [string]: boolean })
+	local read: { [string]: boolean } = {}
+	local written: { [string]: boolean } = {}
+	local function nameOf(node: unknown): string?
+		if type(node) ~= "table" then
+			return nil
+		end
+		local expression = node :: Node
+		if expression.kind ~= "expr" or expression.tag ~= "global" then
+			return nil
+		end
+		return ((expression.name :: Node).text :: unknown) :: string
+	end
+	local function walk(node: Node)
+		local name = nameOf(node)
+		if name then
+			read[name] = true
+		elseif node.kind == "stat" then
+			local targets: { unknown } = {}
+			if node.tag == "assign" then
+				for _, variable in (node.variables :: unknown) :: { unknown } do
+					table.insert(targets, variable)
+				end
+			elseif node.tag == "compoundassign" then
+				table.insert(targets, node.variable)
+			elseif node.tag == "function" then
+				table.insert(targets, node.name)
+			end
+			for _, target in targets do
+				local assigned = nameOf(target)
+				if assigned then
+					written[assigned] = true
+				end
+			end
+		end
+		for key, value in node do
+			if type(key) == "string" and (string.find(key, "rivia") or string.find(key, "ocation")) then
+				continue
+			end
+			if type(value) == "table" then
+				walk(value :: Node)
+			end
+		end
+	end
+	walk(((parser.parse(source) :: unknown) :: { root: Node }).root)
+	return read, written
+end
+
+local function boundNames(source: string, globals: { [string]: unknown }): { string }
+	local read, written = globalNames(source)
+	local names: { string } = {}
+	for name in read do
+		if
+			written[name]
+			or name == "script"
+			or name == "require"
+			or not rawequal(luau.load(luau.compile("return " .. name), "global")(), globals[name])
+		then
+			table.insert(names, name)
+		end
+	end
+	table.sort(names)
+	return names
+end
+
+export type Compiled = { bytecode: luau.Bytecode, names: { string } }
+
+local function bind(source: string, globals: { [string]: unknown }, chunk: string?): Compiled
+	local names = boundNames(source, globals)
+	local nested = false
+	while true do
+		local prefix = if #names > 0 then "local " .. table.concat(names, ", ") .. " = ...; " else ""
+		local body = source
+		if nested then
+			prefix ..= "return (function(...) "
+			body = (source:gsub("\n(%s*)export%s+type%s", "\n%1type "):gsub("^(%s*)export%s+type%s", "%1type "))
+				.. "\nend)()"
+		end
+		local bytecode = compile(body, prefix)
+		local ok, problem = pcall(function()
+			return luau.load(bytecode, chunk or "bind")
+		end)
+		if ok then
+			return { bytecode = bytecode, names = names }
+		end
+		local message = tostring(problem)
+		local outer = message:match "Type function cannot reference outer local '([%w_]+)'"
+		local position = if outer then table.find(names, outer) else nil
+		if position then
+			table.remove(names, position)
+		elseif not nested and message:find("Out of local registers", 1, true) then
+			nested = true
+		else
+			error(problem, 0)
+		end
+	end
+end
+
+local bytecode: { [string]: { [string]: Compiled } } = {}
 
 local function normal(path: string): string
 	local parts: { string } = {}
@@ -209,12 +311,16 @@ local function create(environment: Environment.Environment)
 			compiledForMode = {}
 			bytecode[currentMode] = compiledForMode
 		end
-		local compiled = compiledForMode[path]
-		if compiled == nil then
-			compiled = compile(fs.readFileToString(path))
-			compiledForMode[path] = compiled
+		local entry = compiledForMode[path]
+		if entry == nil then
+			entry = bind(fs.readFileToString(path), (globals :: unknown) :: { [string]: unknown }, "@" .. path)
+			compiledForMode[path] = entry
 		end
-		local result: unknown = luau.load(compiled, "@" .. path, globals)()
+		local values: { unknown } = table.create(#entry.names)
+		for index, name in entry.names do
+			values[index] = globals[name]
+		end
+		local result: unknown = luau.load(entry.bytecode, "@" .. path)(table.unpack(values, 1, #entry.names))
 		cache[path] = result
 		loaded[path] = true
 		return result
@@ -228,6 +334,7 @@ end
 
 return {
 	create = create,
+	bind = bind,
 	compile = compile,
 	mode = mode,
 	setMode = setMode,

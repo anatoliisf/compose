@@ -175,6 +175,42 @@ describe("framework comparison", function()
 		expect(optimized).never:toBe "inlined"
 	end)
 
+	it("comparison loader binds cost-model globals per file in the Lute environment", function()
+		local globals = (Environment.create().globals :: unknown) :: { [string]: unknown }
+		local function run(source: string): ({ string }, ...unknown)
+			local compiled = Upstream.bind(source, globals)
+			local values: { unknown } = {}
+			for index, name in compiled.names do
+				values[index] = globals[name]
+			end
+			return compiled.names, luau.load(compiled.bytecode, "probe")(table.unpack(values, 1, #compiled.names))
+		end
+		local names, reader =
+			run "assignedByProbe = Instance\nreturn function() return assignedByProbe, math.floor(2.5) end"
+		expect(table.find(names, "Instance") ~= nil):toBe(true)
+		expect(table.find(names, "assignedByProbe") ~= nil):toBe(true)
+		expect(table.find(names, "math")):toBeNil()
+		local read = reader :: () -> (unknown, number)
+		local instance, floored = read()
+		expect(instance):toBe(globals.Instance)
+		expect(floored):toBe(2)
+		expect(debug.info(read, "l")):toBe(2)
+		expect(luau.load(luau.compile "return assignedByProbe", "other")()):toBeNil()
+
+		local crowded: { string } = { "export type Count = number" }
+		for index = 1, 199 do
+			table.insert(crowded, ("local v%d = %d"):format(index, index))
+		end
+		table.insert(crowded, "return Instance, v199")
+		local _, nestedInstance, last = run(table.concat(crowded, "\n"))
+		expect(nestedInstance):toBe(globals.Instance)
+		expect(last):toBe(199)
+
+		local typed, printer = run "type function Echo(t) print(t) return t end\nreturn print"
+		expect(table.find(typed, "print")):toBeNil()
+		expect(type(printer)):toBe "function"
+	end)
+
 	it("comparison lanes load once per process and Compose loads as it ships", function()
 		local compose: Frameworks.Framework? = nil
 		for _, candidate in Frameworks.available(true) do
