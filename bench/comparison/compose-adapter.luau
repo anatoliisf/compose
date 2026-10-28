@@ -54,9 +54,12 @@ local function create(environment: Environment.Environment): Types.Driver
 		node = function(class: string, properties: Types.Properties, children: { unknown }?): unknown
 			local props = table.clone(properties)
 			if children then
-				table.move(children, 1, #children, 1, props)
+				for index, child in children do
+					props[index] = child
+				end
 			end
-			return (Host :: any)[class](props)
+			local constructors = (Host :: unknown) :: { [string]: (Types.Properties) -> unknown }
+			return constructors[class](props)
 		end,
 		keyed = function(list: Types.Source<{ Types.Row }>): unknown
 			return Core.keyed {
@@ -85,9 +88,10 @@ local function create(environment: Environment.Environment): Types.Driver
 	}
 	return {
 		mount = function(container: Environment.Instance, build: (Types.Scope) -> unknown): () -> ()
-			return runtime.mount(function()
-				return build(scope) :: any
+			local dispose = runtime.mount(function()
+				return (build(scope) :: unknown) :: Core.Node
 			end, container)
+			return dispose
 		end,
 		batch = function(run: () -> ())
 			runtime:batch(run)
